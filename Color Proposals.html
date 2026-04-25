@@ -1,0 +1,1418 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Ekklo — Color Proposals</title>
+<link rel="stylesheet" href="colors_and_type.css" />
+<link rel="stylesheet" href="_shell.css" />
+<style>
+  body { max-width: 1320px; padding-bottom: 160px; }
+
+  /* ── Direction card ─────────────────────────────────── */
+  .direction {
+    margin-bottom: 88px;
+    padding-top: 16px;
+  }
+  .direction + .direction {
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 64px;
+  }
+
+  .dir-head {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 48px;
+    align-items: end;
+    margin-bottom: 32px;
+  }
+  .dir-num {
+    font: 600 11px/1 var(--font-ui);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin: 0 0 12px;
+  }
+  .dir-name {
+    font: 700 36px/1.1 var(--font-ui);
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+  .dir-tag {
+    font: var(--t-secondary);
+    color: var(--text-secondary);
+    margin: 0;
+    max-width: 560px;
+  }
+
+  /* compact accent strip in header */
+  .accent-strip {
+    display: flex;
+    border-radius: var(--r-card);
+    overflow: hidden;
+    border: 1px solid var(--border-subtle);
+    height: 72px;
+  }
+  .accent-strip > div { flex: 1; }
+
+  /* ── Palette grid ───────────────────────────────────── */
+  .palette {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .sw {
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--surface-card);
+  }
+  .sw .chip {
+    height: 84px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .sw .meta { padding: 10px 12px 12px; }
+  .sw .role {
+    font: 600 10px/1 var(--font-ui);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin: 0 0 4px;
+  }
+  .sw .name { font: 600 13px/1.2 var(--font-ui); margin: 0 0 6px; }
+  .sw .hex {
+    font: 500 10px/1 ui-monospace, 'SF Mono', Menlo, monospace;
+    letter-spacing: 0.04em;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+  }
+
+  /* ── Applied preview row ─────────────────────────────── */
+  .applied {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr 0.95fr;
+    gap: 16px;
+    margin-top: 8px;
+  }
+  .preview-card {
+    background: var(--surface-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--r-card);
+    padding: 22px;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    position: relative;
+  }
+  .preview-card .label {
+    font: 600 10px/1 var(--font-ui);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin: 0 0 14px;
+  }
+
+  /* — Mini sidebar preview — */
+  .mini-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 4px;
+    background: var(--mini-canvas, #FAFAFA);
+    border-radius: 10px;
+  }
+  .mini-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 12px;
+    border-radius: 999px;
+    font: 500 13px/1 var(--font-ui);
+    color: var(--mini-text-2, #6B6B68);
+  }
+  .mini-row .dot {
+    width: 18px; height: 18px; border-radius: 5px;
+    background: var(--mini-icon, #DCDCD8);
+    flex-shrink: 0;
+  }
+  .mini-row.selected {
+    background: var(--mini-selected-bg, #EEFBA5);
+    color: var(--mini-selected-text, #1A1A1A);
+    font-weight: 600;
+  }
+  .mini-row.selected .dot { background: var(--mini-selected-text, #1A1A1A); }
+
+  /* — CTA pair — */
+  .cta-stack {
+    display: flex; flex-direction: column; gap: 10px;
+    margin-top: 4px;
+  }
+  .cta {
+    height: 38px; padding: 0 18px;
+    border-radius: 999px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font: 600 13px/1 var(--font-ui);
+    border: 0;
+  }
+  .cta.primary {
+    background: var(--mini-primary, #D8F11A);
+    color: var(--mini-primary-ink, #1A1A1A);
+  }
+  .cta.secondary {
+    background: var(--mini-secondary, #1A1A1A);
+    color: var(--mini-secondary-ink, #FFFFFF);
+  }
+  .cta.ghost {
+    background: transparent;
+    color: var(--text-primary);
+    border: 1.5px solid var(--mini-primary, #D8F11A);
+  }
+
+  /* — Stat tile — */
+  .stat {
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 12px;
+    align-items: center;
+    padding: 12px;
+    border-radius: 10px;
+    background: var(--mini-stat-bg, #F4F4F2);
+  }
+  .stat .icon {
+    width: 36px; height: 36px;
+    border-radius: 999px;
+    background: var(--mini-stat-icon-bg, #1A1A1A);
+    color: var(--mini-stat-icon-fg, #D8F11A);
+    display: flex; align-items: center; justify-content: center;
+    font: 700 14px/1 var(--font-ui);
+  }
+  .stat .num {
+    font: 700 18px/1.1 var(--font-ui);
+    margin: 0;
+    color: var(--text-primary);
+  }
+  .stat .lbl {
+    font: 400 11px/1.2 var(--font-ui);
+    color: var(--text-secondary);
+    margin: 2px 0 0;
+  }
+
+  /* — Pill row — */
+  .pill-row {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 4px;
+  }
+  .p {
+    height: 28px; padding: 0 12px;
+    border-radius: 999px;
+    display: inline-flex; align-items: center;
+    font: 500 12px/1 var(--font-ui);
+    gap: 6px;
+  }
+  .p.solid { background: var(--mini-primary, #D8F11A); color: var(--mini-primary-ink, #1A1A1A); }
+  .p.soft  { background: var(--mini-soft, #EEFBA5); color: var(--mini-primary-ink, #1A1A1A); }
+  .p.ink   { background: var(--mini-secondary, #1A1A1A); color: var(--mini-secondary-ink, #FFFFFF); }
+  .p.help  { background: var(--mini-help, #1ED77A); color: white; }
+  .p.outline { background: white; color: var(--text-primary); border: 1.5px solid var(--border-input); }
+  .p .num {
+    background: rgba(0,0,0,0.12);
+    border-radius: 999px;
+    padding: 2px 7px;
+    font: 600 10px/1 var(--font-ui);
+  }
+  .p.ink .num { background: rgba(255,255,255,0.18); }
+
+  /* — Help FAB — */
+  .fab-demo {
+    margin-top: 12px;
+    padding: 18px;
+    background: var(--mini-canvas, #FAFAFA);
+    border-radius: 10px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .fab {
+    width: 44px; height: 44px;
+    border-radius: 999px;
+    background: var(--mini-help, #1ED77A);
+    box-shadow: 0 8px 24px var(--mini-help-shadow, rgba(30,215,122,0.35));
+    display: flex; align-items: center; justify-content: center;
+    color: white; font: 700 18px/1 var(--font-ui);
+    flex-shrink: 0;
+  }
+  .fab-demo .ftxt {
+    font: var(--t-caption); color: var(--text-secondary); margin: 0;
+  }
+
+  /* ── Direction-specific palette overrides ─────────────────── */
+
+  /* D1 — Court (the current system) */
+  .d1 {
+    --mini-primary: #D8F11A; --mini-primary-ink: #1A1A1A;
+    --mini-soft: #EEFBA5;
+    --mini-secondary: #1A1A1A; --mini-secondary-ink: #FFFFFF;
+    --mini-help: #1ED77A; --mini-help-shadow: rgba(30,215,122,0.35);
+    --mini-selected-bg: #EEFBA5; --mini-selected-text: #1A1A1A;
+    --mini-stat-bg: #F4F4F2; --mini-stat-icon-bg: #1A1A1A; --mini-stat-icon-fg: #D8F11A;
+  }
+
+  /* D2 — Sunrise — coral + warm graphite, sunrise-run vibes */
+  .d2 {
+    --mini-primary: #FF6A3D; --mini-primary-ink: #FFFFFF;
+    --mini-soft: #FFE4D6;
+    --mini-secondary: #1F1A17; --mini-secondary-ink: #FFFFFF;
+    --mini-help: #2BB6A5; --mini-help-shadow: rgba(43,182,165,0.35);
+    --mini-selected-bg: #FFE4D6; --mini-selected-text: #7A2A11;
+    --mini-stat-bg: #FAF3EE; --mini-stat-icon-bg: #1F1A17; --mini-stat-icon-fg: #FF6A3D;
+  }
+
+  /* D3 — Pulse — electric magenta + deep indigo, gym/HIIT energy */
+  .d3 {
+    --mini-primary: #F0286C; --mini-primary-ink: #FFFFFF;
+    --mini-soft: #FCDDE7;
+    --mini-secondary: #14132B; --mini-secondary-ink: #FFFFFF;
+    --mini-help: #5B7CFA; --mini-help-shadow: rgba(91,124,250,0.35);
+    --mini-selected-bg: #FCDDE7; --mini-selected-text: #8A1342;
+    --mini-stat-bg: #F5F4FA; --mini-stat-icon-bg: #14132B; --mini-stat-icon-fg: #F0286C;
+  }
+
+  /* D4 — Trail — earthy moss + clay, outdoor / wellness coach */
+  .d4 {
+    --mini-primary: #5B8E3A; --mini-primary-ink: #FFFFFF;
+    --mini-soft: #DCEDCB;
+    --mini-secondary: #2A2620; --mini-secondary-ink: #FFFFFF;
+    --mini-help: #C57544; --mini-help-shadow: rgba(197,117,68,0.35);
+    --mini-selected-bg: #DCEDCB; --mini-selected-text: #2F4D1B;
+    --mini-stat-bg: #F3F1EC; --mini-stat-icon-bg: #2A2620; --mini-stat-icon-fg: #5B8E3A;
+  }
+
+  /* D5 — Studio — premium ice-blue + ink, boutique studio / pilates */
+  .d5 {
+    --mini-primary: #2563FF; --mini-primary-ink: #FFFFFF;
+    --mini-soft: #DDE7FF;
+    --mini-secondary: #0E1116; --mini-secondary-ink: #FFFFFF;
+    --mini-help: #FF8A4C; --mini-help-shadow: rgba(255,138,76,0.35);
+    --mini-selected-bg: #DDE7FF; --mini-selected-text: #112F8A;
+    --mini-stat-bg: #F4F6FB; --mini-stat-icon-bg: #0E1116; --mini-stat-icon-fg: #2563FF;
+  }
+
+  /* D6 — Forge — green ink + orange action, the user-supplied recipe */
+  .d6 {
+    --mini-primary: #FF6A2C; --mini-primary-ink: #FFFFFF;
+    --mini-soft: #FFE2D0;
+    --mini-secondary: #1F3A2A; --mini-secondary-ink: #FFFFFF;
+    --mini-help: #E63946; --mini-help-shadow: rgba(230,57,70,0.30);
+    --mini-selected-bg: #DDEBE0; --mini-selected-text: #1F3A2A;
+    --mini-stat-bg: #F2F4F1; --mini-stat-icon-bg: #1F3A2A; --mini-stat-icon-fg: #FF6A2C;
+  }
+
+  /* D7 — Iron — black + red, gym/intense workouts */
+  .d7 {
+    --mini-primary: #E11D2E; --mini-primary-ink: #FFFFFF;
+    --mini-soft: #FBD9DC;
+    --mini-secondary: #0B0B0C; --mini-secondary-ink: #FFFFFF;
+    --mini-help: #FF7A1A; --mini-help-shadow: rgba(255,122,26,0.35);
+    --mini-selected-bg: #FBD9DC; --mini-selected-text: #6E0E18;
+    --mini-stat-bg: #F2F2F3; --mini-stat-icon-bg: #0B0B0C; --mini-stat-icon-fg: #E11D2E;
+  }
+
+  /* D8 — Meadow — green + soft blue, wellness/lifestyle */
+  .d8 {
+    --mini-primary: #2F9E6E; --mini-primary-ink: #FFFFFF;
+    --mini-soft: #D6EFE2;
+    --mini-secondary: #1B2A2F; --mini-secondary-ink: #FFFFFF;
+    --mini-help: #6FB3D1; --mini-help-shadow: rgba(111,179,209,0.35);
+    --mini-selected-bg: #D6EFE2; --mini-selected-text: #1F5A41;
+    --mini-stat-bg: #EEF4F1; --mini-stat-icon-bg: #1B2A2F; --mini-stat-icon-fg: #2F9E6E;
+  }
+
+  /* D10 — Hearth — terracotta on cream, between Trail and Sunrise */
+  .d10 {
+    --mini-primary: #D9582B; --mini-primary-ink: #FFFFFF;
+    --mini-soft: #F6DCCB;
+    --mini-secondary: #2B2A26; --mini-secondary-ink: #FFFFFF;
+    --mini-help: #5C8C7A; --mini-help-shadow: rgba(92,140,122,0.35);
+    --mini-selected-bg: #F6DCCB; --mini-selected-text: #6E2812;
+    --mini-stat-bg: #F1ECE3; --mini-stat-icon-bg: #2B2A26; --mini-stat-icon-fg: #D9582B;
+  }
+
+  /* D11 — Citrus — soft mango on warm bone, between Court and Sunrise */
+  .d11 {
+    --mini-primary: #F2A41C; --mini-primary-ink: #1F1A12;
+    --mini-soft: #FCEAC5;
+    --mini-secondary: #1F1A12; --mini-secondary-ink: #FFFFFF;
+    --mini-help: #4FA88B; --mini-help-shadow: rgba(79,168,139,0.35);
+    --mini-selected-bg: #FCEAC5; --mini-selected-text: #5A3F0A;
+    --mini-stat-bg: #F4F0E8; --mini-stat-icon-bg: #1F1A12; --mini-stat-icon-fg: #F2A41C;
+  }
+
+  /* D12 — Orbit — dark charcoal + safety orange (from screenshot 1) */
+  .d12 {
+    --mini-primary: #FF6A00; --mini-primary-ink: #0E0E10;
+    --mini-soft: #2A1B11;
+    --mini-secondary: #FFFFFF; --mini-secondary-ink: #0E0E10;
+    --mini-help: #34D17F; --mini-help-shadow: rgba(52,209,127,0.40);
+    --mini-canvas: #16161A;
+    --mini-text-2: #8E8E94;
+    --mini-icon: #2C2C32;
+    --mini-selected-bg: #232328; --mini-selected-text: #FFFFFF;
+    --mini-stat-bg: #1B1B20; --mini-stat-icon-bg: #FF6A00; --mini-stat-icon-fg: #0E0E10;
+  }
+  .d12 .preview-card {
+    background: #1A1A1F;
+    border-color: #26262C;
+    color: #ECECEE;
+    box-shadow: none;
+  }
+  .d12 .preview-card .label { color: #6F6F76; }
+  .d12 .stat .num { color: #FFFFFF; }
+  .d12 .stat .lbl { color: #8E8E94; }
+  .d12 .mini-row { color: #8E8E94; }
+  .d12 .p.outline { background: transparent; color: #ECECEE; border-color: #2C2C32; }
+  .d12 .p.ink { background: #FFFFFF; color: #0E0E10; }
+  .d12 .p.ink .num { background: rgba(0,0,0,0.12); color: #0E0E10; }
+  .d12 .cta.ghost { color: #ECECEE; border-color: #FF6A00; }
+  .d12 .fab-demo .ftxt { color: #8E8E94; }
+
+  /* D13 — Atlas — light, soft greys + spectrum priority chips (from screenshot 2) */
+  .d13 {
+    --mini-primary: #0F0F12; --mini-primary-ink: #FFFFFF;
+    --mini-soft: #EDEEF1;
+    --mini-secondary: #0F0F12; --mini-secondary-ink: #FFFFFF;
+    --mini-help: #5B6CFF; --mini-help-shadow: rgba(91,108,255,0.30);
+    --mini-selected-bg: #EDEEF1; --mini-selected-text: #0F0F12;
+    --mini-stat-bg: #F4F5F7; --mini-stat-icon-bg: #0F0F12; --mini-stat-icon-fg: #FFFFFF;
+  }
+
+  /* D9 — Neon — dark mode + neon green */
+  .d9 {
+    --mini-primary: #B8FF1A; --mini-primary-ink: #0B0F0A;
+    --mini-soft: #1F2A18;
+    --mini-secondary: #FFFFFF; --mini-secondary-ink: #0B0F0A;
+    --mini-help: #B8FF1A; --mini-help-shadow: rgba(184,255,26,0.45);
+    --mini-canvas: #0E1310;
+    --mini-text-2: #8B948A;
+    --mini-icon: #2A332A;
+    --mini-selected-bg: #1A2014; --mini-selected-text: #B8FF1A;
+    --mini-stat-bg: #161B14; --mini-stat-icon-bg: #B8FF1A; --mini-stat-icon-fg: #0B0F0A;
+  }
+  /* Neon needs dark-card overrides on its preview cards */
+  .d9 .preview-card {
+    background: #141914;
+    border-color: #232A22;
+    color: #E6EBE3;
+    box-shadow: none;
+  }
+  .d9 .preview-card .label { color: #6E776B; }
+  .d9 .stat .num { color: #E6EBE3; }
+  .d9 .stat .lbl { color: #8B948A; }
+  .d9 .mini-row { color: #8B948A; }
+  .d9 .p.outline { background: transparent; color: #E6EBE3; border-color: #2A332A; }
+  .d9 .p.ink { background: #FFFFFF; color: #0B0F0A; }
+  .d9 .p.ink .num { background: rgba(0,0,0,0.12); color: #0B0F0A; }
+  .d9 .cta.ghost { color: #E6EBE3; border-color: #B8FF1A; }
+  .d9 .fab-demo .ftxt { color: #8B948A; }
+
+  /* domain context block */
+  .domain-context {
+    background: var(--surface-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--r-card);
+    padding: 32px;
+    margin-bottom: 64px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 32px;
+  }
+  .domain-context h3 {
+    font: 600 11px/1 var(--font-ui);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin: 0 0 10px;
+  }
+  .domain-context p {
+    font: var(--t-body); color: var(--text-secondary);
+    margin: 0;
+  }
+  .domain-context p strong {
+    color: var(--text-primary); font-weight: 600;
+  }
+
+  /* recommendation footer */
+  .reco {
+    background: var(--ekklo-ink);
+    color: white;
+    border-radius: 16px;
+    padding: 40px 44px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .reco h2 {
+    font: 600 22px/1.25 var(--font-ui);
+    margin: 0 0 12px;
+    color: white;
+  }
+  .reco p {
+    font: 400 14px/1.55 var(--font-ui);
+    color: rgba(255,255,255,0.7);
+    margin: 0 0 16px;
+  }
+  .reco ul {
+    margin: 0; padding: 0; list-style: none;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .reco li {
+    display: grid;
+    grid-template-columns: 14px 1fr;
+    gap: 14px;
+    align-items: start;
+    font: 400 14px/1.5 var(--font-ui);
+    color: rgba(255,255,255,0.85);
+  }
+  .reco li::before {
+    content: '';
+    width: 14px; height: 14px;
+    border-radius: 4px;
+    background: var(--li-color, var(--ekklo-lime));
+    margin-top: 4px;
+  }
+  .reco li strong {
+    color: white; font-weight: 600;
+  }
+
+  .next {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    font: var(--t-caption);
+    color: rgba(255,255,255,0.6);
+  }
+  .next strong { color: white; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<header class="spec-header">
+  <div class="eyebrow">Foundations · Color · Proposals</div>
+  <h1>Five color directions for Ekklo</h1>
+  <p>Same architecture as today (one accent, one ink, one helper, neutrals everywhere else) — but tuned for different fitness-coach archetypes. Each direction is a complete, swappable system. The current Court palette is included as direction 1 so you can compare like-for-like.</p>
+</header>
+
+<section class="domain-context">
+  <div>
+    <h3>Who uses Ekklo</h3>
+    <p>Independent <strong>fitness &amp; wellness coaches</strong> — personal trainers, nutritionists, online programs, boutique studios.</p>
+  </div>
+  <div>
+    <h3>What they do here</h3>
+    <p>Manage <strong>clients, sessions, programs, payments</strong>. The app is a dense operator console, not a workout app.</p>
+  </div>
+  <div>
+    <h3>What the color does</h3>
+    <p>Cut through density. Point at the <strong>next action</strong> on a busy screen. Stay calm everywhere else.</p>
+  </div>
+  <div>
+    <h3>What to avoid</h3>
+    <p>Generic "tech-startup" blues. Aggressive bodybuilder reds. Anything that fights the data-heavy tables and calendars.</p>
+  </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────────── -->
+<!-- DIRECTION 1 — COURT (current)                          -->
+<!-- ────────────────────────────────────────────────────── -->
+<section class="direction d1">
+  <div class="dir-head">
+    <div>
+      <p class="dir-num">Direction 01 · Current</p>
+      <h2 class="dir-name">Court</h2>
+      <p class="dir-tag">The system today. Tennis-court lime against near-black, with a mint help moment. Reads as fresh, sporty, slightly playful — never aggressive. Strongest at signaling "the one thing to do next" because lime is so rare in business UI.</p>
+    </div>
+    <div class="accent-strip">
+      <div style="background:#D8F11A"></div>
+      <div style="background:#EEFBA5"></div>
+      <div style="background:#1A1A1A"></div>
+      <div style="background:#1ED77A"></div>
+      <div style="background:#FAFAFA"></div>
+    </div>
+  </div>
+
+  <div class="palette">
+    <div class="sw"><div class="chip" style="background:#D8F11A"></div><div class="meta"><p class="role">Primary</p><p class="name">Lime</p><p class="hex">#D8F11A</p></div></div>
+    <div class="sw"><div class="chip" style="background:#EEFBA5"></div><div class="meta"><p class="role">Soft</p><p class="name">Lime Soft</p><p class="hex">#EEFBA5</p></div></div>
+    <div class="sw"><div class="chip" style="background:#1A1A1A"></div><div class="meta"><p class="role">Ink</p><p class="name">Near Black</p><p class="hex">#1A1A1A</p></div></div>
+    <div class="sw"><div class="chip" style="background:#1ED77A"></div><div class="meta"><p class="role">Helper</p><p class="name">Mint</p><p class="hex">#1ED77A</p></div></div>
+    <div class="sw"><div class="chip" style="background:#FAFAFA;border-bottom:1px solid var(--border-subtle)"></div><div class="meta"><p class="role">Canvas</p><p class="name">Off White</p><p class="hex">#FAFAFA</p></div></div>
+    <div class="sw"><div class="chip" style="background:#F4F4F2;border-bottom:1px solid var(--border-subtle)"></div><div class="meta"><p class="role">Sunken</p><p class="name">Stone</p><p class="hex">#F4F4F2</p></div></div>
+  </div>
+
+  <div class="applied">
+    <div class="preview-card">
+      <p class="label">Sidebar selection</p>
+      <div class="mini-sidebar">
+        <div class="mini-row"><span class="dot"></span>Clients</div>
+        <div class="mini-row selected"><span class="dot"></span>Programs</div>
+        <div class="mini-row"><span class="dot"></span>Calendar</div>
+        <div class="mini-row"><span class="dot"></span>Accounting</div>
+      </div>
+    </div>
+    <div class="preview-card">
+      <p class="label">CTA hierarchy</p>
+      <div class="cta-stack">
+        <button class="cta primary">Create program</button>
+        <button class="cta secondary">Save as draft</button>
+        <button class="cta ghost">+ New folder</button>
+      </div>
+      <div class="pill-row" style="margin-top:18px">
+        <span class="p solid">Active</span>
+        <span class="p soft">New</span>
+        <span class="p ink">All<span class="num">42</span></span>
+        <span class="p outline">Filters</span>
+      </div>
+    </div>
+    <div class="preview-card">
+      <p class="label">Help &amp; data tile</p>
+      <div class="stat">
+        <div class="icon">€</div>
+        <div><p class="num">€4,280</p><p class="lbl">Pending invoices · 6</p></div>
+      </div>
+      <div class="fab-demo">
+        <div class="fab">?</div>
+        <p class="ftxt">Mint helper FAB sits independent of the brand pair — never competes with the primary CTA.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────────── -->
+<!-- DIRECTION 2 — SUNRISE                                  -->
+<!-- ────────────────────────────────────────────────────── -->
+<section class="direction d2">
+  <div class="dir-head">
+    <div>
+      <p class="dir-num">Direction 02</p>
+      <h2 class="dir-name">Sunrise</h2>
+      <p class="dir-tag">Warm coral on warm graphite. Borrows from sunrise-run, marathon, recovery-meal photography — the visual language clients already associate with their coach. Friendlier than lime, still energetic. Pairs naturally with food + lifestyle imagery in the Nutrition module.</p>
+    </div>
+    <div class="accent-strip">
+      <div style="background:#FF6A3D"></div>
+      <div style="background:#FFE4D6"></div>
+      <div style="background:#1F1A17"></div>
+      <div style="background:#2BB6A5"></div>
+      <div style="background:#FAF7F4"></div>
+    </div>
+  </div>
+
+  <div class="palette">
+    <div class="sw"><div class="chip" style="background:#FF6A3D"></div><div class="meta"><p class="role">Primary</p><p class="name">Coral</p><p class="hex">#FF6A3D</p></div></div>
+    <div class="sw"><div class="chip" style="background:#FFE4D6"></div><div class="meta"><p class="role">Soft</p><p class="name">Peach</p><p class="hex">#FFE4D6</p></div></div>
+    <div class="sw"><div class="chip" style="background:#1F1A17"></div><div class="meta"><p class="role">Ink</p><p class="name">Espresso</p><p class="hex">#1F1A17</p></div></div>
+    <div class="sw"><div class="chip" style="background:#2BB6A5"></div><div class="meta"><p class="role">Helper</p><p class="name">Teal</p><p class="hex">#2BB6A5</p></div></div>
+    <div class="sw"><div class="chip" style="background:#FAF7F4;border-bottom:1px solid var(--border-subtle)"></div><div class="meta"><p class="role">Canvas</p><p class="name">Linen</p><p class="hex">#FAF7F4</p></div></div>
+    <div class="sw"><div class="chip" style="background:#F2EBE4;border-bottom:1px solid var(--border-subtle)"></div><div class="meta"><p class="role">Sunken</p><p class="name">Sand</p><p class="hex">#F2EBE4</p></div></div>
+  </div>
+
+  <div class="applied">
+    <div class="preview-card" style="background:#FAF7F4">
+      <p class="label">Sidebar selection</p>
+      <div class="mini-sidebar" style="background:#FAF7F4">
+        <div class="mini-row"><span class="dot"></span>Clients</div>
+        <div class="mini-row selected"><span class="dot"></span>Nutrition</div>
+        <div class="mini-row"><span class="dot"></span>Calendar</div>
+        <div class="mini-row"><span class="dot"></span>Accounting</div>
+      </div>
+    </div>
+    <div class="preview-card">
+      <p class="label">CTA hierarchy</p>
+      <div class="cta-stack">
+        <button class="cta primary">Send meal plan</button>
+        <button class="cta secondary">Save draft</button>
+        <button class="cta ghost">+ Add recipe</button>
+      </div>
+      <div class="pill-row" style="margin-top:18px">
+        <span class="p solid">Active</span>
+        <span class="p soft">New</span>
+        <span class="p ink">All<span class="num">42</span></span>
+        <span class="p outline">Filters</span>
+      </div>
+    </div>
+    <div class="preview-card">
+      <p class="label">Help &amp; data tile</p>
+      <div class="stat" style="background:#F2EBE4">
+        <div class="icon">€</div>
+        <div><p class="num">€4,280</p><p class="lbl">Pending invoices · 6</p></div>
+      </div>
+      <div class="fab-demo" style="background:#FAF7F4">
+        <div class="fab">?</div>
+        <p class="ftxt">Teal helper reads as "calm support" against the warm coral CTA — complementary on the wheel, never competing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────────── -->
+<!-- DIRECTION 3 — PULSE                                    -->
+<!-- ────────────────────────────────────────────────────── -->
+<section class="direction d3">
+  <div class="dir-head">
+    <div>
+      <p class="dir-num">Direction 03</p>
+      <h2 class="dir-name">Pulse</h2>
+      <p class="dir-tag">Electric magenta on deep indigo-black. Aimed at the HIIT / strength / boxing coach archetype where intensity sells. Indigo (not pure black) gives screens a slightly nocturnal "studio after 6pm" feel. Most distinctive of the five — strong opinion, polarizing on purpose.</p>
+    </div>
+    <div class="accent-strip">
+      <div style="background:#F0286C"></div>
+      <div style="background:#FCDDE7"></div>
+      <div style="background:#14132B"></div>
+      <div style="background:#5B7CFA"></div>
+      <div style="background:#F8F8FB"></div>
+    </div>
+  </div>
+
+  <div class="palette">
+    <div class="sw"><div class="chip" style="background:#F0286C"></div><div class="meta"><p class="role">Primary</p><p class="name">Magenta</p><p class="hex">#F0286C</p></div></div>
+    <div class="sw"><div class="chip" style="background:#FCDDE7"></div><div class="meta"><p class="role">Soft</p><p class="name">Blush</p><p class="hex">#FCDDE7</p></div></div>
+    <div class="sw"><div class="chip" style="background:#14132B"></div><div class="meta"><p class="role">Ink</p><p class="name">Indigo</p><p class="hex">#14132B</p></div></div>
+    <div class="sw"><div class="chip" style="background:#5B7CFA"></div><div class="meta"><p class="role">Helper</p><p class="name">Periwinkle</p><p class="hex">#5B7CFA</p></div></div>
+    <div class="sw"><div class="chip" style="background:#F8F8FB;border-bottom:1px solid var(--border-subtle)"></div><div class="meta"><p class="role">Canvas</p><p class="name">Mist</p><p class="hex">#F8F8FB</p></div></div>
+    <div class="sw"><div class="chip" style="background:#EFEFF5;border-bottom:1px solid var(--border-subtle)"></div><div class="meta"><p class="role">Sunken</p><p class="name">Fog</p><p class="hex">#EFEFF5</p></div></div>
+  </div>
+
+  <div class="applied">
+    <div class="preview-card">
+      <p class="label">Sidebar selection</p>
+      <div class="mini-sidebar" style="background:#F8F8FB">
+        <div class="mini-row"><span class="dot"></span>Clients</div>
+        <div class="mini-row selected"><span class="dot"></span>Programs</div>
+        <div class="mini-row"><span class="dot"></span>Tracking</div>
+        <div class="mini-row"><span class="dot"></span>Accounting</div>
+      </div>
+    </div>
+    <div class="preview-card">
+      <p class="label">CTA hierarchy</p>
+      <div class="cta-stack">
+        <button class="cta primary">Start session</button>
+        <button class="cta secondary">Save draft</button>
+        <button class="cta ghost">+ New circuit</button>
+      </div>
+      <div class="pill-row" style="margin-top:18px">
+        <span class="p solid">Live</span>
+        <span class="p soft">New</span>
+        <span class="p ink">All<span class="num">42</span></span>
+        <span class="p outline">Filters</span>
+      </div>
+    </div>
+    <div class="preview-card">
+      <p class="label">Help &amp; data tile</p>
+      <div class="stat" style="background:#EFEFF5">
+        <div class="icon">€</div>
+        <div><p class="num">€4,280</p><p class="lbl">Pending invoices · 6</p></div>
+      </div>
+      <div class="fab-demo" style="background:#F8F8FB">
+        <div class="fab">?</div>
+        <p class="ftxt">Periwinkle help reads as "still on the team" — sits in the same blue family as the indigo ink.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────────── -->
+<!-- DIRECTION 4 — TRAIL                                    -->
+<!-- ────────────────────────────────────────────────────── -->
+<section class="direction d4">
+  <div class="dir-head">
+    <div>
+      <p class="dir-num">Direction 04</p>
+      <h2 class="dir-name">Trail</h2>
+      <p class="dir-tag">Moss green and clay against warm bark. Built for the wellness / outdoor / yoga / running-club coach. Quietest of the five — the accent doesn't shout, the system feels like a notebook. Best fit if Ekklo wants to lean into the longevity, holistic-health side of the market.</p>
+    </div>
+    <div class="accent-strip">
+      <div style="background:#5B8E3A"></div>
+      <div style="background:#DCEDCB"></div>
+      <div style="background:#2A2620"></div>
+      <div style="background:#C57544"></div>
+      <div style="background:#F8F6F1"></div>
+    </div>
+  </div>
+
+  <div class="palette">
+    <div class="sw"><div class="chip" style="background:#5B8E3A"></div><div class="meta"><p class="role">Primary</p><p class="name">Moss</p><p class="hex">#5B8E3A</p></div></div>
+    <div class="sw"><div class="chip" style="background:#DCEDCB"></div><div class="meta"><p class="role">Soft</p><p class="name">Sage</p><p class="hex">#DCEDCB</p></div></div>
+    <div class="sw"><div class="chip" style="background:#2A2620"></div><div class="meta"><p class="role">Ink</p><p class="name">Bark</p><p class="hex">#2A2620</p></div></div>
+    <div class="sw"><div class="chip" style="background:#C57544"></div><div class="meta"><p class="role">Helper</p><p class="name">Clay</p><p class="hex">#C57544</p></div></div>
+    <div class="sw"><div class="chip" style="background:#F8F6F1;border-bottom:1px solid var(--border-subtle)"></div><div class="meta"><p class="role">Canvas</p><p class="name">Paper</p><p class="hex">#F8F6F1</p></div></div>
+    <div class="sw"><div class="chip" style="background:#EFEBE2;border-bottom:1px solid var(--border-subtle)"></div><div class="meta"><p class="role">Sunken</p><p class="name">Oat</p><p class="hex">#EFEBE2</p></div></div>
+  </div>
+
+  <div class="applied">
+    <div class="preview-card" style="background:#FCFAF5">
+      <p class="label">Sidebar selection</p>
+      <div class="mini-sidebar" style="background:#F8F6F1">
+        <div class="mini-row"><span class="dot"></span>Clients</div>
+        <div class="mini-row selected"><span class="dot" style="background:white"></span>Programs</div>
+        <div class="mini-row"><span class="dot"></span>Calendar</div>
+        <div class="mini-row"><span class="dot"></span>Accounting</div>
+      </div>
+    </div>
+    <div class="preview-card">
+      <p class="label">CTA hierarchy</p>
+      <div class="cta-stack">
+        <button class="cta primary">Publish program</button>
+        <button class="cta secondary">Save draft</button>
+        <button class="cta ghost">+ New phase</button>
+      </div>
+      <div class="pill-row" style="margin-top:18px">
+        <span class="p solid">Active</span>
+        <span class="p soft">New</span>
+        <span class="p ink">All<span class="num">42</span></span>
+        <span class="p outline">Filters</span>
+      </div>
+    </div>
+    <div class="preview-card">
+      <p class="label">Help &amp; data tile</p>
+      <div class="stat" style="background:#EFEBE2">
+        <div class="icon">€</div>
+        <div><p class="num">€4,280</p><p class="lbl">Pending invoices · 6</p></div>
+      </div>
+      <div class="fab-demo" style="background:#F8F6F1">
+        <div class="fab">?</div>
+        <p class="ftxt">Clay helper is the warmest moment in an otherwise cool palette — naturally draws the eye for "I need help".</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────────── -->
+<!-- DIRECTION 5 — STUDIO                                   -->
+<!-- ────────────────────────────────────────────────────── -->
+<section class="direction d5">
+  <div class="dir-head">
+    <div>
+      <p class="dir-num">Direction 05</p>
+      <h2 class="dir-name">Studio</h2>
+      <p class="dir-tag">Confident cobalt blue, near-black ink, a single warm orange for help. The "premium SaaS for coaches" direction — feels closer to Stripe or Linear than to a fitness app. Best if Ekklo wants to be read as a serious business tool first, sport second. Quietly upmarket; pairs well with photography of any sport.</p>
+    </div>
+    <div class="accent-strip">
+      <div style="background:#2563FF"></div>
+      <div style="background:#DDE7FF"></div>
+      <div style="background:#0E1116"></div>
+      <div style="background:#FF8A4C"></div>
+      <div style="background:#F7F8FB"></div>
+    </div>
+  </div>
+
+  <div class="palette">
+    <div class="sw"><div class="chip" style="background:#2563FF"></div><div class="meta"><p class="role">Primary</p><p class="name">Cobalt</p><p class="hex">#2563FF</p></div></div>
+    <div class="sw"><div class="chip" style="background:#DDE7FF"></div><div class="meta"><p class="role">Soft</p><p class="name">Sky</p><p class="hex">#DDE7FF</p></div></div>
+    <div class="sw"><div class="chip" style="background:#0E1116"></div><div class="meta"><p class="role">Ink</p><p class="name">Graphite</p><p class="hex">#0E1116</p></div></div>
+    <div class="sw"><div class="chip" style="background:#FF8A4C"></div><div class="meta"><p class="role">Helper</p><p class="name">Amber</p><p class="hex">#FF8A4C</p></div></div>
+    <div class="sw"><div class="chip" style="background:#F7F8FB;border-bottom:1px solid var(--border-subtle)"></div><div class="meta"><p class="role">Canvas</p><p class="name">Frost</p><p class="hex">#F7F8FB</p></div></div>
+    <div class="sw"><div class="chip" style="background:#EEF1F6;border-bottom:1px solid var(--border-subtle)"></div><div class="meta"><p class="role">Sunken</p><p class="name">Cloud</p><p class="hex">#EEF1F6</p></div></div>
+  </div>
+
+  <div class="applied">
+    <div class="preview-card">
+      <p class="label">Sidebar selection</p>
+      <div class="mini-sidebar" style="background:#F7F8FB">
+        <div class="mini-row"><span class="dot"></span>Clients</div>
+        <div class="mini-row selected"><span class="dot" style="background:white"></span>Programs</div>
+        <div class="mini-row"><span class="dot"></span>Calendar</div>
+        <div class="mini-row"><span class="dot"></span>Accounting</div>
+      </div>
+    </div>
+    <div class="preview-card">
+      <p class="label">CTA hierarchy</p>
+      <div class="cta-stack">
+        <button class="cta primary">Invite client</button>
+        <button class="cta secondary">Save draft</button>
+        <button class="cta ghost">+ New folder</button>
+      </div>
+      <div class="pill-row" style="margin-top:18px">
+        <span class="p solid">Active</span>
+        <span class="p soft">New</span>
+        <span class="p ink">All<span class="num">42</span></span>
+        <span class="p outline">Filters</span>
+      </div>
+    </div>
+    <div class="preview-card">
+      <p class="label">Help &amp; data tile</p>
+      <div class="stat" style="background:#EEF1F6">
+        <div class="icon">€</div>
+        <div><p class="num">€4,280</p><p class="lbl">Pending invoices · 6</p></div>
+      </div>
+      <div class="fab-demo" style="background:#F7F8FB">
+        <div class="fab">?</div>
+        <p class="ftxt">Amber help is the only warm color on screen — a single bright moment in an otherwise blue + neutral system.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────────── -->
+<!-- DIRECTION 6 — FORGE                                    -->
+<!-- ────────────────────────────────────────────────────── -->
+<section class="direction d6">
+  <div class="dir-head">
+    <div>
+      <p class="dir-num">Direction 06 · Your recipe</p>
+      <h2 class="dir-name">Forge</h2>
+      <p class="dir-tag">The brief you described literally: <strong>deep green as the primary surface/ink</strong>, <strong>orange as the action color</strong>, white &amp; warm grey for everything in between. Reads as confident and grounded — green carries the brand, orange does the pointing. A small red accent is reserved for destructive moments only.</p>
+    </div>
+    <div class="accent-strip">
+      <div style="background:#FF6A2C"></div>
+      <div style="background:#FFE2D0"></div>
+      <div style="background:#1F3A2A"></div>
+      <div style="background:#E63946"></div>
+      <div style="background:#F7F6F2"></div>
+    </div>
+  </div>
+
+  <div class="palette">
+    <div class="sw"><div class="chip" style="background:#FF6A2C"></div><div class="meta"><p class="role">Action</p><p class="name">Orange</p><p class="hex">#FF6A2C</p></div></div>
+    <div class="sw"><div class="chip" style="background:#FFE2D0"></div><div class="meta"><p class="role">Soft</p><p class="name">Apricot</p><p class="hex">#FFE2D0</p></div></div>
+    <div class="sw"><div class="chip" style="background:#1F3A2A"></div><div class="meta"><p class="role">Primary</p><p class="name">Forest</p><p class="hex">#1F3A2A</p></div></div>
+    <div class="sw"><div class="chip" style="background:#E63946"></div><div class="meta"><p class="role">Danger</p><p class="name">Signal Red</p><p class="hex">#E63946</p></div></div>
+    <div class="sw"><div class="chip" style="background:#F7F6F2;border-bottom:1px solid var(--border-subtle)"></div><div class="meta"><p class="role">Canvas</p><p class="name">Bone</p><p class="hex">#F7F6F2</p></div></div>
+    <div class="sw"><div class="chip" style="background:#ECEAE3;border-bottom:1px solid var(--border-subtle)"></div><div class="meta"><p class="role">Sunken</p><p class="name">Ash</p><p class="hex">#ECEAE3</p></div></div>
+  </div>
+
+  <div class="applied">
+    <div class="preview-card">
+      <p class="label">Sidebar selection</p>
+      <div class="mini-sidebar" style="background:#F7F6F2">
+        <div class="mini-row"><span class="dot"></span>Clients</div>
+        <div class="mini-row selected"><span class="dot" style="background:#1F3A2A"></span>Programs</div>
+        <div class="mini-row"><span class="dot"></span>Calendar</div>
+        <div class="mini-row"><span class="dot"></span>Accounting</div>
+      </div>
+    </div>
+    <div class="preview-card">
+      <p class="label">CTA hierarchy</p>
+      <div class="cta-stack">
+        <button class="cta primary">Create program</button>
+        <button class="cta secondary">Save draft</button>
+        <button class="cta ghost">+ New folder</button>
+      </div>
+      <div class="pill-row" style="margin-top:18px">
+        <span class="p solid">Action</span>
+        <span class="p soft">New</span>
+        <span class="p ink">All<span class="num">42</span></span>
+        <span class="p outline">Filters</span>
+      </div>
+    </div>
+    <div class="preview-card">
+      <p class="label">Help &amp; data tile</p>
+      <div class="stat" style="background:#F2F4F1">
+        <div class="icon">€</div>
+        <div><p class="num">€4,280</p><p class="lbl">Pending invoices · 6</p></div>
+      </div>
+      <div class="fab-demo" style="background:#F7F6F2">
+        <div class="fab" style="background:#E63946;box-shadow:0 8px 24px rgba(230,57,70,0.30)">?</div>
+        <p class="ftxt">Red shows up only as a danger / urgent helper — never on a default action. Orange owns "do this next".</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────────── -->
+<!-- DIRECTION 7 — IRON                                     -->
+<!-- ────────────────────────────────────────────────────── -->
+<section class="direction d7">
+  <div class="dir-head">
+    <div>
+      <p class="dir-num">Direction 07 · Gym / intense</p>
+      <h2 class="dir-name">Iron</h2>
+      <p class="dir-tag">Pure black, signal red, a sharp orange for help. Aggressive and energetic — built for the strength, CrossFit, boxing, HYROX coach who wants the app to feel like the gym. Highest-contrast option of the set; every CTA punches.</p>
+    </div>
+    <div class="accent-strip">
+      <div style="background:#E11D2E"></div>
+      <div style="background:#FBD9DC"></div>
+      <div style="background:#0B0B0C"></div>
+      <div style="background:#FF7A1A"></div>
+      <div style="background:#F6F6F7"></div>
+    </div>
+  </div>
+
+  <div class="palette">
+    <div class="sw"><div class="chip" style="background:#E11D2E"></div><div class="meta"><p class="role">Primary</p><p class="name">Signal Red</p><p class="hex">#E11D2E</p></div></div>
+    <div class="sw"><div class="chip" style="background:#FBD9DC"></div><div class="meta"><p class="role">Soft</p><p class="name">Rose</p><p class="hex">#FBD9DC</p></div></div>
+    <div class="sw"><div class="chip" style="background:#0B0B0C"></div><div class="meta"><p class="role">Ink</p><p class="name">Black</p><p class="hex">#0B0B0C</p></div></div>
+    <div class="sw"><div class="chip" style="background:#FF7A1A"></div><div class="meta"><p class="role">Helper</p><p class="name">Flame</p><p class="hex">#FF7A1A</p></div></div>
+    <div class="sw"><div class="chip" style="background:#F6F6F7;border-bottom:1px solid var(--border-subtle)"></div><div class="meta"><p class="role">Canvas</p><p class="name">Concrete</p><p class="hex">#F6F6F7</p></div></div>
+    <div class="sw"><div class="chip" style="background:#E9E9EB;border-bottom:1px solid var(--border-subtle)"></div><div class="meta"><p class="role">Sunken</p><p class="name">Steel</p><p class="hex">#E9E9EB</p></div></div>
+  </div>
+
+  <div class="applied">
+    <div class="preview-card">
+      <p class="label">Sidebar selection</p>
+      <div class="mini-sidebar" style="background:#F6F6F7">
+        <div class="mini-row"><span class="dot"></span>Clients</div>
+        <div class="mini-row selected"><span class="dot" style="background:#0B0B0C"></span>Programs</div>
+        <div class="mini-row"><span class="dot"></span>Tracking</div>
+        <div class="mini-row"><span class="dot"></span>Accounting</div>
+      </div>
+    </div>
+    <div class="preview-card">
+      <p class="label">CTA hierarchy</p>
+      <div class="cta-stack">
+        <button class="cta primary">Start session</button>
+        <button class="cta secondary">Save draft</button>
+        <button class="cta ghost">+ New circuit</button>
+      </div>
+      <div class="pill-row" style="margin-top:18px">
+        <span class="p solid">Live</span>
+        <span class="p soft">New</span>
+        <span class="p ink">All<span class="num">42</span></span>
+        <span class="p outline">Filters</span>
+      </div>
+    </div>
+    <div class="preview-card">
+      <p class="label">Help &amp; data tile</p>
+      <div class="stat" style="background:#F2F2F3">
+        <div class="icon">€</div>
+        <div><p class="num">€4,280</p><p class="lbl">Pending invoices · 6</p></div>
+      </div>
+      <div class="fab-demo" style="background:#F6F6F7">
+        <div class="fab">?</div>
+        <p class="ftxt">Flame helper sits adjacent to red on the wheel — same family, lower urgency. Reads as "support" not "alarm".</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────────── -->
+<!-- DIRECTION 8 — MEADOW                                   -->
+<!-- ────────────────────────────────────────────────────── -->
+<section class="direction d8">
+  <div class="dir-head">
+    <div>
+      <p class="dir-num">Direction 08 · Wellness / lifestyle</p>
+      <h2 class="dir-name">Meadow</h2>
+      <p class="dir-tag">Health-club green, generous white, a soft sky blue for help. Calm and clinical-adjacent — the palette of yoga studios, nutrition coaches, recovery and longevity programs. Lowest visual aggression of the set; ages well.</p>
+    </div>
+    <div class="accent-strip">
+      <div style="background:#2F9E6E"></div>
+      <div style="background:#D6EFE2"></div>
+      <div style="background:#1B2A2F"></div>
+      <div style="background:#6FB3D1"></div>
+      <div style="background:#FBFCFB"></div>
+    </div>
+  </div>
+
+  <div class="palette">
+    <div class="sw"><div class="chip" style="background:#2F9E6E"></div><div class="meta"><p class="role">Primary</p><p class="name">Meadow</p><p class="hex">#2F9E6E</p></div></div>
+    <div class="sw"><div class="chip" style="background:#D6EFE2"></div><div class="meta"><p class="role">Soft</p><p class="name">Mint</p><p class="hex">#D6EFE2</p></div></div>
+    <div class="sw"><div class="chip" style="background:#1B2A2F"></div><div class="meta"><p class="role">Ink</p><p class="name">Pine</p><p class="hex">#1B2A2F</p></div></div>
+    <div class="sw"><div class="chip" style="background:#6FB3D1"></div><div class="meta"><p class="role">Helper</p><p class="name">Sky</p><p class="hex">#6FB3D1</p></div></div>
+    <div class="sw"><div class="chip" style="background:#FBFCFB;border-bottom:1px solid var(--border-subtle)"></div><div class="meta"><p class="role">Canvas</p><p class="name">Snow</p><p class="hex">#FBFCFB</p></div></div>
+    <div class="sw"><div class="chip" style="background:#EEF2EF;border-bottom:1px solid var(--border-subtle)"></div><div class="meta"><p class="role">Sunken</p><p class="name">Cloud</p><p class="hex">#EEF2EF</p></div></div>
+  </div>
+
+  <div class="applied">
+    <div class="preview-card">
+      <p class="label">Sidebar selection</p>
+      <div class="mini-sidebar" style="background:#FBFCFB">
+        <div class="mini-row"><span class="dot"></span>Clients</div>
+        <div class="mini-row selected"><span class="dot" style="background:#1B2A2F"></span>Nutrition</div>
+        <div class="mini-row"><span class="dot"></span>Calendar</div>
+        <div class="mini-row"><span class="dot"></span>Accounting</div>
+      </div>
+    </div>
+    <div class="preview-card">
+      <p class="label">CTA hierarchy</p>
+      <div class="cta-stack">
+        <button class="cta primary">Send meal plan</button>
+        <button class="cta secondary">Save draft</button>
+        <button class="cta ghost">+ Add recipe</button>
+      </div>
+      <div class="pill-row" style="margin-top:18px">
+        <span class="p solid">Active</span>
+        <span class="p soft">New</span>
+        <span class="p ink">All<span class="num">42</span></span>
+        <span class="p outline">Filters</span>
+      </div>
+    </div>
+    <div class="preview-card">
+      <p class="label">Help &amp; data tile</p>
+      <div class="stat" style="background:#EEF4F1">
+        <div class="icon">€</div>
+        <div><p class="num">€4,280</p><p class="lbl">Pending invoices · 6</p></div>
+      </div>
+      <div class="fab-demo" style="background:#FBFCFB">
+        <div class="fab">?</div>
+        <p class="ftxt">Soft sky helper reads as "calm" — the analogous neighbour to meadow green. Nothing on screen feels urgent.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────────── -->
+<!-- DIRECTION 9 — NEON (dark mode)                         -->
+<!-- ────────────────────────────────────────────────────── -->
+<section class="direction d9">
+  <div class="dir-head">
+    <div>
+      <p class="dir-num">Direction 09 · Modern premium</p>
+      <h2 class="dir-name">Neon</h2>
+      <p class="dir-tag">Default-dark UI with a single neon-green accent. Sleek, techy, performance-coded — the palette of Whoop, Strava-pro, Oura. Best fit if Ekklo wants to read as <em>tool for serious athletes &amp; data-driven coaches</em>. Light mode ships as a secondary theme, not the default.</p>
+    </div>
+    <div class="accent-strip">
+      <div style="background:#B8FF1A"></div>
+      <div style="background:#1F2A18"></div>
+      <div style="background:#0E1310"></div>
+      <div style="background:#FFFFFF"></div>
+      <div style="background:#161B14"></div>
+    </div>
+  </div>
+
+  <div class="palette">
+    <div class="sw"><div class="chip" style="background:#B8FF1A"></div><div class="meta"><p class="role">Accent</p><p class="name">Neon</p><p class="hex">#B8FF1A</p></div></div>
+    <div class="sw"><div class="chip" style="background:#1F2A18"></div><div class="meta"><p class="role">Soft</p><p class="name">Moss Glow</p><p class="hex">#1F2A18</p></div></div>
+    <div class="sw"><div class="chip" style="background:#0E1310"></div><div class="meta"><p class="role">Canvas</p><p class="name">Obsidian</p><p class="hex">#0E1310</p></div></div>
+    <div class="sw"><div class="chip" style="background:#141914"></div><div class="meta"><p class="role">Card</p><p class="name">Carbon</p><p class="hex">#141914</p></div></div>
+    <div class="sw"><div class="chip" style="background:#232A22"></div><div class="meta"><p class="role">Border</p><p class="name">Graphite</p><p class="hex">#232A22</p></div></div>
+    <div class="sw"><div class="chip" style="background:#FFFFFF;border-bottom:1px solid var(--border-subtle)"></div><div class="meta"><p class="role">Text</p><p class="name">Snow</p><p class="hex">#FFFFFF</p></div></div>
+  </div>
+
+  <div class="applied">
+    <div class="preview-card">
+      <p class="label">Sidebar selection</p>
+      <div class="mini-sidebar" style="background:#0E1310">
+        <div class="mini-row"><span class="dot"></span>Clients</div>
+        <div class="mini-row selected"><span class="dot" style="background:#B8FF1A"></span>Programs</div>
+        <div class="mini-row"><span class="dot"></span>Tracking</div>
+        <div class="mini-row"><span class="dot"></span>Accounting</div>
+      </div>
+    </div>
+    <div class="preview-card">
+      <p class="label">CTA hierarchy</p>
+      <div class="cta-stack">
+        <button class="cta primary">Start session</button>
+        <button class="cta secondary">Save draft</button>
+        <button class="cta ghost">+ New circuit</button>
+      </div>
+      <div class="pill-row" style="margin-top:18px">
+        <span class="p solid">Live</span>
+        <span class="p soft" style="background:#1F2A18;color:#B8FF1A">New</span>
+        <span class="p ink">All<span class="num">42</span></span>
+        <span class="p outline">Filters</span>
+      </div>
+    </div>
+    <div class="preview-card">
+      <p class="label">Help &amp; data tile</p>
+      <div class="stat">
+        <div class="icon">€</div>
+        <div><p class="num">€4,280</p><p class="lbl">Pending invoices · 6</p></div>
+      </div>
+      <div class="fab-demo" style="background:#0E1310">
+        <div class="fab">?</div>
+        <p class="ftxt">Single neon accent does double duty — primary CTA and helper FAB share it. Use sparingly or it stops popping.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────────── -->
+<!-- DIRECTION 10 — HEARTH                                  -->
+<!-- ────────────────────────────────────────────────────── -->
+<section class="direction d10">
+  <div class="dir-head">
+    <div>
+      <p class="dir-num">Direction 10 · Bridges Trail × Sunrise × Forge</p>
+      <h2 class="dir-name">Hearth</h2>
+      <p class="dir-tag">Terracotta on warm cream, with a soft sage helper. Borrows the warm-canvas-and-natural-ink feeling you liked in Trail and Sunrise, then dials the action color toward Forge's orange — but warmer, more clay than highlighter. Confident without shouting; the system the coach trusts on a Tuesday morning.</p>
+    </div>
+    <div class="accent-strip">
+      <div style="background:#D9582B"></div>
+      <div style="background:#F6DCCB"></div>
+      <div style="background:#2B2A26"></div>
+      <div style="background:#5C8C7A"></div>
+      <div style="background:#FAF6EF"></div>
+    </div>
+  </div>
+
+  <div class="palette">
+    <div class="sw"><div class="chip" style="background:#D9582B"></div><div class="meta"><p class="role">Action</p><p class="name">Terracotta</p><p class="hex">#D9582B</p></div></div>
+    <div class="sw"><div class="chip" style="background:#F6DCCB"></div><div class="meta"><p class="role">Soft</p><p class="name">Adobe</p><p class="hex">#F6DCCB</p></div></div>
+    <div class="sw"><div class="chip" style="background:#2B2A26"></div><div class="meta"><p class="role">Ink</p><p class="name">Charcoal</p><p class="hex">#2B2A26</p></div></div>
+    <div class="sw"><div class="chip" style="background:#5C8C7A"></div><div class="meta"><p class="role">Helper</p><p class="name">Sage</p><p class="hex">#5C8C7A</p></div></div>
+    <div class="sw"><div class="chip" style="background:#FAF6EF;border-bottom:1px solid var(--border-subtle)"></div><div class="meta"><p class="role">Canvas</p><p class="name">Cream</p><p class="hex">#FAF6EF</p></div></div>
+    <div class="sw"><div class="chip" style="background:#F1ECE3;border-bottom:1px solid var(--border-subtle)"></div><div class="meta"><p class="role">Sunken</p><p class="name">Linen</p><p class="hex">#F1ECE3</p></div></div>
+  </div>
+
+  <div class="applied">
+    <div class="preview-card" style="background:#FCFAF5">
+      <p class="label">Sidebar selection</p>
+      <div class="mini-sidebar" style="background:#FAF6EF">
+        <div class="mini-row"><span class="dot"></span>Clients</div>
+        <div class="mini-row selected"><span class="dot" style="background:#2B2A26"></span>Programs</div>
+        <div class="mini-row"><span class="dot"></span>Calendar</div>
+        <div class="mini-row"><span class="dot"></span>Accounting</div>
+      </div>
+    </div>
+    <div class="preview-card">
+      <p class="label">CTA hierarchy</p>
+      <div class="cta-stack">
+        <button class="cta primary">Create program</button>
+        <button class="cta secondary">Save draft</button>
+        <button class="cta ghost">+ New folder</button>
+      </div>
+      <div class="pill-row" style="margin-top:18px">
+        <span class="p solid">Action</span>
+        <span class="p soft">New</span>
+        <span class="p ink">All<span class="num">42</span></span>
+        <span class="p outline">Filters</span>
+      </div>
+    </div>
+    <div class="preview-card">
+      <p class="label">Help &amp; data tile</p>
+      <div class="stat" style="background:#F1ECE3">
+        <div class="icon">€</div>
+        <div><p class="num">€4,280</p><p class="lbl">Pending invoices · 6</p></div>
+      </div>
+      <div class="fab-demo" style="background:#FAF6EF">
+        <div class="fab">?</div>
+        <p class="ftxt">Sage helper is the cool note in a warm system — earthy enough to belong, distinct enough to find.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────────── -->
+<!-- DIRECTION 11 — CITRUS                                  -->
+<!-- ────────────────────────────────────────────────────── -->
+<section class="direction d11">
+  <div class="dir-head">
+    <div>
+      <p class="dir-num">Direction 11 · Bridges Court × Sunrise</p>
+      <h2 class="dir-name">Citrus</h2>
+      <p class="dir-tag">A softer, warmer cousin of Court: mango-yellow as the action color, deep coffee ink, a teal-leaning helper. Keeps the &quot;single bright moment on a quiet canvas&quot; feeling that makes Court work, but loses the highlighter-lime edge — friendlier, more approachable, still energetic.</p>
+    </div>
+    <div class="accent-strip">
+      <div style="background:#F2A41C"></div>
+      <div style="background:#FCEAC5"></div>
+      <div style="background:#1F1A12"></div>
+      <div style="background:#4FA88B"></div>
+      <div style="background:#FBF8F1"></div>
+    </div>
+  </div>
+
+  <div class="palette">
+    <div class="sw"><div class="chip" style="background:#F2A41C"></div><div class="meta"><p class="role">Primary</p><p class="name">Mango</p><p class="hex">#F2A41C</p></div></div>
+    <div class="sw"><div class="chip" style="background:#FCEAC5"></div><div class="meta"><p class="role">Soft</p><p class="name">Honey</p><p class="hex">#FCEAC5</p></div></div>
+    <div class="sw"><div class="chip" style="background:#1F1A12"></div><div class="meta"><p class="role">Ink</p><p class="name">Coffee</p><p class="hex">#1F1A12</p></div></div>
+    <div class="sw"><div class="chip" style="background:#4FA88B"></div><div class="meta"><p class="role">Helper</p><p class="name">Jade</p><p class="hex">#4FA88B</p></div></div>
+    <div class="sw"><div class="chip" style="background:#FBF8F1;border-bottom:1px solid var(--border-subtle)"></div><div class="meta"><p class="role">Canvas</p><p class="name">Vanilla</p><p class="hex">#FBF8F1</p></div></div>
+    <div class="sw"><div class="chip" style="background:#F4F0E8;border-bottom:1px solid var(--border-subtle)"></div><div class="meta"><p class="role">Sunken</p><p class="name">Oat</p><p class="hex">#F4F0E8</p></div></div>
+  </div>
+
+  <div class="applied">
+    <div class="preview-card">
+      <p class="label">Sidebar selection</p>
+      <div class="mini-sidebar" style="background:#FBF8F1">
+        <div class="mini-row"><span class="dot"></span>Clients</div>
+        <div class="mini-row selected"><span class="dot" style="background:#1F1A12"></span>Programs</div>
+        <div class="mini-row"><span class="dot"></span>Calendar</div>
+        <div class="mini-row"><span class="dot"></span>Accounting</div>
+      </div>
+    </div>
+    <div class="preview-card">
+      <p class="label">CTA hierarchy</p>
+      <div class="cta-stack">
+        <button class="cta primary">Create program</button>
+        <button class="cta secondary">Save draft</button>
+        <button class="cta ghost">+ New folder</button>
+      </div>
+      <div class="pill-row" style="margin-top:18px">
+        <span class="p solid">Active</span>
+        <span class="p soft">New</span>
+        <span class="p ink">All<span class="num">42</span></span>
+        <span class="p outline">Filters</span>
+      </div>
+    </div>
+    <div class="preview-card">
+      <p class="label">Help &amp; data tile</p>
+      <div class="stat" style="background:#F4F0E8">
+        <div class="icon">€</div>
+        <div><p class="num">€4,280</p><p class="lbl">Pending invoices · 6</p></div>
+      </div>
+      <div class="fab-demo" style="background:#FBF8F1">
+        <div class="fab">?</div>
+        <p class="ftxt">Jade helper is the complement of mango — same temperature family as Sunrise's teal, but cooler.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────────── -->
+<!-- DIRECTION 12 — ORBIT (from screenshot 1)              -->
+<!-- ────────────────────────────────────────────────────── -->
+<section class="direction d12">
+  <div class="dir-head">
+    <div>
+      <p class="dir-num">Direction 12 · From your reference · Orbit dashboard</p>
+      <h2 class="dir-name">Orbit</h2>
+      <p class="dir-tag">Dark-by-default like the reference: deep charcoal canvas, near-black cards, a single saturated safety-orange running the action color, and a small green for positive deltas. Confident, performance-coded, slightly nocturnal. Closer to a financial console than a fitness app — which is the point of the reference.</p>
+    </div>
+    <div class="accent-strip">
+      <div style="background:#FF6A00"></div>
+      <div style="background:#2A1B11"></div>
+      <div style="background:#0E0E10"></div>
+      <div style="background:#34D17F"></div>
+      <div style="background:#1A1A1F"></div>
+    </div>
+  </div>
+
+  <div class="palette">
+    <div class="sw"><div class="chip" style="background:#FF6A00"></div><div class="meta"><p class="role">Action</p><p class="name">Safety Orange</p><p class="hex">#FF6A00</p></div></div>
+    <div class="sw"><div class="chip" style="background:#2A1B11"></div><div class="meta"><p class="role">Soft</p><p class="name">Ember</p><p class="hex">#2A1B11</p></div></div>
+    <div class="sw"><div class="chip" style="background:#0E0E10"></div><div class="meta"><p class="role">Canvas</p><p class="name">Obsidian</p><p class="hex">#0E0E10</p></div></div>
+    <div class="sw"><div class="chip" style="background:#1A1A1F"></div><div class="meta"><p class="role">Card</p><p class="name">Slate</p><p class="hex">#1A1A1F</p></div></div>
+    <div class="sw"><div class="chip" style="background:#34D17F"></div><div class="meta"><p class="role">Success</p><p class="name">Mint Up</p><p class="hex">#34D17F</p></div></div>
+    <div class="sw"><div class="chip" style="background:#FFFFFF;border-bottom:1px solid var(--border-subtle)"></div><div class="meta"><p class="role">Text</p><p class="name">Snow</p><p class="hex">#FFFFFF</p></div></div>
+  </div>
+
+  <div class="applied">
+    <div class="preview-card">
+      <p class="label">Sidebar selection</p>
+      <div class="mini-sidebar" style="background:#0E0E10">
+        <div class="mini-row"><span class="dot"></span>Clients</div>
+        <div class="mini-row selected"><span class="dot" style="background:#FFFFFF"></span>Programs</div>
+        <div class="mini-row"><span class="dot"></span>Tracking</div>
+        <div class="mini-row"><span class="dot"></span>Accounting</div>
+      </div>
+    </div>
+    <div class="preview-card">
+      <p class="label">CTA hierarchy</p>
+      <div class="cta-stack">
+        <button class="cta primary">Start session</button>
+        <button class="cta secondary">Save draft</button>
+        <button class="cta ghost">+ New circuit</button>
+      </div>
+      <div class="pill-row" style="margin-top:18px">
+        <span class="p solid">Live</span>
+        <span class="p soft" style="background:#2A1B11;color:#FF6A00">New</span>
+        <span class="p ink">All<span class="num">42</span></span>
+        <span class="p outline">Filters</span>
+      </div>
+    </div>
+    <div class="preview-card">
+      <p class="label">Help &amp; data tile</p>
+      <div class="stat">
+        <div class="icon">€</div>
+        <div><p class="num">€4,280</p><p class="lbl" style="color:#34D17F">+5 vs last month</p></div>
+      </div>
+      <div class="fab-demo" style="background:#0E0E10">
+        <div class="fab">?</div>
+        <p class="ftxt">Orange owns the action; green is reserved for positive deltas in data only — never on a button.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────────── -->
+<!-- DIRECTION 13 — ATLAS (from screenshot 2)              -->
+<!-- ────────────────────────────────────────────────────── -->
+<section class="direction d13">
+  <div class="dir-head">
+    <div>
+      <p class="dir-num">Direction 13 · From your reference · Atlas project board</p>
+      <h2 class="dir-name">Atlas</h2>
+      <p class="dir-tag">Light app shell almost devoid of brand color — the system <em>is</em> the neutrals. Color shows up only as small spectrum chips for priority &amp; status (red / amber / blue / violet) and a single ink-black CTA. The opposite philosophy of Court: instead of one loud accent, a calm canvas where data colors itself.</p>
+    </div>
+    <div class="accent-strip">
+      <div style="background:#0F0F12"></div>
+      <div style="background:#EF4D4F"></div>
+      <div style="background:#F2A41C"></div>
+      <div style="background:#5B6CFF"></div>
+      <div style="background:#8B5CF6"></div>
+    </div>
+  </div>
+
+  <div class="palette">
+    <div class="sw"><div class="chip" style="background:#0F0F12"></div><div class="meta"><p class="role">Primary</p><p class="name">Ink</p><p class="hex">#0F0F12</p></div></div>
+    <div class="sw"><div class="chip" style="background:#FAFAFB;border-bottom:1px solid var(--border-subtle)"></div><div class="meta"><p class="role">Canvas</p><p class="name">Paper</p><p class="hex">#FAFAFB</p></div></div>
+    <div class="sw"><div class="chip" style="background:#EF4D4F"></div><div class="meta"><p class="role">Priority</p><p class="name">High</p><p class="hex">#EF4D4F</p></div></div>
+    <div class="sw"><div class="chip" style="background:#F2A41C"></div><div class="meta"><p class="role">Priority</p><p class="name">Medium</p><p class="hex">#F2A41C</p></div></div>
+    <div class="sw"><div class="chip" style="background:#5B6CFF"></div><div class="meta"><p class="role">Priority</p><p class="name">Low</p><p class="hex">#5B6CFF</p></div></div>
+    <div class="sw"><div class="chip" style="background:#8B5CF6"></div><div class="meta"><p class="role">Tag</p><p class="name">Design</p><p class="hex">#8B5CF6</p></div></div>
+  </div>
+
+  <div class="applied">
+    <div class="preview-card">
+      <p class="label">Sidebar selection</p>
+      <div class="mini-sidebar" style="background:#FAFAFB">
+        <div class="mini-row"><span class="dot"></span>Clients</div>
+        <div class="mini-row selected"><span class="dot" style="background:#0F0F12"></span>Programs</div>
+        <div class="mini-row"><span class="dot"></span>Calendar</div>
+        <div class="mini-row"><span class="dot"></span>Accounting</div>
+      </div>
+    </div>
+    <div class="preview-card">
+      <p class="label">CTA hierarchy</p>
+      <div class="cta-stack">
+        <button class="cta primary">New program</button>
+        <button class="cta secondary" style="background:#FFFFFF;color:#0F0F12;border:1px solid #E4E4E7">New task</button>
+        <button class="cta ghost" style="border-color:#E4E4E7;color:#0F0F12">+ New folder</button>
+      </div>
+      <div class="pill-row" style="margin-top:18px">
+        <span class="p" style="background:#FDE3E4;color:#B5292B">High</span>
+        <span class="p" style="background:#FCEAC5;color:#7A5208">Medium</span>
+        <span class="p" style="background:#E0E5FF;color:#1F2C9F">Low</span>
+        <span class="p" style="background:#EDE3FE;color:#5B2EB8">Design</span>
+      </div>
+    </div>
+    <div class="preview-card">
+      <p class="label">Help &amp; data tile</p>
+      <div class="stat" style="background:#F4F5F7">
+        <div class="icon" style="background:#0F0F12;color:#FFFFFF">€</div>
+        <div><p class="num">€4,280</p><p class="lbl">Pending invoices · 6</p></div>
+      </div>
+      <div class="fab-demo" style="background:#FAFAFB">
+        <div class="fab" style="background:#5B6CFF;box-shadow:0 8px 24px rgba(91,108,255,0.30)">?</div>
+        <p class="ftxt">No brand color owns the screen. Hierarchy comes from typography, weight, and the priority chips themselves.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────────── -->
+<!-- READING                                                -->
+<!-- ────────────────────────────────────────────────────── -->
+<section class="reco">
+  <div>
+    <h2>How I'd read these</h2>
+    <p>Each direction implies a slightly different Ekklo. Pick the brand stance first; the palette follows.</p>
+    <p class="next"><strong>Next step.</strong> Tell me which 1–2 you want to see fully applied to the dashboard. I'll fork <em>ui_kits/dashboard</em> and produce a side-by-side mock so you can judge it under real density (calendar, accounting, exercise library) — not just on swatches.</p>
+  </div>
+  <ul>
+    <li style="--li-color:#D8F11A"><span><strong>Court</strong> — fresh, sporty, neutral on archetype. Already works. Keep if Ekklo wants the broadest appeal across coach types.</span></li>
+    <li style="--li-color:#FF6A3D"><span><strong>Sunrise</strong> — warm, hospitable, food-friendly. Best if Nutrition + lifestyle photography is central.</span></li>
+    <li style="--li-color:#F0286C"><span><strong>Pulse</strong> — high-intensity, polarizing. Best for HIIT / strength / boxing-leaning brands. Will alienate yoga-side coaches.</span></li>
+    <li style="--li-color:#5B8E3A"><span><strong>Trail</strong> — calm, longevity, holistic. Best for wellness / outdoor / mature audience. Quietest accent.</span></li>
+    <li style="--li-color:#2563FF"><span><strong>Studio</strong> — premium, business-first, sport-agnostic. Best if "serious tool for pros" beats "playful sports brand".</span></li>
+    <li style="--li-color:#FF6A2C"><span><strong>Forge</strong> — green ink + orange action, your stated recipe. Confident, grounded, broadest fit across coach types. A safe-but-distinctive default.</span></li>
+    <li style="--li-color:#E11D2E"><span><strong>Iron</strong> — black + red, gym &amp; intense workouts. Highest aggression. Best for strength / combat / HYROX brands; will alienate wellness side.</span></li>
+    <li style="--li-color:#2F9E6E"><span><strong>Meadow</strong> — green + soft blue, wellness &amp; lifestyle. Calmest of the set. Best for nutrition, yoga, recovery, longevity coaches.</span></li>
+    <li style="--li-color:#B8FF1A"><span><strong>Neon</strong> — dark mode + neon green, modern premium. Sleek and techy. Best if Ekklo wants to read as performance tooling (Whoop / Strava-pro vibe).</span></li>
+    <li style="--li-color:#D9582B"><span><strong>Hearth</strong> — terracotta + cream + sage. Bridges Trail × Sunrise × Forge. Warm, grounded, broad appeal — strong default if you want one coherent recipe across coach types.</span></li>
+    <li style="--li-color:#F2A41C"><span><strong>Citrus</strong> — mango + coffee + jade. Bridges Court × Sunrise. Keeps Court's "single bright moment" pattern but trades highlighter-lime for a softer, friendlier mango.</span></li>
+    <li style="--li-color:#FF6A00"><span><strong>Orbit</strong> — dark charcoal + safety orange + green deltas. From your reference. Performance-coded, financial-console feel; reads as "tool for serious athletes" — strong opinion.</span></li>
+    <li style="--li-color:#0F0F12"><span><strong>Atlas</strong> — neutral-first, ink CTA, spectrum priority chips. From your reference. The opposite of Court: no brand color owns the screen, hierarchy comes from typography and chip-color.</span></li>
+  </ul>
+</section>
+
+</body>
+</html>
