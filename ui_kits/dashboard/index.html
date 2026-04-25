@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Ekklo · Dashboard</title>
+<link rel="stylesheet" href="../../colors_and_type.css" />
+<link rel="stylesheet" href="_shell.css" />
+<style>
+  .body { padding: 28px 32px; display: grid; grid-template-columns: 320px 1fr; gap: 24px; }
+  .card {
+    background: white; border: 1px solid var(--border-subtle); border-radius: 12px; padding: 20px;
+  }
+  .card + .card { margin-top: 16px; }
+  .card h3 { font: var(--t-h2); margin: 0 0 14px; }
+
+  .activity-hero { display: flex; align-items: center; gap: 14px; margin-bottom: 6px; }
+  .activity-hero h2 { font: 700 22px/1.1 var(--font-ui); margin: 0; }
+
+  .schedule-empty { text-align: center; padding: 8px 0 0; }
+
+  .pmt-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--border-subtle); }
+  .pmt-row .av { width: 28px; height: 28px; border-radius: 999px; background: var(--surface-sunken); display: inline-flex; align-items: center; justify-content: center; font: 600 11px var(--font-ui); color: var(--text-secondary); }
+  .pmt-row .grow { flex: 1; font: var(--t-body); }
+  .pmt-row .amt { font: var(--t-body-strong); }
+
+  .rev-chart { height: 90px; border-radius: 8px; margin-top: 8px; display: flex; align-items: flex-end; padding: 0 6px; gap: 6px; }
+  .rev-chart .bar { flex: 1; background: var(--ekklo-ink); border-radius: 3px 3px 0 0; opacity: 0.85; }
+  .rev-x { display: flex; justify-content: space-between; font: var(--t-caption); color: var(--text-tertiary); margin-top: 6px; padding: 0 6px; }
+
+  .tut-banner {
+    background: #8E1F1F; color: white; border-radius: 12px;
+    padding: 16px 20px; display: flex; align-items: center; gap: 16px; margin-bottom: 20px;
+  }
+  .tut-banner .iconbox { width: 40px; height: 40px; background: rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+  .tut-banner .grow { flex: 1; }
+  .tut-banner h4 { font: var(--t-h2); margin: 0 0 2px; }
+  .tut-banner p { font: var(--t-caption); margin: 0; opacity: 0.8; }
+  .tut-banner button {
+    background: white; color: #8E1F1F; border: none; padding: 8px 16px;
+    border-radius: 999px; font: var(--t-button); cursor: pointer; white-space: nowrap;
+  }
+
+  .section-h { font: var(--t-h2); margin: 24px 0 14px; }
+
+  .invite-card {
+    background: white; border: 1px solid var(--border-subtle); border-radius: 12px;
+    padding: 28px; text-align: center; margin-bottom: 16px;
+  }
+
+  .activity-card {
+    background: white; border: 1px solid var(--border-subtle); border-radius: 12px;
+    padding: 20px; margin-bottom: 16px;
+  }
+  .activity-card .hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .activity-card .hd h4 { font: var(--t-h2); margin: 0; }
+  .activity-card .filter {
+    border: 1px solid var(--border-input); border-radius: 999px; padding: 4px 12px;
+    font: var(--t-caption); color: var(--text-secondary); background: white; cursor: pointer;
+  }
+  .activity-card .empty-inline {
+    background: var(--surface-canvas); border-radius: 8px; padding: 14px; display: flex; gap: 12px; align-items: center;
+  }
+  .activity-card .empty-inline p { font: var(--t-caption); color: var(--text-secondary); margin: 0; flex: 1; }
+  .activity-row {
+    display: flex; align-items: center; gap: 10px; padding: 10px 0;
+    border-top: 1px solid var(--border-subtle); font: var(--t-body);
+  }
+  .activity-row .day { color: var(--text-tertiary); width: 50px; }
+  .activity-row .av { width: 22px; height: 22px; border-radius: 999px; background: var(--surface-sunken); display: inline-flex; align-items: center; justify-content: center; font: 600 10px var(--font-ui); color: var(--text-secondary); }
+  .activity-row .grow { flex: 1; }
+  .activity-row .pill { padding: 3px 10px; border-radius: 999px; font: 600 11px var(--font-ui); white-space: nowrap; }
+  .pill-lime { background: var(--ekklo-lime-soft); color: var(--ekklo-lime-ink); }
+  .pill-warn { background: #FEF3C7; color: #92400E; }
+</style>
+</head>
+<body>
+
+<div class="app" data-screen-label="01 Dashboard">
+  <div id="shell-side"></div>
+  <main class="main">
+    <div id="shell-top"></div>
+
+    <div class="body">
+      <!-- Left column -->
+      <div>
+        <div class="card">
+          <h3>Your activity</h3>
+          <div class="activity-hero">
+            <span class="bell" id="bell-greet"></span>
+            <h2>Hello<br>Fode 👋</h2>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Today's schedule</h3>
+          <div class="schedule-empty">
+            <button class="btn btn-primary">+ Add an event</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Payments received</h3>
+          <p style="font: var(--t-caption); color: var(--text-secondary); margin: 0 0 4px;">Your latest payments will appear here.</p>
+          <div class="pmt-row">
+            <span class="av">A</span>
+            <span class="grow">Aya Nakamura</span>
+            <span class="amt">150,00 €</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Revenue over the last months</h3>
+          <p style="font: var(--t-caption); color: var(--text-secondary); margin: 0;">6 months ▾</p>
+          <div class="rev-chart">
+            <div class="bar" style="height: 30%;"></div>
+            <div class="bar" style="height: 45%;"></div>
+            <div class="bar" style="height: 25%;"></div>
+            <div class="bar" style="height: 60%;"></div>
+            <div class="bar" style="height: 70%;"></div>
+            <div class="bar" style="height: 50%;"></div>
+          </div>
+          <div class="rev-x"><span>Oct</span><span>Nov</span><span>Dec</span><span>Jan</span><span>Feb</span><span>Mar</span></div>
+        </div>
+      </div>
+
+      <!-- Right column -->
+      <div>
+        <div class="tut-banner">
+          <div class="iconbox">▶</div>
+          <div class="grow">
+            <h4>Master Ekklo in minutes</h4>
+            <p>Explore our video tutorials to unlock the full potential of the platform and save time every day.</p>
+          </div>
+          <button>Watch tutorials →</button>
+        </div>
+
+        <h3 class="section-h">Client tracking</h3>
+
+        <div class="invite-card">
+          <button class="btn btn-primary">+ Invite your first client</button>
+        </div>
+
+        <div class="activity-card">
+          <div class="hd">
+            <h4>Client activities</h4>
+            <button class="filter">All ▾</button>
+          </div>
+          <div class="empty-inline">
+            <span class="bell" id="bell-act"></span>
+            <p>Track all your clients' activities here: scheduled sessions, logged weight, and more. Monitor their progress at a glance!</p>
+          </div>
+          <div class="activity-row">
+            <span class="day">Today</span>
+            <span class="av">AN</span>
+            <span class="grow">Aya Nakamura</span>
+            <span class="pill pill-lime">Session</span>
+          </div>
+        </div>
+
+        <div class="activity-card">
+          <div class="hd">
+            <h4>Assessments to validate <span class="pill pill-lime" style="margin-left:4px;">0</span></h4>
+            <button class="filter">To validate ▾</button>
+          </div>
+          <div class="empty-inline">
+            <span class="bell" id="bell-asm"></span>
+            <p>As soon as a client completes their assessment, you'll see it here. Simply click on it to review and validate it.</p>
+          </div>
+          <div class="activity-row">
+            <span class="av">AN</span>
+            <span class="grow">Aya Nakamura</span>
+            <span class="pill pill-warn">To validate</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="fab">💬</div>
+
+<script src="_shell.js"></script>
+<script>
+  __mountShell('dashboard', 'Dashboard');
+  document.getElementById('bell-greet').innerHTML = window.__BELL_SVG(72);
+  document.getElementById('bell-act').innerHTML = window.__BELL_SVG(36);
+  document.getElementById('bell-asm').innerHTML = window.__BELL_SVG(36);
+</script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+/* Shell for preview pages — keeps the spec sheet legible */
+body {
+  padding: 48px 56px 96px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.spec-header {
+  margin-bottom: 48px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.spec-header .eyebrow {
+  margin-bottom: 8px;
+}
+.spec-header h1 {
+  font: var(--t-display);
+  margin: 0 0 8px;
+}
+.spec-header p {
+  font: var(--t-secondary);
+  color: var(--text-secondary);
+  margin: 0;
+  max-width: 640px;
+}
+
+.spec-section {
+  margin-bottom: 64px;
+}
+.spec-section > h2 {
+  font: var(--t-h1);
+  margin: 0 0 4px;
+}
+.spec-section > .desc {
+  font: var(--t-secondary);
+  color: var(--text-secondary);
+  margin: 0 0 24px;
+  max-width: 640px;
+}

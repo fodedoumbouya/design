@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Ekklo — Spacing & Radii</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="_shell.css" />
+<style>
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+
+  .demo-card {
+    background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: var(--r-card);
+    padding: 24px;
+  }
+  .demo-card h3 { font: var(--t-h3); margin: 0 0 6px; }
+  .demo-card .meta { font: var(--t-caption); color: var(--text-secondary); margin: 0 0 16px; }
+
+  .r-block {
+    height: 80px;
+    background: var(--ekklo-ink);
+    margin-bottom: 12px;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font: var(--t-caption);
+  }
+
+  .spacing-row {
+    display: flex; align-items: flex-end; gap: 24px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-subtle); border-radius: var(--r-card);
+    padding: 32px;
+  }
+  .spacing-tick {
+    text-align: center;
+  }
+  .spacing-tick .bar {
+    background: var(--ekklo-lime);
+    width: 100%; min-width: 4px;
+    border-radius: 4px;
+  }
+  .spacing-tick .label {
+    font: var(--t-caption); color: var(--text-secondary); margin-top: 8px;
+  }
+  .spacing-tick .name { font: var(--t-h3); margin-top: 2px; }
+
+  .shadow-card {
+    background: var(--surface-card); padding: 32px;
+    border-radius: var(--r-card); height: 140px;
+    display: flex; align-items: center; justify-content: center;
+    font: var(--t-h3);
+  }
+  .shadow-card.s-card { box-shadow: var(--shadow-card); }
+  .shadow-card.s-modal { box-shadow: var(--shadow-modal); }
+  .shadow-card.s-fab {
+    background: var(--ekklo-mint); color: white;
+    box-shadow: var(--shadow-fab);
+    border-radius: 999px; width: 140px; margin: 0 auto;
+  }
+</style>
+</head>
+<body>
+
+<header class="spec-header">
+  <div class="eyebrow">Foundations · Spacing</div>
+  <h1>Spacing, radii & shadow</h1>
+  <p>The system is built on an 8px rhythm with a 4px half-step for inline density. Pills (full radius) signal interactivity; 12px corners signal grouping; flat 0px lives only inside table rows.</p>
+</header>
+
+<section class="spec-section">
+  <h2>Spacing scale</h2>
+  <p class="desc">All padding and gap values come from this scale. <code>--s-4</code> (16px) is the default card padding step; <code>--s-6</code> (24px) is the default card-to-card gap.</p>
+  <div class="spacing-row">
+    <div class="spacing-tick" style="width: 4%;"><div class="bar" style="height: 4px;"></div><div class="name">4</div><div class="label">--s-1</div></div>
+    <div class="spacing-tick" style="width: 6%;"><div class="bar" style="height: 8px;"></div><div class="name">8</div><div class="label">--s-2</div></div>
+    <div class="spacing-tick" style="width: 8%;"><div class="bar" style="height: 12px;"></div><div class="name">12</div><div class="label">--s-3</div></div>
+    <div class="spacing-tick" style="width: 10%;"><div class="bar" style="height: 16px;"></div><div class="name">16</div><div class="label">--s-4</div></div>
+    <div class="spacing-tick" style="width: 12%;"><div class="bar" style="height: 20px;"></div><div class="name">20</div><div class="label">--s-5</div></div>
+    <div class="spacing-tick" style="width: 14%;"><div class="bar" style="height: 24px;"></div><div class="name">24</div><div class="label">--s-6</div></div>
+    <div class="spacing-tick" style="width: 16%;"><div class="bar" style="height: 32px;"></div><div class="name">32</div><div class="label">--s-7</div></div>
+    <div class="spacing-tick" style="width: 18%;"><div class="bar" style="height: 40px;"></div><div class="name">40</div><div class="label">--s-8</div></div>
+    <div class="spacing-tick" style="width: 22%;"><div class="bar" style="height: 56px;"></div><div class="name">56</div><div class="label">--s-9</div></div>
+  </div>
+</section>
+
+<section class="spec-section">
+  <h2>Radii</h2>
+  <p class="desc">Three radii. Anything pill-shaped is interactive; anything 12px-cornered is a content group.</p>
+  <div class="grid-3">
+    <div class="demo-card">
+      <h3>Pill — 999px</h3>
+      <p class="meta">Buttons, badges, tabs, search inputs, the trial banner CTA.</p>
+      <div class="r-block" style="border-radius: var(--r-pill);">--r-pill</div>
+    </div>
+    <div class="demo-card">
+      <h3>Card — 12px</h3>
+      <p class="meta">Cards, modals, the sidebar getting-started box, image upload tiles.</p>
+      <div class="r-block" style="border-radius: var(--r-card);">--r-card</div>
+    </div>
+    <div class="demo-card">
+      <h3>Input — 8px</h3>
+      <p class="meta">Text inputs, selects, dropzones, code blocks. Sits between pill and card.</p>
+      <div class="r-block" style="border-radius: var(--r-input);">--r-input</div>
+    </div>
+  </div>
+</section>
+
+<section class="spec-section">
+  <h2>Shadow</h2>
+  <p class="desc">Shadows are restrained — Ekklo borders cards instead of floating them. Only modals and the help FAB get a real shadow.</p>
+  <div class="grid-3">
+    <div>
+      <div class="shadow-card s-card">Card</div>
+      <p class="meta" style="margin-top: 12px; font: var(--t-caption); color: var(--text-secondary);">Almost imperceptible — pairs with the 1px border for a hairline lift.</p>
+    </div>
+    <div>
+      <div class="shadow-card s-modal">Modal</div>
+      <p class="meta" style="margin-top: 12px; font: var(--t-caption); color: var(--text-secondary);">Used on dialogs, side sheets, and the slide-over prospect panel.</p>
+    </div>
+    <div>
+      <div class="shadow-card s-fab">FAB</div>
+      <p class="meta" style="margin-top: 12px; font: var(--t-caption); color: var(--text-secondary);">Mint-tinted shadow on the help bubble — the only colored shadow in the system.</p>
+    </div>
+  </div>
+</section>
+
+<section class="spec-section">
+  <h2>Layout grid</h2>
+  <p class="desc">The app is a fixed 240px sidebar plus a fluid main column. Main content sits in a 1180px max-width container with 24px gutters.</p>
+  <div class="demo-card" style="padding: 0; overflow: hidden;">
+    <div style="display: grid; grid-template-columns: 240px 1fr; height: 280px;">
+      <div style="background: var(--surface-canvas); border-right: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: center; font: var(--t-caption); color: var(--text-secondary);">Sidebar · 240px fixed</div>
+      <div style="background: var(--surface-card); display: flex; align-items: center; justify-content: center; padding: 24px;">
+        <div style="background: var(--surface-sunken); border: 1px dashed var(--border-input); width: 100%; max-width: 1180px; height: 100%; display: flex; align-items: center; justify-content: center; font: var(--t-caption); color: var(--text-secondary);">Main · max 1180px · 24px gutters</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

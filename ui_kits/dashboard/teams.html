@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Ekklo · Teams</title>
+<link rel="stylesheet" href="../../colors_and_type.css" />
+<link rel="stylesheet" href="_shell.css" />
+<style>
+  .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .team {
+    background: white; border: 1px solid var(--border-subtle); border-radius: 12px; padding: 20px;
+  }
+  .team h3 { font: var(--t-h2); margin: 0 0 4px; }
+  .team .meta { font: var(--t-caption); color: var(--text-secondary); margin-bottom: 16px; }
+  .team .members { display: flex; align-items: center; }
+  .team .av { width: 32px; height: 32px; border-radius: 999px; background: var(--surface-sunken); display: inline-flex; align-items: center; justify-content: center; font: 600 12px var(--font-ui); color: var(--text-secondary); border: 2px solid white; margin-left: -8px; }
+  .team .av:first-child { margin-left: 0; }
+  .team .more { font: var(--t-caption); color: var(--text-tertiary); margin-left: 12px; }
+  .team .row2 { display: flex; align-items: center; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-subtle); font: var(--t-caption); color: var(--text-secondary); }
+  .team .row2 .grow { flex: 1; }
+</style>
+</head>
+<body>
+
+<div class="app" data-screen-label="10 Teams">
+  <div id="shell-side"></div>
+  <main class="main">
+    <div id="shell-top"></div>
+
+    <div class="page">
+      <div class="page-head">
+        <div>
+          <h1>Teams</h1>
+          <p class="subtitle">Manage your teams and collaborate with other coaches. Create teams, invite members and organize your teamwork.</p>
+        </div>
+      </div>
+
+      <div class="tabs"><button class="active">Teams</button></div>
+
+      <div class="toolbar">
+        <div class="search"><span>🔍</span><input placeholder="Search a team..." /></div>
+        <span class="grow"></span>
+        <button class="btn btn-primary">Create a team</button>
+      </div>
+
+      <div class="team-grid">
+        <div class="team">
+          <h3>Studio Bastille</h3>
+          <p class="meta">Strength & conditioning · Paris 11</p>
+          <div class="members">
+            <span class="av">FD</span><span class="av">AN</span><span class="av">MR</span><span class="av">+2</span>
+            <span class="more">5 coaches</span>
+          </div>
+          <div class="row2"><span class="grow">42 active clients</span><span>›</span></div>
+        </div>
+
+        <div class="team">
+          <h3>Online — EU</h3>
+          <p class="meta">Remote coaching network</p>
+          <div class="members">
+            <span class="av">EH</span><span class="av">JN</span><span class="av">YT</span>
+            <span class="more">3 coaches</span>
+          </div>
+          <div class="row2"><span class="grow">28 active clients</span><span>›</span></div>
+        </div>
+
+        <div class="team">
+          <h3>Postpartum collective</h3>
+          <p class="meta">Specialty network</p>
+          <div class="members">
+            <span class="av">JN</span><span class="av">SK</span>
+            <span class="more">2 coaches</span>
+          </div>
+          <div class="row2"><span class="grow">11 active clients</span><span>›</span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="fab">💬</div>
+
+<script src="_shell.js"></script>
+<script>__mountShell('teams', 'Teams', { tutorial: true });</script>
+</body>
+</html>

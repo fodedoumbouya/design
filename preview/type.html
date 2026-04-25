@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Ekklo — Type</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="_shell.css" />
+<style>
+  .ramp {
+    background: var(--surface-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--r-card);
+    padding: 32px 40px;
+  }
+  .ramp .row {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 32px;
+    align-items: baseline;
+    padding: 22px 0;
+    border-bottom: 1px dashed var(--border-subtle);
+  }
+  .ramp .row:last-child { border-bottom: 0; padding-bottom: 0; }
+  .ramp .meta { font: var(--t-caption); color: var(--text-secondary); }
+  .ramp .meta strong { display: block; font: var(--t-h3); color: var(--text-primary); margin-bottom: 6px; }
+  .ramp .meta code {
+    display: block; margin-top: 8px;
+    font: 500 11px/1.4 ui-monospace, 'SF Mono', Menlo, monospace;
+    color: var(--text-tertiary);
+  }
+
+  .sample.display { font: var(--t-display); }
+  .sample.h1 { font: var(--t-h1); }
+  .sample.h2 { font: var(--t-h2); }
+  .sample.h3 { font: var(--t-h3); }
+  .sample.body { font: var(--t-body); }
+  .sample.bodys { font: var(--t-body-strong); }
+  .sample.sec { font: var(--t-secondary); color: var(--text-secondary); }
+  .sample.cap { font: var(--t-caption); color: var(--text-secondary); }
+  .sample.eyebrow { font: var(--t-eyebrow); letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); }
+
+  .voice-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 24px;
+  }
+  .voice-card {
+    background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: var(--r-card); padding: 28px;
+  }
+  .voice-card h3 { font: var(--t-h2); margin: 0 0 16px; }
+  .voice-card .ex { font: var(--t-body); color: var(--text-primary); margin: 0 0 8px; }
+  .voice-card .ex.bad { color: var(--text-tertiary); text-decoration: line-through; }
+  .voice-card .label {
+    display: inline-block; font: var(--t-eyebrow); letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-tertiary); margin-bottom: 4px;
+  }
+</style>
+</head>
+<body>
+
+<header class="spec-header">
+  <div class="eyebrow">Foundations · Type</div>
+  <h1>Typography</h1>
+  <p>Inter, four weights. The ramp is small (28 → 11) and tight — Ekklo is a workhorse coach app, not a marketing site. Page titles sit at 22px so the trial banner above them stays the visually loudest header.</p>
+</header>
+
+<section class="spec-section">
+  <h2>Type ramp</h2>
+  <p class="desc">All UI uses Inter. Display is rare — only marketing pages or hero moments. Page-level work starts at h1.</p>
+  <div class="ramp">
+    <div class="row"><div class="meta"><strong>Display</strong>28 / 1.2 / 700<code>--t-display</code></div><div class="sample display">Master Ekklo in minutes</div></div>
+    <div class="row"><div class="meta"><strong>H1 — Page title</strong>22 / 1.25 / 600<code>--t-h1</code></div><div class="sample h1">Your prospects</div></div>
+    <div class="row"><div class="meta"><strong>H2 — Card title</strong>16 / 1.35 / 600<code>--t-h2</code></div><div class="sample h2">Connect your Stripe account</div></div>
+    <div class="row"><div class="meta"><strong>H3 — Inline label</strong>14 / 1.4 / 600<code>--t-h3</code></div><div class="sample h3">Profile name</div></div>
+    <div class="row"><div class="meta"><strong>Body</strong>14 / 1.5 / 400<code>--t-body</code></div><div class="sample body">Save time by creating your circuit, session and sports program templates ready to be customized for each client.</div></div>
+    <div class="row"><div class="meta"><strong>Body strong</strong>14 / 1.5 / 500<code>--t-body-strong</code></div><div class="sample bodys">04/11/2026 · Fode Doumbouya · €1.00</div></div>
+    <div class="row"><div class="meta"><strong>Secondary</strong>13 / 1.45 / 400<code>--t-secondary</code></div><div class="sample sec">Manage your payments and track the accounting of your clients.</div></div>
+    <div class="row"><div class="meta"><strong>Caption</strong>12 / 1.4 / 400<code>--t-caption</code></div><div class="sample cap">JPG, PNG · Max 5 MB</div></div>
+    <div class="row"><div class="meta"><strong>Eyebrow</strong>11 / 1 / 600 · uppercase · 0.08em<code>--t-eyebrow</code></div><div class="sample eyebrow">Resources</div></div>
+  </div>
+</section>
+
+<section class="spec-section">
+  <h2>Voice</h2>
+  <p class="desc">Direct, calm, second-person. French-accented English: friendly without being chirpy. Microcopy below a title explains the job, not the feature.</p>
+
+  <div class="voice-grid">
+    <div class="voice-card">
+      <h3>Page titles do the job</h3>
+      <span class="label">Pattern</span>
+      <p class="ex">Your prospects</p>
+      <p class="ex">Your tracking templates</p>
+      <p class="ex">Your fitness programs</p>
+      <span class="label">Why</span>
+      <p class="ex" style="color: var(--text-secondary);">Possessive ("Your") makes the workspace feel owned. Plural noun, no verb.</p>
+    </div>
+    <div class="voice-card">
+      <h3>Subtitles say what to do</h3>
+      <span class="label">Good</span>
+      <p class="ex">Manage and share your files with your clients.</p>
+      <p class="ex">Save time by creating your circuit, session and sports program templates.</p>
+      <span class="label">Avoid</span>
+      <p class="ex bad">Welcome to the drive feature where you can store files.</p>
+      <p class="ex bad">A flexible templating system for power users.</p>
+    </div>
+    <div class="voice-card">
+      <h3>CTAs are verbs</h3>
+      <span class="label">Pattern</span>
+      <p class="ex">Create a team · Add a payment · Create my coach profile</p>
+      <span class="label">Why</span>
+      <p class="ex" style="color: var(--text-secondary);">Use the article. "Add a payment" reads better than "Add payment" — Ekklo's French roots show.</p>
+    </div>
+    <div class="voice-card">
+      <h3>Empty states use the mascot</h3>
+      <span class="label">Pattern</span>
+      <p class="ex">No teams</p>
+      <p class="ex" style="color: var(--text-secondary); font-size: 13px;">Create your first team to start collaborating with other coaches.</p>
+      <span class="label">Why</span>
+      <p class="ex" style="color: var(--text-secondary);">Two-line empty state: terse headline (no period) + one sentence of "first team" framing. The kettlebell mascot replaces the icon when the state is large.</p>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

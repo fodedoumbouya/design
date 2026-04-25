@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Ekklo · Accounting</title>
+<link rel="stylesheet" href="../../colors_and_type.css" />
+<link rel="stylesheet" href="_shell.css" />
+<style>
+  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+  .stat { background: white; border: 1px solid var(--border-subtle); border-radius: 12px; padding: 18px 20px; }
+  .stat .lab { font: var(--t-eyebrow); color: var(--text-tertiary); margin-bottom: 6px; }
+  .stat .val { font: 700 26px/1 var(--font-ui); color: var(--text-primary); }
+  .stat .delta { font: var(--t-caption); margin-top: 6px; }
+  .stat .delta.up { color: #15803D; }
+  .stat .delta.down { color: #B91C1C; }
+</style>
+</head>
+<body>
+
+<div class="app" data-screen-label="09 Accounting">
+  <div id="shell-side"></div>
+  <main class="main">
+    <div id="shell-top"></div>
+
+    <div class="page">
+      <div class="page-head">
+        <div>
+          <h1>Accounting</h1>
+          <p class="subtitle">Manage your payments and track the accounting of your clients.</p>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="active">Payments</button>
+        <button>Client tracking</button>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat"><div class="lab">This month</div><div class="val">€2,840</div><div class="delta up">▲ 18% vs last</div></div>
+        <div class="stat"><div class="lab">Outstanding</div><div class="val">€720</div><div class="delta down">▼ 1 invoice overdue</div></div>
+        <div class="stat"><div class="lab">YTD revenue</div><div class="val">€18,450</div><div class="delta up">▲ 32% vs 2025</div></div>
+        <div class="stat"><div class="lab">Active subscriptions</div><div class="val">7</div><div class="delta">€343/mo recurring</div></div>
+      </div>
+
+      <div class="toolbar">
+        <div class="search"><span>🔍</span><input placeholder="Search a payment..." /></div>
+        <span class="divider"></span>
+        <button class="filter active">All</button>
+        <button class="filter">▽ Filter</button>
+        <span class="grow"></span>
+        <button class="btn btn-primary">Add a payment</button>
+      </div>
+
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th style="width:32px;"><span class="checkbox"></span></th>
+            <th>Date</th>
+            <th>Client</th>
+            <th>Description</th>
+            <th>Method</th>
+            <th>Status</th>
+            <th style="text-align:right;">Amount</th>
+            <th style="width:60px;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="checkbox"></span></td><td>14/04/2026</td><td><span class="av-sm"><span class="av">A</span> Aya Nakamura</span></td><td>12-week coaching plan</td><td>💳 Stripe</td><td><span style="background: var(--ekklo-lime-soft); color: var(--ekklo-lime-ink); padding: 3px 10px; border-radius: 999px; font: 600 11px var(--font-ui);">Paid</span></td><td style="text-align:right; font: var(--t-body-strong);">€1,440.00</td><td>⋯</td></tr>
+          <tr><td><span class="checkbox"></span></td><td>10/04/2026</td><td><span class="av-sm"><span class="av">M</span> Marc Rivera</span></td><td>Pro plan — April</td><td>🔁 Subscription</td><td><span style="background: var(--ekklo-lime-soft); color: var(--ekklo-lime-ink); padding: 3px 10px; border-radius: 999px; font: 600 11px var(--font-ui);">Paid</span></td><td style="text-align:right; font: var(--t-body-strong);">€49.00</td><td>⋯</td></tr>
+          <tr><td><span class="checkbox"></span></td><td>05/04/2026</td><td><span class="av-sm"><span class="av">E</span> Elena Haddad</span></td><td>Discovery call package</td><td>💳 Stripe</td><td><span style="background: var(--ekklo-lime-soft); color: var(--ekklo-lime-ink); padding: 3px 10px; border-radius: 999px; font: 600 11px var(--font-ui);">Paid</span></td><td style="text-align:right; font: var(--t-body-strong);">€300.00</td><td>⋯</td></tr>
+          <tr><td><span class="checkbox"></span></td><td>02/04/2026</td><td><span class="av-sm"><span class="av">J</span> Jana Novak</span></td><td>Postpartum reset 8wk</td><td>💳 Stripe</td><td><span style="background: #FEF3C7; color: #92400E; padding: 3px 10px; border-radius: 999px; font: 600 11px var(--font-ui);">Pending</span></td><td style="text-align:right; font: var(--t-body-strong);">€720.00</td><td>⋯</td></tr>
+          <tr><td><span class="checkbox"></span></td><td>28/03/2026</td><td><span class="av-sm"><span class="av">D</span> David Paulsen</span></td><td>Personal session</td><td>💵 Cash</td><td><span style="background: var(--ekklo-lime-soft); color: var(--ekklo-lime-ink); padding: 3px 10px; border-radius: 999px; font: 600 11px var(--font-ui);">Paid</span></td><td style="text-align:right; font: var(--t-body-strong);">€80.00</td><td>⋯</td></tr>
+          <tr><td><span class="checkbox"></span></td><td>20/03/2026</td><td><span class="av-sm"><span class="av">Y</span> Yuki Tanaka</span></td><td>4-session pack</td><td>💳 Stripe</td><td><span style="background: var(--ekklo-lime-soft); color: var(--ekklo-lime-ink); padding: 3px 10px; border-radius: 999px; font: 600 11px var(--font-ui);">Paid</span></td><td style="text-align:right; font: var(--t-body-strong);">€280.00</td><td>⋯</td></tr>
+        </tbody>
+      </table>
+
+      <div class="tbl-meta">Showing <strong>1</strong> to <strong>6</strong> of <strong>23</strong> results</div>
+    </div>
+  </main>
+</div>
+
+<div class="fab">💬</div>
+
+<script src="_shell.js"></script>
+<script>__mountShell('accounting', 'Accounting');</script>
+</body>
+</html>

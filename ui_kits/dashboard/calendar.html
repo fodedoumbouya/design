@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Ekklo · Calendar</title>
+<link rel="stylesheet" href="../../colors_and_type.css" />
+<link rel="stylesheet" href="_shell.css" />
+<style>
+  .cal-toolbar { display: flex; align-items: center; gap: 16px; padding: 16px 24px; border-bottom: 1px solid var(--border-subtle); }
+  .cal-toolbar .nav-btns { display: inline-flex; gap: 4px; }
+  .cal-toolbar .nav-btns button { width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--border-subtle); background: white; cursor: pointer; }
+  .cal-toolbar .today { padding: 6px 14px; border-radius: 6px; border: 1px solid var(--border-subtle); background: white; font: var(--t-button); cursor: pointer; }
+  .cal-toolbar h2 { font: var(--t-h1); margin: 0; }
+  .cal-toolbar .grow { flex: 1; }
+  .cal-toolbar .view-seg { display: inline-flex; border: 1px solid var(--border-subtle); border-radius: 8px; overflow: hidden; }
+  .cal-toolbar .view-seg button { padding: 6px 14px; border: none; background: white; cursor: pointer; font: var(--t-button); color: var(--text-secondary); }
+  .cal-toolbar .view-seg button.active { background: var(--ekklo-ink); color: white; }
+
+  .week { display: grid; grid-template-columns: 48px repeat(7, 1fr); border-bottom: 1px solid var(--border-subtle); }
+  .week .corner {}
+  .week .day-h { padding: 10px 8px; text-align: center; border-left: 1px solid var(--border-subtle); }
+  .week .day-h .dow { font: var(--t-eyebrow); color: var(--text-tertiary); }
+  .week .day-h .num { font: var(--t-h2); margin-top: 2px; }
+  .week .day-h.today .num { color: var(--ekklo-ink); display: inline-flex; width: 30px; height: 30px; align-items: center; justify-content: center; background: var(--ekklo-lime); border-radius: 999px; }
+
+  .grid {
+    display: grid; grid-template-columns: 48px repeat(7, 1fr);
+    background: white; position: relative;
+  }
+  .hours { display: flex; flex-direction: column; }
+  .hour-cell { height: 48px; padding-right: 6px; text-align: right; font: var(--t-caption); color: var(--text-tertiary); border-top: 1px solid var(--border-subtle); }
+  .day-col { border-left: 1px solid var(--border-subtle); position: relative; }
+  .day-col .slot { height: 48px; border-top: 1px solid var(--border-subtle); }
+  .day-col.today { background: rgba(216, 241, 26, 0.04); }
+
+  .ev {
+    position: absolute; left: 4px; right: 4px;
+    background: var(--ekklo-lime-soft); border-left: 3px solid var(--ekklo-lime);
+    color: var(--ekklo-lime-ink); border-radius: 6px; padding: 6px 8px;
+    font: 600 11px/1.3 var(--font-ui); overflow: hidden;
+  }
+  .ev .t { color: var(--text-tertiary); font-weight: 500; display: block; }
+  .ev.ink { background: #1A1A1A; color: white; border-left-color: var(--ekklo-lime); }
+  .ev.ink .t { color: rgba(255,255,255,0.65); }
+  .ev.mint { background: #DCFCE7; border-left-color: var(--ekklo-mint); color: #065F46; }
+  .ev.mint .t { color: #065F46; opacity: 0.7; }
+
+  .legend { display: inline-flex; gap: 12px; align-items: center; font: var(--t-caption); color: var(--text-secondary); }
+  .legend .lg { display: inline-flex; align-items: center; gap: 6px; }
+  .legend .sw { width: 10px; height: 10px; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div class="app" data-screen-label="04 Calendar">
+  <div id="shell-side"></div>
+  <main class="main">
+    <div id="shell-top"></div>
+
+    <div class="cal-toolbar">
+      <button class="today">Today</button>
+      <div class="nav-btns">
+        <button>‹</button><button>›</button>
+      </div>
+      <h2>April 2026</h2>
+      <span class="legend">
+        <span class="lg"><span class="sw" style="background: var(--ekklo-lime);"></span>Session</span>
+        <span class="lg"><span class="sw" style="background: var(--ekklo-ink);"></span>Discovery call</span>
+        <span class="lg"><span class="sw" style="background: var(--ekklo-mint);"></span>Personal</span>
+      </span>
+      <span class="grow"></span>
+      <div class="view-seg">
+        <button>Day</button>
+        <button class="active">Week</button>
+        <button>Month</button>
+      </div>
+      <button class="btn btn-primary btn-sm">+ New event</button>
+    </div>
+
+    <div class="week">
+      <div class="corner"></div>
+      <div class="day-h"><div class="dow">Mon</div><div class="num">20</div></div>
+      <div class="day-h"><div class="dow">Tue</div><div class="num">21</div></div>
+      <div class="day-h"><div class="dow">Wed</div><div class="num">22</div></div>
+      <div class="day-h"><div class="dow">Thu</div><div class="num">23</div></div>
+      <div class="day-h today"><div class="dow">Fri</div><div class="num">24</div></div>
+      <div class="day-h"><div class="dow">Sat</div><div class="num">25</div></div>
+      <div class="day-h"><div class="dow">Sun</div><div class="num">26</div></div>
+    </div>
+
+    <div class="grid" id="grid">
+      <div class="hours" id="hours"></div>
+      <div class="day-col" data-day="0"></div>
+      <div class="day-col" data-day="1"></div>
+      <div class="day-col" data-day="2"></div>
+      <div class="day-col" data-day="3"></div>
+      <div class="day-col today" data-day="4"></div>
+      <div class="day-col" data-day="5"></div>
+      <div class="day-col" data-day="6"></div>
+    </div>
+  </main>
+</div>
+
+<div class="fab">💬</div>
+
+<script src="_shell.js"></script>
+<script>
+  __mountShell('calendar', 'Calendar');
+
+  // hour labels 7am - 8pm
+  const hoursEl = document.getElementById('hours');
+  for (let h = 7; h <= 20; h++) {
+    const c = document.createElement('div'); c.className = 'hour-cell';
+    c.textContent = h + ':00';
+    hoursEl.appendChild(c);
+  }
+  // empty slots for each day
+  document.querySelectorAll('.day-col').forEach(col => {
+    for (let h = 7; h <= 20; h++) {
+      const s = document.createElement('div'); s.className = 'slot';
+      col.appendChild(s);
+    }
+  });
+
+  // events: day index, start hour (decimal), duration, title, client, kind
+  const events = [
+    [0, 9, 1, 'Session', 'Aya Nakamura', ''],
+    [0, 14, 1.5, 'Session', 'Marc Rivera', ''],
+    [1, 10, 1, 'Discovery call', 'Simone Klein', 'ink'],
+    [1, 16, 1, 'Session', 'Elena Haddad', ''],
+    [2, 8, 1, 'Personal — gym', '', 'mint'],
+    [2, 11, 1, 'Session', 'Jana Novak', ''],
+    [2, 17, 1.5, 'Session', 'Aya Nakamura', ''],
+    [3, 9, 1, 'Session', 'Yuki Tanaka', ''],
+    [3, 14, 1, 'Discovery call', 'David Paulsen', 'ink'],
+    [4, 10, 1, 'Session', 'Aya Nakamura', ''],
+    [4, 13, 0.5, 'Lunch', '', 'mint'],
+    [4, 15, 1.5, 'Session', 'Elena Haddad', ''],
+    [4, 18, 1, 'Session', 'Marc Rivera', ''],
+    [5, 9, 2, 'Workshop — Mobility', '', ''],
+    [6, 10, 1, 'Personal — long run', '', 'mint'],
+  ];
+
+  events.forEach(([day, start, dur, title, client, kind]) => {
+    const col = document.querySelector(`.day-col[data-day="${day}"]`);
+    const top = (start - 7) * 48;
+    const height = dur * 48 - 4;
+    const ev = document.createElement('div');
+    ev.className = 'ev ' + kind;
+    ev.style.top = top + 'px';
+    ev.style.height = height + 'px';
+    const endH = start + dur;
+    const fmt = (n) => Math.floor(n) + (n % 1 ? ':30' : ':00');
+    ev.innerHTML = `<span class="t">${fmt(start)} – ${fmt(endH)}</span>${title}${client ? ' · ' + client : ''}`;
+    col.appendChild(ev);
+  });
+</script>
+</body>
+</html>

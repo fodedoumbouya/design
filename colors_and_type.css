@@ -1,0 +1,113 @@
+/* Ekklo Design Tokens
+ * Source of truth — every preview and UI kit page imports this file.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* ── Brand ─────────────────────────────────────────── */
+  --ekklo-lime: #D8F11A;          /* Primary accent — CTAs, selected sidebar item, badges */
+  --ekklo-lime-soft: #EEFBA5;     /* Soft lime — sidebar selected bg, "New" tags */
+  --ekklo-lime-ink: #1A1A1A;      /* Text color used on top of lime */
+
+  --ekklo-ink: #1A1A1A;           /* Near-black — selected pills, secondary CTA, primary text */
+  --ekklo-ink-soft: #2C2C2A;      /* Dark surface (about-box, empty-state hero) */
+
+  --ekklo-mint: #1ED77A;          /* Help FAB and mascot accents */
+  --ekklo-mint-soft: #B6F0CC;     /* Mint chip background */
+
+  /* ── Surfaces ──────────────────────────────────────── */
+  --surface-canvas: #FAFAFA;      /* App background behind sidebar + main */
+  --surface-card: #FFFFFF;        /* Cards, modals, the main content panel */
+  --surface-sunken: #F4F4F2;      /* Inputs, getting-started box, table header */
+  --surface-overlay: rgba(26, 26, 26, 0.4); /* Modal scrim */
+
+  /* ── Text ──────────────────────────────────────────── */
+  --text-primary: #1A1A1A;
+  --text-secondary: #6B6B68;      /* Subtitles, helper copy, sidebar idle */
+  --text-tertiary: #9C9C98;       /* Placeholder, disabled, table headers */
+  --text-on-dark: #FFFFFF;
+  --text-link: #1A1A1A;
+
+  /* ── Borders ───────────────────────────────────────── */
+  --border-subtle: #ECECEA;       /* Card edges, table rows, input idle */
+  --border-strong: #1A1A1A;       /* Outline buttons, focus, selected card edge */
+  --border-input: #DCDCD8;
+
+  /* ── Status ────────────────────────────────────────── */
+  --status-success: #1ED77A;
+  --status-warning: #F59E0B;      /* "Pending" pill */
+  --status-warning-bg: #FEF3C7;
+  --status-danger: #E5484D;
+  --status-danger-bg: #FEEBEB;
+  --status-info: #6E8AFF;          /* Stripe button blue */
+  --status-info-bg: #EEF2FF;
+
+  /* Notification trial banner */
+  --banner-trial-bg: #1A1A1A;
+  --banner-trial-text: #FFFFFF;
+
+  /* Tutorial banner (red/maroon) */
+  --banner-tutorial-bg: #8E1F1F;
+
+  /* ── Radii ─────────────────────────────────────────── */
+  --r-pill: 999px;                /* Buttons, badges, tabs, search inputs */
+  --r-card: 12px;
+  --r-input: 8px;
+  --r-chip: 6px;
+
+  /* ── Spacing ───────────────────────────────────────── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-7: 32px;
+  --s-8: 40px;
+  --s-9: 56px;
+
+  /* ── Shadow ────────────────────────────────────────── */
+  --shadow-card: 0 1px 2px rgba(20, 20, 20, 0.04), 0 1px 3px rgba(20, 20, 20, 0.04);
+  --shadow-modal: 0 24px 60px rgba(20, 20, 20, 0.18), 0 4px 12px rgba(20, 20, 20, 0.08);
+  --shadow-fab: 0 8px 24px rgba(30, 215, 122, 0.35);
+
+  /* ── Type ──────────────────────────────────────────── */
+  --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --t-display: 700 28px/1.2 var(--font-ui);   /* Page heros (rare) */
+  --t-h1: 600 22px/1.25 var(--font-ui);       /* Page title — "Accounting", "Notifications" */
+  --t-h2: 600 16px/1.35 var(--font-ui);       /* Card title — "Sport Program" */
+  --t-h3: 600 14px/1.4 var(--font-ui);        /* Inline label — "Profile name" */
+  --t-body: 400 14px/1.5 var(--font-ui);      /* Body copy */
+  --t-body-strong: 500 14px/1.5 var(--font-ui);
+  --t-secondary: 400 13px/1.45 var(--font-ui); /* Subtitle under page title */
+  --t-caption: 400 12px/1.4 var(--font-ui);   /* Helper text */
+  --t-eyebrow: 600 11px/1 var(--font-ui);     /* "RESOURCES", "MANAGEMENT" — uppercase */
+  --t-pill: 500 13px/1 var(--font-ui);        /* Tab pills */
+  --t-button: 600 13px/1 var(--font-ui);
+}
+
+/* Reset-ish base */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  color: var(--text-primary);
+  background: var(--surface-canvas);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a { color: var(--text-link); }
+
+/* Eyebrow utility */
+.eyebrow {
+  font: var(--t-eyebrow);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}

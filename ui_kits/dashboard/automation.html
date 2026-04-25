@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Ekklo · Automation</title>
+<link rel="stylesheet" href="../../colors_and_type.css" />
+<link rel="stylesheet" href="_shell.css" />
+<style>
+  .upsell {
+    display: grid; grid-template-columns: 200px 1fr;
+    gap: 28px; align-items: center; max-width: 720px;
+    background: white; border: 1px solid var(--border-subtle); border-radius: 12px;
+    padding: 28px 32px; margin-bottom: 24px;
+  }
+  .upsell h2 { font: 700 22px/1.3 var(--font-ui); margin: 0 0 8px; }
+  .upsell p { font: var(--t-body); color: var(--text-secondary); margin: 0 0 16px; max-width: 50ch; }
+  .upsell .bell-wrap { display: flex; align-items: center; justify-content: center; }
+
+  .demo-frame {
+    background: linear-gradient(135deg, #0D1B5E, #C2410C, #F59E0B);
+    border-radius: 16px; padding: 60px 80px; max-width: 820px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .demo-window {
+    width: 100%; background: #1A1A1A; border-radius: 8px; overflow: hidden;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.5);
+  }
+  .demo-window .chrome { background: #2C2C2A; padding: 8px 12px; display: flex; gap: 6px; }
+  .demo-window .chrome span { width: 10px; height: 10px; border-radius: 999px; background: #444; }
+  .demo-window .body {
+    background: #1A1A1A; padding: 24px; color: white; font: var(--t-body);
+    display: grid; grid-template-columns: 80px 1fr; gap: 20px;
+  }
+  .demo-window .body .nav { display: flex; flex-direction: column; gap: 10px; color: rgba(255,255,255,0.4); }
+  .demo-window .body .nav span { padding: 6px; }
+  .demo-window .modal {
+    background: #2C2C2A; border-radius: 8px; padding: 20px; max-width: 360px; margin: 0 auto;
+    border: 1px solid rgba(216, 241, 26, 0.3);
+  }
+  .demo-window .modal h4 { font: 700 14px var(--font-ui); margin: 0 0 16px; }
+  .demo-window .modal label { font: var(--t-caption); color: rgba(255,255,255,0.5); display: block; margin: 12px 0 4px; }
+  .demo-window .modal .input { background: #1A1A1A; border: 1px solid rgba(216, 241, 26, 0.4); border-radius: 6px; padding: 8px 10px; font: var(--t-body); }
+  .demo-window .modal .actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+  .demo-window .modal .actions button { border: none; padding: 6px 14px; border-radius: 999px; cursor: pointer; font: 600 11px var(--font-ui); }
+  .demo-window .modal .cancel { background: transparent; color: rgba(255,255,255,0.5); }
+  .demo-window .modal .ok { background: var(--ekklo-lime); color: var(--ekklo-lime-ink); }
+</style>
+</head>
+<body>
+
+<div class="app" data-screen-label="12 Automation">
+  <div id="shell-side"></div>
+  <main class="main">
+    <div id="shell-top"></div>
+
+    <div class="page">
+      <div class="page-head">
+        <div>
+          <h1>Automations</h1>
+          <p class="subtitle">Automate recurring actions and connect Ekklo to your favorite tools.</p>
+        </div>
+        <div class="head-actions">
+          <a>🔑 API Keys</a>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="active">Automations</button>
+        <button>Integrations</button>
+      </div>
+
+      <div class="upsell">
+        <div class="bell-wrap"><span class="bell" id="bell-up"></span></div>
+        <div>
+          <h2>You do not have access to automations with your current subscription.</h2>
+          <p>Automations let you create coaching periods of 1, 3, 6, 9 months with everything planned to save as much time as possible. Schedule recurring actions, send messages, assign programs and much more automatically.</p>
+          <button class="btn btn-primary">Upgrade your subscription</button>
+        </div>
+      </div>
+
+      <div class="demo-frame">
+        <div class="demo-window">
+          <div class="chrome"><span></span><span></span><span></span></div>
+          <div class="body">
+            <div class="nav">
+              <span>▦</span><span>👤</span><span>👥</span><span>📅</span><span>🏋</span>
+            </div>
+            <div>
+              <div style="font: var(--t-eyebrow); color: rgba(255,255,255,0.5); margin-bottom: 12px;">AUTOMATIONS</div>
+              <div class="modal">
+                <h4>Create an automation</h4>
+                <div style="font: var(--t-caption); color: rgba(255,255,255,0.5); margin-bottom: 12px;">Configure your workflow</div>
+                <label>Automation name</label>
+                <div class="input">Onboarding Client</div>
+                <label>Description</label>
+                <div class="input" style="height: 36px;"></div>
+                <label>Category</label>
+                <div class="input" style="color: rgba(255,255,255,0.4);">Select a category ▾</div>
+                <label>Trigger</label>
+                <div class="input" style="color: rgba(255,255,255,0.4);">Manual ▾</div>
+                <div class="actions">
+                  <button class="cancel">Cancel</button>
+                  <button class="ok">Create</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="fab">💬</div>
+
+<script src="_shell.js"></script>
+<script>
+  __mountShell('automation', 'Automations', { tutorial: true });
+  document.getElementById('bell-up').innerHTML = window.__BELL_SVG(140);
+  document.getElementById('bell-up').style.width = '160px';
+  document.getElementById('bell-up').style.height = '160px';
+</script>
+</body>
+</html>

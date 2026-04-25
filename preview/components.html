@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Ekklo — Components</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="_shell.css" />
+<style>
+  body { max-width: 1320px; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+  .demo {
+    background: var(--surface-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--r-card);
+    padding: 32px;
+  }
+  .demo h3 {
+    font: var(--t-h3); margin: 0 0 4px;
+  }
+  .demo .demo-meta {
+    font: var(--t-caption); color: var(--text-secondary); margin: 0 0 24px;
+  }
+  .demo .stage {
+    background: var(--surface-canvas);
+    border-radius: var(--r-input);
+    padding: 28px;
+    display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+    min-height: 80px;
+  }
+  .stage.col { flex-direction: column; align-items: stretch; gap: 16px; }
+
+  /* ──────────────── Buttons ──────────────── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    white-space: nowrap;
+    height: 36px; padding: 0 18px;
+    border-radius: var(--r-pill);
+    font: var(--t-button);
+    border: none; cursor: pointer;
+    transition: filter 0.15s ease, background 0.15s ease;
+    text-decoration: none;
+    color: var(--ekklo-lime-ink);
+  }
+  .btn-primary {
+    background: var(--ekklo-lime); color: var(--ekklo-lime-ink);
+  }
+  .btn-primary:hover { filter: brightness(0.95); }
+  .btn-ink {
+    background: var(--ekklo-ink); color: white;
+  }
+  .btn-ink:hover { background: #2a2a2a; }
+  .btn-outline {
+    background: white; color: var(--text-primary);
+    border: 1.5px solid var(--ekklo-lime);
+  }
+  .btn-outline:hover { background: #fbffe0; }
+  .btn-ghost {
+    background: transparent; color: var(--text-primary);
+    border: 1.5px solid var(--border-input);
+  }
+  .btn-ghost:hover { background: var(--surface-sunken); }
+  .btn-text {
+    background: transparent; color: var(--text-secondary); padding: 0 8px;
+  }
+  .btn-text:hover { color: var(--text-primary); }
+
+  .btn-sm { height: 30px; padding: 0 14px; font-size: 12px; }
+  .btn-lg { height: 44px; padding: 0 22px; font-size: 14px; }
+
+  .btn .arr {
+    display: inline-block; width: 14px; height: 14px;
+    background: currentColor;
+    -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><line x1='5' y1='12' x2='19' y2='12'/><polyline points='12 5 19 12 12 19'/></svg>") center/contain no-repeat;
+    mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><line x1='5' y1='12' x2='19' y2='12'/><polyline points='12 5 19 12 12 19'/></svg>") center/contain no-repeat;
+  }
+  .btn .check {
+    display: inline-block; width: 14px; height: 14px;
+    background: currentColor;
+    -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>") center/contain no-repeat;
+    mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>") center/contain no-repeat;
+  }
+  .btn .plus {
+    display: inline-block; width: 14px; height: 14px;
+    background: currentColor;
+    -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><line x1='12' y1='5' x2='12' y2='19'/><line x1='5' y1='12' x2='19' y2='12'/></svg>") center/contain no-repeat;
+    mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><line x1='12' y1='5' x2='12' y2='19'/><line x1='5' y1='12' x2='19' y2='12'/></svg>") center/contain no-repeat;
+  }
+
+  /* ──────────────── Pills / Badges ──────────────── */
+  .tab-group {
+    display: inline-flex; gap: 6px;
+    background: transparent;
+  }
+  .tab {
+    height: 30px; padding: 0 14px;
+    border-radius: var(--r-pill);
+    background: transparent; color: var(--text-primary);
+    font: var(--t-pill); border: none; cursor: pointer;
+    display: inline-flex; align-items: center;
+  }
+  .tab:hover { background: var(--surface-sunken); }
+  .tab[aria-selected="true"] { background: var(--ekklo-ink); color: white; }
+  .tab .dim { color: var(--text-tertiary); margin-left: 6px; font-size: 11px; }
+  .tab[aria-selected="true"] .dim { color: rgba(255,255,255,0.6); }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    height: 20px; padding: 0 8px;
+    border-radius: var(--r-chip);
+    font: 600 11px/1 var(--font-ui);
+  }
+  .badge-new { background: var(--ekklo-lime-soft); color: var(--ekklo-lime-ink); }
+  .badge-v2 { background: var(--ekklo-lime-soft); color: var(--ekklo-lime-ink); }
+  .badge-active { background: var(--ekklo-mint); color: white; }
+  .badge-pending { background: #FEF3C7; color: #92400E; }
+  .badge-once { background: var(--ekklo-mint-soft); color: #0C5C32; }
+  .badge-not-verified { background: var(--ekklo-lime-soft); color: var(--ekklo-lime-ink); }
+
+  /* ──────────────── Inputs ──────────────── */
+  .field { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+  .field label { font: var(--t-h3); }
+  .field .help { font: var(--t-caption); color: var(--text-secondary); }
+  .field .req { color: var(--status-danger); }
+
+  .input, .select, .textarea {
+    width: 100%;
+    height: 40px;
+    padding: 0 14px;
+    border: 1px solid var(--border-input);
+    border-radius: var(--r-input);
+    background: var(--surface-card);
+    font: var(--t-body); color: var(--text-primary);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .input:focus, .select:focus, .textarea:focus {
+    outline: none; border-color: var(--ekklo-ink);
+    box-shadow: 0 0 0 3px rgba(216, 241, 26, 0.35);
+  }
+  .input::placeholder { color: var(--text-tertiary); }
+  .textarea { height: auto; padding: 12px 14px; min-height: 96px; resize: vertical; }
+  .input-pill {
+    border-radius: var(--r-pill);
+    padding-left: 38px;
+    background: var(--surface-card)
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239C9C98' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><line x1='21' y1='21' x2='16.65' y2='16.65'/></svg>")
+      no-repeat 14px center / 16px;
+  }
+
+  .toggle {
+    --w: 36px; --h: 20px;
+    width: var(--w); height: var(--h);
+    background: #DCDCD8; border-radius: 999px;
+    position: relative; display: inline-block; cursor: pointer;
+    transition: background 0.18s;
+  }
+  .toggle::after {
+    content: ""; position: absolute; top: 2px; left: 2px;
+    width: 16px; height: 16px; background: white; border-radius: 999px;
+    transition: transform 0.18s;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  }
+  .toggle.on { background: var(--ekklo-ink); }
+  .toggle.on::after { transform: translateX(16px); }
+
+  /* ──────────────── Cards / List ──────────────── */
+  .card {
+    background: var(--surface-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--r-card);
+    padding: 20px;
+  }
+  .card-title { font: var(--t-h2); margin: 0 0 4px; }
+  .card-sub { font: var(--t-secondary); color: var(--text-secondary); margin: 0; }
+
+  /* ──────────────── Sidebar nav ──────────────── */
+  .sidebar-nav {
+    width: 240px;
+    background: var(--surface-canvas);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--r-card);
+    padding: 16px 12px;
+  }
+  .sidebar-nav .eyebrow { padding: 14px 12px 6px; display: block; }
+  .sidebar-nav .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    height: 36px; padding: 0 12px;
+    border-radius: var(--r-input);
+    color: var(--text-secondary);
+    font: var(--t-body-strong);
+    cursor: pointer;
+    text-decoration: none;
+    margin-bottom: 2px;
+  }
+  .sidebar-nav .nav-item:hover { background: var(--surface-sunken); color: var(--text-primary); }
+  .sidebar-nav .nav-item.selected { background: var(--surface-sunken); color: var(--text-primary); font-weight: 600; }
+  .sidebar-nav .nav-item .ic {
+    width: 18px; height: 18px; color: var(--text-secondary);
+    background: currentColor;
+    -webkit-mask-size: contain; mask-size: contain;
+    -webkit-mask-position: center; mask-position: center;
+    -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  }
+  .sidebar-nav .nav-item .grow { flex: 1; }
+
+  .ic-dashboard { -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='3' width='7' height='7' rx='1.5'/><rect x='14' y='3' width='7' height='7' rx='1.5'/><rect x='3' y='14' width='7' height='7' rx='1.5'/><rect x='14' y='14' width='7' height='7' rx='1.5'/></svg>"); mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='3' width='7' height='7' rx='1.5'/><rect x='14' y='3' width='7' height='7' rx='1.5'/><rect x='3' y='14' width='7' height='7' rx='1.5'/><rect x='14' y='14' width='7' height='7' rx='1.5'/></svg>"); }
+  .ic-clients { -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='8' r='4'/><path d='M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8'/></svg>"); mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='8' r='4'/><path d='M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8'/></svg>"); }
+  .ic-prospects { -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'><path d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2'/><circle cx='9' cy='7' r='4'/><path d='M22 21v-2a4 4 0 0 0-3-3.87'/><path d='M16 3.13a4 4 0 0 1 0 7.75'/></svg>"); mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'><path d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2'/><circle cx='9' cy='7' r='4'/><path d='M22 21v-2a4 4 0 0 0-3-3.87'/><path d='M16 3.13a4 4 0 0 1 0 7.75'/></svg>"); }
+  .ic-calendar { -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg>"); mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg>"); }
+  .ic-fitness { -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'><path d='M6 4v16'/><path d='M18 4v16'/><path d='M6 12h12'/><path d='M2 9v6'/><path d='M22 9v6'/></svg>"); mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'><path d='M6 4v16'/><path d='M18 4v16'/><path d='M6 12h12'/><path d='M2 9v6'/><path d='M22 9v6'/></svg>"); }
+
+  /* ──────────────── Table ──────────────── */
+  .table {
+    width: 100%; border-collapse: collapse;
+    background: var(--surface-card);
+  }
+  .table th {
+    text-align: left;
+    font: var(--t-eyebrow); letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-tertiary);
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .table td {
+    padding: 18px 16px;
+    border-bottom: 1px solid var(--border-subtle);
+    font: var(--t-body); color: var(--text-primary);
+    vertical-align: middle;
+  }
+  .table .check-col { width: 36px; }
+  .table .checkbox {
+    width: 16px; height: 16px; border: 1.5px solid var(--border-input);
+    border-radius: 4px; cursor: pointer; display: inline-block;
+  }
+  .avatar {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 999px;
+    background: var(--surface-sunken);
+    font: 600 11px/1 var(--font-ui); color: var(--text-secondary);
+    margin-right: 10px;
+  }
+  .table .name-cell { display: flex; align-items: center; }
+
+  /* ──────────────── Modal ──────────────── */
+  .modal-stage {
+    background: rgba(26,26,26,0.06);
+    border-radius: var(--r-input);
+    padding: 32px;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 360px;
+  }
+  .modal {
+    background: var(--surface-card);
+    border-radius: var(--r-card);
+    box-shadow: var(--shadow-modal);
+    width: 100%; max-width: 420px;
+    padding: 24px;
+  }
+  .modal-head { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .modal-icon {
+    width: 36px; height: 36px; border-radius: var(--r-input);
+    background: var(--ekklo-lime-soft);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ekklo-lime-ink); font-size: 18px;
+  }
+  .modal-title { font: var(--t-h2); margin: 0; }
+  .modal-sub { font: var(--t-caption); color: var(--text-secondary); margin: 2px 0 0; }
+  .modal-foot { display: flex; justify-content: flex-end; gap: 8px; margin-top: 24px; }
+
+  /* ──────────────── Empty state ──────────────── */
+  .empty {
+    background: var(--ekklo-ink-soft);
+    border-radius: var(--r-card);
+    padding: 32px;
+    text-align: center;
+    color: white;
+  }
+  .empty-icon {
+    width: 28px; height: 28px; margin: 0 auto 12px;
+    background: white;
+    -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'><path d='M3 21V8l9-5 9 5v13'/><path d='M9 21v-9h6v9'/></svg>") center/contain no-repeat;
+    mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'><path d='M3 21V8l9-5 9 5v13'/><path d='M9 21v-9h6v9'/></svg>") center/contain no-repeat;
+  }
+  .empty h3 { font: var(--t-h2); margin: 0 0 6px; }
+  .empty p { font: var(--t-secondary); color: rgba(255,255,255,0.7); margin: 0 0 18px; }
+
+  /* ──────────────── Trial banner ──────────────── */
+  .trial-banner {
+    background: white; border: 1px solid var(--border-subtle);
+    border-radius: var(--r-card); padding: 14px 20px;
+    display: flex; align-items: center; justify-content: center; gap: 14px;
+    font: var(--t-body-strong);
+  }
+
+</style>
+</head>
+<body>
+
+<header class="spec-header">
+  <div class="eyebrow">Foundations · Components</div>
+  <h1>Components</h1>
+  <p>Every interactive element in Ekklo speaks the same vocabulary: pills for action and tabs, 12px cards for grouping, 8px inputs, near-black for "this is selected," lime for "this is the next step."</p>
+</header>
+
+<!-- ── Buttons ─────────────────────────────────────────── -->
+<section class="spec-section">
+  <h2>Buttons</h2>
+  <p class="desc">One primary, one secondary, three quieter alternatives. Buttons are always pills; trailing icons (arrow, check) lean into the verb.</p>
+
+  <div class="grid-2">
+    <div class="demo">
+      <h3>Primary — Lime fill</h3>
+      <p class="demo-meta">The single loudest action on a screen. One per view.</p>
+      <div class="stage">
+        <button class="btn btn-primary">Create program <span class="check"></span></button>
+        <button class="btn btn-primary"><span class="plus"></span> Add a payment</button>
+        <button class="btn btn-primary">Go to services <span class="arr"></span></button>
+        <button class="btn btn-primary btn-sm">Let's go</button>
+      </div>
+    </div>
+
+    <div class="demo">
+      <h3>Secondary — Ink fill</h3>
+      <p class="demo-meta">Used for "Cancel" inside dialogs and the trial-banner CTA. Never paired with anything other than the primary lime button.</p>
+      <div class="stage">
+        <button class="btn btn-ink">Upgrade plan</button>
+        <button class="btn btn-ink">Cancel</button>
+        <button class="btn btn-ink btn-sm">Manual payment</button>
+      </div>
+    </div>
+
+    <div class="demo">
+      <h3>Outline — Lime stroke</h3>
+      <p class="demo-meta">Two-of-two action layouts: "Assign a template" + "Create a program". The outline holds the alternate path without competing with the primary fill.</p>
+      <div class="stage">
+        <button class="btn btn-outline"><span class="plus"></span> Assign a template</button>
+        <button class="btn btn-outline">New folder</button>
+        <button class="btn btn-outline">New collection</button>
+      </div>
+    </div>
+
+    <div class="demo">
+      <h3>Ghost & text</h3>
+      <p class="demo-meta">Quiet rails — toolbar buttons, "Cancel" outside dialogs, video tutorial links in the topbar.</p>
+      <div class="stage">
+        <button class="btn btn-ghost">Cancel</button>
+        <button class="btn btn-text">Replay the guide</button>
+        <button class="btn btn-text">Video tutorial</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Tabs / Pills ─────────────────────────────────────── -->
+<section class="spec-section">
+  <h2>Tabs &amp; chips</h2>
+  <p class="desc">Tabs are pills. The selected pill is solid ink; all others are transparent until hover. Tab groups are left-aligned under the page title.</p>
+
+  <div class="grid-2">
+    <div class="demo">
+      <h3>Tab group</h3>
+      <p class="demo-meta">Used everywhere — Programs / Meal plans / Meals / Food equivalents. Single ink-filled pill marks the active view.</p>
+      <div class="stage">
+        <div class="tab-group">
+          <button class="tab" aria-selected="true">Programs</button>
+          <button class="tab">Meal plans</button>
+          <button class="tab">Meals</button>
+          <button class="tab">Food equivalents</button>
+          <button class="tab">Board view</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo">
+      <h3>Pipeline / kanban tab</h3>
+      <p class="demo-meta">Same pill but with a colored dot prefix and a count. From the Prospects board.</p>
+      <div class="stage">
+        <button class="tab" aria-selected="true"><span style="display:inline-block;width:8px;height:8px;border-radius:999px;background:#9C9C98;margin-right:8px;"></span>First contact <span class="dim">0</span></button>
+        <button class="tab"><span style="display:inline-block;width:8px;height:8px;border-radius:999px;background:#6E8AFF;margin-right:8px;"></span>Discovery call <span class="dim">0</span></button>
+        <button class="tab"><span style="display:inline-block;width:8px;height:8px;border-radius:999px;background:#F59E0B;margin-right:8px;"></span>Proposal <span class="dim">0</span></button>
+        <button class="tab"><span style="display:inline-block;width:8px;height:8px;border-radius:999px;background:#1ED77A;margin-right:8px;"></span>Closing <span class="dim">0</span></button>
+      </div>
+    </div>
+
+    <div class="demo">
+      <h3>Status badges</h3>
+      <p class="demo-meta">All chips share a 6px radius and 11px semibold type. Status color stays in the chip — never spreads.</p>
+      <div class="stage">
+        <span class="badge badge-new">New</span>
+        <span class="badge badge-v2">V2</span>
+        <span class="badge badge-active">Active</span>
+        <span class="badge badge-pending">Pending</span>
+        <span class="badge badge-once">Once</span>
+        <span class="badge badge-not-verified">Not verified</span>
+      </div>
+    </div>
+
+    <div class="demo">
+      <h3>Trial banner</h3>
+      <p class="demo-meta">Sits in the top center, hugs the page title — the trial countdown lives here so the rest of the chrome stays quiet.</p>
+      <div class="stage">
+        <div class="trial-banner">
+          <span>You have 9 free trial days remaining</span>
+          <button class="btn btn-ink btn-sm">Upgrade plan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Inputs ───────────────────────────────────────────── -->
+<section class="spec-section">
+  <h2>Inputs</h2>
+  <p class="desc">Every input is 40px tall. Search rounds to a pill; everything else uses 8px. Required fields use a small red asterisk (the only place danger-red is allowed in steady state).</p>
+
+  <div class="grid-2">
+    <div class="demo">
+      <h3>Text + helper</h3>
+      <p class="demo-meta">Label above. Helper sits just under the label, never under the field.</p>
+      <div class="stage col">
+        <div class="field">
+          <label>Profile name</label>
+          <span class="help">This name will be visible on your profile. 100 characters maximum.</span>
+          <input class="input" value="test" />
+        </div>
+        <div class="field">
+          <label>Team name <span class="req">*</span></label>
+          <input class="input" placeholder="E.g.: Fitness Team" />
+        </div>
+        <div class="field">
+          <label>Description</label>
+          <textarea class="textarea" placeholder="Team description..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo">
+      <h3>Search, select, toggle</h3>
+      <p class="demo-meta">Search uses the pill input — the only pill-shaped input. The selected dropdown rotates a chevron.</p>
+      <div class="stage col">
+        <input class="input input-pill" placeholder="Search a client..." />
+        <div class="field">
+          <label>Status <span class="req">*</span></label>
+          <select class="select">
+            <option>Pending</option>
+            <option>Paid</option>
+            <option>Failed</option>
+          </select>
+        </div>
+        <div style="display:flex; align-items:center; gap:14px;">
+          <span style="font: var(--t-body-strong);">Empêcher les captures d'écran</span>
+          <span class="toggle on" role="switch"></span>
+          <span style="font: var(--t-body-strong); margin-left: 24px;">Enable reminder</span>
+          <span class="toggle" role="switch"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Sidebar nav ──────────────────────────────────────── -->
+<section class="spec-section">
+  <h2>Sidebar navigation</h2>
+  <p class="desc">240px wide, lives on the canvas (not its own surface). Three groups: top items, then RESOURCES, then MANAGEMENT, then PROFILE — each separated by an uppercase tertiary-gray eyebrow.</p>
+
+  <div class="grid-2">
+    <div class="demo">
+      <h3>Anatomy</h3>
+      <p class="demo-meta">Nav items are 36px rows. Selected state uses a sunken-gray pill (not lime — the lime is reserved for action). "New" / "V2" tags sit at the right of an item.</p>
+      <div class="stage" style="padding: 16px;">
+        <nav class="sidebar-nav">
+          <a class="nav-item selected"><span class="ic ic-dashboard"></span><span class="grow">Dashboard</span></a>
+          <a class="nav-item"><span class="ic ic-clients"></span><span class="grow">Clients</span></a>
+          <a class="nav-item"><span class="ic ic-prospects"></span><span class="grow">Prospects</span><span class="badge badge-new">New</span></a>
+          <a class="nav-item"><span class="ic ic-calendar"></span><span class="grow">Calendar</span></a>
+          <span class="eyebrow">Resources</span>
+          <a class="nav-item"><span class="ic ic-fitness"></span><span class="grow">Fitness</span></a>
+        </nav>
+      </div>
+    </div>
+
+    <div class="demo">
+      <h3>Empty state</h3>
+      <p class="demo-meta">Two-line copy on a near-black card. Used for any large module the coach hasn't set up — Calendar without a coach profile, Public Profile not yet created. Lime CTA centers below.</p>
+      <div class="stage">
+        <div class="empty" style="width: 100%;">
+          <div class="empty-icon"></div>
+          <h3>Start your coach profile</h3>
+          <p>Create your profile to be visible to your clients and offer your services.</p>
+          <button class="btn btn-primary"><span class="plus"></span> Create my coach profile</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Cards ────────────────────────────────────────────── -->
+<section class="spec-section">
+  <h2>Cards</h2>
+  <p class="desc">Three card families: content card, feature row (with toggle), and upload tile. All share 12px radius + 1px hairline border + tiny shadow.</p>
+  <div class="grid-3">
+    <div class="demo" style="padding: 0; background: var(--surface-canvas);">
+      <div style="padding: 32px;">
+        <h3>Content</h3>
+        <p class="demo-meta">Used for empty modules (Stripe), feature explainers, payment cards.</p>
+      </div>
+      <div class="stage" style="background: white; border-radius: 0 0 var(--r-card) var(--r-card);">
+        <div class="card" style="width: 100%; text-align: center; padding: 32px;">
+          <div style="font-size: 22px; margin-bottom: 12px;">💳</div>
+          <h3 class="card-title">Connect your Stripe account</h3>
+          <p class="card-sub">You haven't connected your Stripe account yet. Connect it to start receiving payments.</p>
+          <button class="btn btn-ink" style="margin-top: 16px; background: #6E8AFF;">Connect with Stripe</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo" style="padding: 0; background: var(--surface-canvas);">
+      <div style="padding: 32px;">
+        <h3>Toggle row</h3>
+        <p class="demo-meta">Notification preferences — two-line label with a trailing toggle. 16px gap between rows.</p>
+      </div>
+      <div class="stage" style="background: white; border-radius: 0 0 var(--r-card) var(--r-card); padding: 28px;">
+        <div class="card" style="width: 100%;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+            <div>
+              <p style="font: var(--t-h3); margin: 0 0 4px;">Sessions</p>
+              <p style="font: var(--t-caption); color: var(--text-secondary); margin: 0;">Your client will receive a notification at 10:00 AM on the day of their session.</p>
+            </div>
+            <span class="toggle on"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo" style="padding: 0; background: var(--surface-canvas);">
+      <div style="padding: 32px;">
+        <h3>Upload tile</h3>
+        <p class="demo-meta">From the Mobile App default-images view. Image fills 4:3, caption ("JPG, PNG · Max 5 MB") sits below center.</p>
+      </div>
+      <div class="stage" style="background: white; border-radius: 0 0 var(--r-card) var(--r-card); padding: 28px;">
+        <div class="card" style="width: 100%; padding: 16px;">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+            <span style="display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius: 999px; background: var(--ekklo-mint-soft); font-size: 14px;">🥬</span>
+            <strong style="font: var(--t-h3);">Nutrition Plan</strong>
+          </div>
+          <p style="font: var(--t-caption); color: var(--text-secondary); margin: 0 0 12px;">Default image displayed on nutrition cards</p>
+          <div style="height: 110px; background: var(--surface-sunken); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text-tertiary);">🍅 🥑 🍳</div>
+          <p style="font: var(--t-caption); color: var(--text-tertiary); margin: 12px 0 0; text-align: center;">JPG, PNG · Max 5 MB</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Table ────────────────────────────────────────────── -->
+<section class="spec-section">
+  <h2>Table</h2>
+  <p class="desc">Header row in uppercase tertiary type with hairline divider. Rows are 56px tall. Cells lean left; status pills and amounts can right-align.</p>
+  <div class="demo">
+    <div style="background: white; border-radius: var(--r-card); border: 1px solid var(--border-subtle); overflow: hidden;">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="check-col"><span class="checkbox"></span></th>
+            <th>Date</th>
+            <th>Client</th>
+            <th>Service</th>
+            <th>Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="checkbox"></span></td>
+            <td>04/11/2026</td>
+            <td><div class="name-cell"><span class="avatar">F</span>Fode Doumbouya</div></td>
+            <td>—</td>
+            <td>€1.00</td>
+            <td><span class="badge badge-pending">Pending</span></td>
+          </tr>
+          <tr>
+            <td><span class="checkbox"></span></td>
+            <td>04/08/2026</td>
+            <td><div class="name-cell"><span class="avatar">A</span>Aya Nakamura</div></td>
+            <td>Sport program</td>
+            <td>€150.00</td>
+            <td><span class="badge badge-active">Paid</span></td>
+          </tr>
+          <tr>
+            <td><span class="checkbox"></span></td>
+            <td>03/29/2026</td>
+            <td><div class="name-cell"><span class="avatar">M</span>Marie Dubois</div></td>
+            <td>Nutrition plan</td>
+            <td>€60.00</td>
+            <td><span class="badge badge-active">Paid</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ── Modal ────────────────────────────────────────────── -->
+<section class="spec-section">
+  <h2>Modal</h2>
+  <p class="desc">Centered, 420px max width, 12px radius. Header has the icon-on-soft-lime tile + title + subtitle. Footer right-aligns Cancel (ink) + Create (lime).</p>
+  <div class="demo modal-stage">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-icon">👥</div>
+        <div>
+          <h3 class="modal-title">Create a new team</h3>
+          <p class="modal-sub">Collaborate with other coaches</p>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="field">
+          <label>Team name <span class="req">*</span></label>
+          <input class="input" placeholder="E.g.: Fitness Team" />
+        </div>
+        <div class="field">
+          <label>Description</label>
+          <textarea class="textarea" placeholder="Team description..."></textarea>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-ink">Cancel</button>
+        <button class="btn btn-primary"><span class="plus"></span> Create team</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

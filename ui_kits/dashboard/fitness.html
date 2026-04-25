@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Ekklo · Fitness</title>
+<link rel="stylesheet" href="../../colors_and_type.css" />
+<link rel="stylesheet" href="_shell.css" />
+<style>
+  .prog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .prog-card { background: white; border: 1px solid var(--border-subtle); border-radius: 12px; overflow: hidden; cursor: pointer; }
+  .prog-card:hover { border-color: var(--ekklo-lime); }
+  .prog-card .cover { height: 120px; background: linear-gradient(135deg, #1A1A1A, #2C2C2A); display: flex; align-items: flex-end; padding: 14px; color: white; }
+  .prog-card .cover.lime { background: linear-gradient(135deg, var(--ekklo-lime), #B5CC10); color: var(--ekklo-lime-ink); }
+  .prog-card .cover.mint { background: linear-gradient(135deg, var(--ekklo-mint), #16A34A); }
+  .prog-card .cover h3 { margin: 0; font: 700 18px/1.2 var(--font-ui); }
+  .prog-card .body { padding: 14px; }
+  .prog-card .meta { font: var(--t-caption); color: var(--text-secondary); display: flex; gap: 12px; margin-bottom: 8px; }
+  .prog-card .clients { display: flex; align-items: center; gap: -4px; }
+  .prog-card .clients .av { width: 22px; height: 22px; border-radius: 999px; background: var(--surface-sunken); display: inline-flex; align-items: center; justify-content: center; font: 600 10px var(--font-ui); color: var(--text-secondary); border: 2px solid white; margin-left: -6px; }
+  .prog-card .clients .av:first-child { margin-left: 0; }
+  .prog-card .clients .more { font: var(--t-caption); color: var(--text-tertiary); margin-left: 8px; }
+</style>
+</head>
+<body>
+
+<div class="app" data-screen-label="05 Fitness">
+  <div id="shell-side"></div>
+  <main class="main">
+    <div id="shell-top"></div>
+
+    <div class="page">
+      <div class="page-head">
+        <div>
+          <h1>Your fitness programs</h1>
+          <p class="subtitle">View all your programs: templates and programs assigned to your clients.</p>
+        </div>
+        <div class="head-actions">
+          <a>📖 Exercise Library</a>
+          <a>⚙ Units</a>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="active">Assigned programs</button>
+        <button>Templates</button>
+        <button>Programs</button>
+        <button>Sessions</button>
+        <button>Circuits</button>
+      </div>
+
+      <div class="toolbar">
+        <div class="search"><span>🔍</span><input placeholder="Search for a program..." /></div>
+        <span class="divider"></span>
+        <button class="filter active">All</button>
+        <button class="filter">▽ Filter</button>
+        <span class="grow"></span>
+        <button class="btn btn-outline">+ Assign a template</button>
+        <button class="btn btn-primary">Create a program</button>
+      </div>
+
+      <div class="prog-grid">
+        <div class="prog-card">
+          <div class="cover lime"><h3>Prise de masse — 12 sem</h3></div>
+          <div class="body">
+            <div class="meta"><span>3× / week</span><span>· 24 sessions</span></div>
+            <div class="clients"><span class="av">AN</span><span class="av">FD</span><span class="more">+ 1 more</span></div>
+          </div>
+        </div>
+        <div class="prog-card">
+          <div class="cover"><h3>Hypertrophy push/pull</h3></div>
+          <div class="body">
+            <div class="meta"><span>4× / week</span><span>· 32 sessions</span></div>
+            <div class="clients"><span class="av">MR</span></div>
+          </div>
+        </div>
+        <div class="prog-card">
+          <div class="cover mint"><h3>Mobility & recovery</h3></div>
+          <div class="body">
+            <div class="meta"><span>2× / week</span><span>· 16 sessions</span></div>
+            <div class="clients"><span class="av">EH</span><span class="av">YT</span></div>
+          </div>
+        </div>
+        <div class="prog-card">
+          <div class="cover"><h3>5/3/1 BBB</h3></div>
+          <div class="body">
+            <div class="meta"><span>4× / week</span><span>· 16 sessions</span></div>
+            <div class="clients"><span class="av">DP</span></div>
+          </div>
+        </div>
+        <div class="prog-card">
+          <div class="cover lime"><h3>Postpartum reset</h3></div>
+          <div class="body">
+            <div class="meta"><span>3× / week</span><span>· 8 sessions</span></div>
+            <div class="clients"><span class="av">JN</span></div>
+          </div>
+        </div>
+        <div class="prog-card">
+          <div class="cover"><h3>HIIT — 30 min</h3></div>
+          <div class="body">
+            <div class="meta"><span>2× / week</span><span>· 12 sessions</span></div>
+            <div class="clients"><span class="av">SK</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="fab">💬</div>
+
+<script src="_shell.js"></script>
+<script>__mountShell('fitness', 'Fitness', { tutorial: true });</script>
+</body>
+</html>

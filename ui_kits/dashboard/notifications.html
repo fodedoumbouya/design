@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Ekklo · Notifications</title>
+<link rel="stylesheet" href="../../colors_and_type.css" />
+<link rel="stylesheet" href="_shell.css" />
+<style>
+  .notif-layout { display: grid; grid-template-columns: 240px 1fr; gap: 24px; align-items: flex-start; }
+
+  .consumption {
+    background: white; border: 1px solid var(--border-subtle); border-radius: 12px; padding: 20px;
+  }
+  .consumption h3 { font: var(--t-h3); margin: 0 0 16px; color: var(--text-secondary); }
+  .consumption .qty { display: flex; align-items: center; gap: 12px; }
+  .consumption .qty .num { font: 700 36px/1 var(--font-ui); }
+  .consumption .qty .total { color: var(--text-secondary); font: var(--t-h3); }
+  .consumption .label { font: var(--t-caption); color: var(--text-tertiary); margin-top: 4px; }
+
+  .section-h { font: var(--t-h2); margin: 0 0 14px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 28px; }
+  .grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; max-width: 66%; }
+
+  .toggle-card {
+    background: white; border: 1px solid var(--border-subtle); border-radius: 10px;
+    padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start;
+  }
+  .toggle-card .grow { flex: 1; }
+  .toggle-card h4 { font: var(--t-body-strong); margin: 0 0 4px; }
+  .toggle-card p { font: var(--t-caption); color: var(--text-secondary); margin: 0; }
+
+  .switch {
+    width: 36px; height: 20px; border-radius: 999px; background: #D4D4D4;
+    position: relative; cursor: pointer; flex-shrink: 0;
+  }
+  .switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; background: white; border-radius: 999px; transition: 0.15s; }
+  .switch.on { background: var(--ekklo-ink); }
+  .switch.on::after { left: 18px; }
+</style>
+</head>
+<body>
+
+<div class="app" data-screen-label="13 Notifications">
+  <div id="shell-side"></div>
+  <main class="main">
+    <div id="shell-top"></div>
+
+    <div class="page">
+      <div class="page-head">
+        <div>
+          <h1>Notifications</h1>
+          <p class="subtitle">Save time by creating your circuit, session and sports program templates ready to be customized for each client.</p>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="active">Predefined</button>
+        <button>Custom</button>
+      </div>
+
+      <div class="notif-layout">
+        <aside class="consumption">
+          <h3>Consumption</h3>
+          <div class="qty">
+            <span class="num">0</span><span class="total">/1000</span>
+            <span class="bell" id="bell-c" style="margin-left: auto;"></span>
+          </div>
+          <div class="label">Notifications sent</div>
+        </aside>
+
+        <section>
+          <h3 class="section-h">Automatic notifications sent to your clients</h3>
+          <div class="grid3">
+            <div class="toggle-card"><div class="grow"><h4>Sessions</h4><p>Your client will receive a notification at 10:00 AM on the day of their session (day-based programs only)</p></div><span class="switch"></span></div>
+            <div class="toggle-card"><div class="grow"><h4>Sports program publication</h4><p>Your client will receive a notification when a sports program is published or updated</p></div><span class="switch"></span></div>
+            <div class="toggle-card"><div class="grow"><h4>Nutrition program assignment</h4><p>Your client will receive a notification when a nutrition program is assigned to them</p></div><span class="switch"></span></div>
+            <div class="toggle-card"><div class="grow"><h4>Habit assignment</h4><p>Your client will receive a notification when habits are assigned to them</p></div><span class="switch"></span></div>
+            <div class="toggle-card"><div class="grow"><h4>Motivational messages</h4><p>Your client will receive an AI-generated motivational notification every day at 9:05 AM</p></div><span class="switch on"></span></div>
+            <div class="toggle-card"><div class="grow"><h4>Questionnaire assignment</h4><p>Your client will receive a notification when a questionnaire is assigned to them</p></div><span class="switch"></span></div>
+            <div class="toggle-card"><div class="grow"><h4>File assignment</h4><p>Your client will receive a notification when a file or folder is assigned to them</p></div><span class="switch"></span></div>
+          </div>
+
+          <h3 class="section-h">Automatic notifications for you</h3>
+          <div class="grid2">
+            <div class="toggle-card"><div class="grow"><h4>Assessment completed</h4><p>You will receive a notification when a client fills out an assessment</p></div><span class="switch on"></span></div>
+            <div class="toggle-card"><div class="grow"><h4>Session feedback completed</h4><p>You will receive a notification when a client completes a session report</p></div><span class="switch on"></span></div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="fab">💬</div>
+
+<script src="_shell.js"></script>
+<script>
+  __mountShell('notifications', 'Notifications', { tutorial: true });
+  document.getElementById('bell-c').innerHTML = window.__BELL_SVG(56);
+  document.querySelectorAll('.switch').forEach(s => s.addEventListener('click', () => s.classList.toggle('on')));
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Ekklo · Tracking</title>
+<link rel="stylesheet" href="../../colors_and_type.css" />
+<link rel="stylesheet" href="_shell.css" />
+</head>
+<body>
+
+<div class="app" data-screen-label="07 Tracking">
+  <div id="shell-side"></div>
+  <main class="main">
+    <div id="shell-top"></div>
+
+    <div class="page">
+      <div class="page-head">
+        <div>
+          <h1>Your tracking templates</h1>
+          <p class="subtitle">Create templates to make tracking your clients easier.</p>
+        </div>
+        <div class="head-actions">
+          <a>📖 Metrics and journeys library</a>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="active">Assessments</button>
+        <button>Habits</button>
+        <button>Questionnaires</button>
+        <button>Session feedbacks</button>
+        <button>⊞ Board view</button>
+      </div>
+
+      <div class="toolbar">
+        <div class="search"><span>🔍</span><input placeholder="Search for an assessment..." /></div>
+        <span class="grow"></span>
+        <button class="btn btn-primary">Create an assessment</button>
+      </div>
+
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th style="width:32px;"><span class="checkbox"></span></th>
+            <th>Created</th>
+            <th>Assessment name</th>
+            <th>Questions</th>
+            <th>Assigned to</th>
+            <th style="width:120px;">Status</th>
+            <th style="width:60px;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="checkbox"></span></td><td>10/04/2026</td><td>Onboarding — Sport background</td><td>14</td><td><span class="av-sm"><span class="av">A</span> Aya Nakamura</span></td><td><span style="background: #FEF3C7; color: #92400E; padding: 3px 10px; border-radius: 999px; font: 600 11px var(--font-ui);">To validate</span></td><td>⋯</td></tr>
+          <tr><td><span class="checkbox"></span></td><td>02/04/2026</td><td>Weekly check-in</td><td>8</td><td><span class="av-sm"><span class="av">M</span> Marc Rivera</span></td><td><span style="background: var(--ekklo-lime-soft); color: var(--ekklo-lime-ink); padding: 3px 10px; border-radius: 999px; font: 600 11px var(--font-ui);">Validated</span></td><td>⋯</td></tr>
+          <tr><td><span class="checkbox"></span></td><td>28/03/2026</td><td>Body composition</td><td>11</td><td><span class="av-sm"><span class="av">E</span> Elena Haddad</span></td><td><span style="background: var(--ekklo-lime-soft); color: var(--ekklo-lime-ink); padding: 3px 10px; border-radius: 999px; font: 600 11px var(--font-ui);">Validated</span></td><td>⋯</td></tr>
+          <tr><td><span class="checkbox"></span></td><td>15/03/2026</td><td>Pain & mobility scan</td><td>22</td><td><span class="av-sm"><span class="av">D</span> David Paulsen</span></td><td><span style="background: var(--surface-sunken); color: var(--text-secondary); padding: 3px 10px; border-radius: 999px; font: 600 11px var(--font-ui);">Draft</span></td><td>⋯</td></tr>
+        </tbody>
+      </table>
+
+      <div class="tbl-meta">Showing <strong>1</strong> to <strong>4</strong> of <strong>4</strong> results</div>
+    </div>
+  </main>
+</div>
+
+<div class="fab">💬</div>
+
+<script src="_shell.js"></script>
+<script>__mountShell('tracking', 'Tracking templates', { tutorial: true });</script>
+</body>
+</html>

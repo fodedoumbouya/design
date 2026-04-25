@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Ekklo · Videos</title>
+<link rel="stylesheet" href="../../colors_and_type.css" />
+<link rel="stylesheet" href="_shell.css" />
+<style>
+  .vid-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .vid {
+    background: white; border: 1px solid var(--border-subtle); border-radius: 12px; overflow: hidden; cursor: pointer;
+  }
+  .vid:hover { border-color: var(--ekklo-lime); }
+  .vid .thumb {
+    aspect-ratio: 16 / 10; background: linear-gradient(135deg, #1A1A1A, #2C2C2A);
+    display: flex; align-items: center; justify-content: center; color: white;
+    position: relative;
+  }
+  .vid .thumb .play { width: 38px; height: 38px; border-radius: 999px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+  .vid .thumb .dur { position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.7); color: white; font: 600 10px var(--font-ui); padding: 2px 6px; border-radius: 4px; }
+  .vid .thumb.lime { background: linear-gradient(135deg, var(--ekklo-lime), #B5CC10); color: var(--ekklo-lime-ink); }
+  .vid .thumb.lime .play { background: rgba(0,0,0,0.15); }
+  .vid .thumb.mint { background: linear-gradient(135deg, var(--ekklo-mint), #16A34A); }
+  .vid .thumb.warm { background: linear-gradient(135deg, #C2410C, #7C2D12); }
+  .vid .meta { padding: 10px 12px; }
+  .vid .name { font: var(--t-body-strong); margin: 0 0 4px; }
+  .vid .info { font: var(--t-caption); color: var(--text-secondary); }
+</style>
+</head>
+<body>
+
+<div class="app" data-screen-label="08 Videos">
+  <div id="shell-side"></div>
+  <main class="main">
+    <div id="shell-top"></div>
+
+    <div class="page">
+      <div class="page-head">
+        <div>
+          <h1>Videos</h1>
+          <p class="subtitle">Manage and share your videos with your clients.</p>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <div class="search"><span>🔍</span><input placeholder="Search" /></div>
+        <span class="divider"></span>
+        <button class="filter active">All</button>
+        <button class="filter">▽ Filter</button>
+        <button class="filter">⊞ Tree view</button>
+        <span class="grow"></span>
+        <button class="btn btn-ghost">🏷 Categories</button>
+        <button class="btn btn-outline">New collection</button>
+        <button class="btn btn-primary">Add +</button>
+      </div>
+
+      <h3 style="font: var(--t-h2); margin: 8px 0 14px; display: flex; align-items: center; gap: 12px;">
+        Collections <span style="font: var(--t-secondary); color: var(--text-secondary); font-weight: 500;">12 videos</span>
+        <span style="margin-left: auto; font: var(--t-button); color: var(--text-secondary); cursor: pointer;">○ Select</span>
+      </h3>
+
+      <div class="vid-grid">
+        <div class="vid"><div class="thumb"><span class="play">▶</span><span class="dur">2:14</span></div><div class="meta"><div class="name">Squat — bracing cues</div><div class="info">Form library · 14 views</div></div></div>
+        <div class="vid"><div class="thumb lime"><span class="play">▶</span><span class="dur">1:48</span></div><div class="meta"><div class="name">Deadlift setup</div><div class="info">Form library · 23 views</div></div></div>
+        <div class="vid"><div class="thumb mint"><span class="play">▶</span><span class="dur">3:02</span></div><div class="meta"><div class="name">Hip mobility flow</div><div class="info">Mobility · 9 views</div></div></div>
+        <div class="vid"><div class="thumb warm"><span class="play">▶</span><span class="dur">0:54</span></div><div class="meta"><div class="name">Bench press grip</div><div class="info">Form library · 17 views</div></div></div>
+        <div class="vid"><div class="thumb"><span class="play">▶</span><span class="dur">4:20</span></div><div class="meta"><div class="name">Welcome — coaching expectations</div><div class="info">Onboarding · 31 views</div></div></div>
+        <div class="vid"><div class="thumb mint"><span class="play">▶</span><span class="dur">2:55</span></div><div class="meta"><div class="name">Foam roller routine</div><div class="info">Mobility · 12 views</div></div></div>
+        <div class="vid"><div class="thumb lime"><span class="play">▶</span><span class="dur">1:12</span></div><div class="meta"><div class="name">Pull-up scaling</div><div class="info">Form library · 8 views</div></div></div>
+        <div class="vid"><div class="thumb"><span class="play">▶</span><span class="dur">5:40</span></div><div class="meta"><div class="name">Programme prise de masse — intro</div><div class="info">Programs · 22 views</div></div></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="fab">💬</div>
+
+<script src="_shell.js"></script>
+<script>__mountShell('videos', 'Videos', { tutorial: true });</script>
+</body>
+</html>

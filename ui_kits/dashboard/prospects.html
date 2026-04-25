@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Ekklo · Prospects</title>
+<link rel="stylesheet" href="../../colors_and_type.css" />
+<link rel="stylesheet" href="_shell.css" />
+<style>
+  .kanban { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 8px; }
+  .col { background: transparent; }
+  .col-h { display: flex; align-items: center; gap: 8px; padding: 8px 4px 12px; font: var(--t-body-strong); }
+  .col-h .dot { width: 8px; height: 8px; border-radius: 999px; }
+  .col-h .count { color: var(--text-tertiary); margin-left: 4px; font: var(--t-body); }
+  .col-h .total { margin-left: auto; background: var(--surface-sunken); color: var(--text-secondary); font: 600 11px var(--font-ui); padding: 3px 8px; border-radius: 999px; }
+  .col-add {
+    width: 100%; padding: 16px; border: 1.5px dashed var(--border-input); background: white;
+    border-radius: 12px; color: var(--text-secondary); font: var(--t-button); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .col-add:hover { border-color: var(--ekklo-lime); color: var(--text-primary); }
+
+  .lead {
+    background: white; border: 1px solid var(--border-subtle); border-radius: 12px;
+    padding: 14px; margin-bottom: 10px; cursor: pointer;
+  }
+  .lead:hover { border-color: var(--ekklo-lime); }
+  .lead .top { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .lead .av { width: 24px; height: 24px; border-radius: 999px; background: var(--surface-sunken); display: inline-flex; align-items: center; justify-content: center; font: 600 10px var(--font-ui); color: var(--text-secondary); }
+  .lead .name { font: var(--t-body-strong); }
+  .lead .price { margin-left: auto; font: var(--t-body-strong); color: var(--text-primary); }
+  .lead .meta { font: var(--t-caption); color: var(--text-secondary); display: flex; gap: 12px; }
+</style>
+</head>
+<body>
+
+<div class="app" data-screen-label="03 Prospects">
+  <div id="shell-side"></div>
+  <main class="main">
+    <div id="shell-top"></div>
+
+    <div class="page">
+      <div class="page-head">
+        <div>
+          <h1>Your prospects</h1>
+          <p class="subtitle">Your built-in CRM to track your prospects, manage your sales pipeline and convert your leads into clients.</p>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="active">Board</button>
+        <button>List</button>
+      </div>
+
+      <div class="toolbar">
+        <div class="search"><span>🔍</span><input placeholder="Search a prospect..." /></div>
+        <span class="divider"></span>
+        <button class="filter active">All</button>
+        <button class="filter">▽ Filter</button>
+      </div>
+
+      <div class="kanban">
+        <div class="col">
+          <div class="col-h">
+            <span class="dot" style="background:#9CA3AF;"></span>
+            First contact <span class="count">3</span>
+            <span class="total">€450</span>
+          </div>
+          <div class="lead">
+            <div class="top"><span class="av">SK</span><span class="name">Simone Klein</span><span class="price">€150</span></div>
+            <div class="meta">📞 Phone call · added 2d ago</div>
+          </div>
+          <div class="lead">
+            <div class="top"><span class="av">MR</span><span class="name">Marc Rivera</span><span class="price">€150</span></div>
+            <div class="meta">📧 Email · added 5d ago</div>
+          </div>
+          <div class="lead">
+            <div class="top"><span class="av">YT</span><span class="name">Yuki Tanaka</span><span class="price">€150</span></div>
+            <div class="meta">🌐 Website · added 1w ago</div>
+          </div>
+          <button class="col-add">+ New prospect</button>
+        </div>
+
+        <div class="col">
+          <div class="col-h">
+            <span class="dot" style="background:#3B82F6;"></span>
+            Discovery call <span class="count">2</span>
+            <span class="total">€600</span>
+          </div>
+          <div class="lead">
+            <div class="top"><span class="av">EH</span><span class="name">Elena Haddad</span><span class="price">€300</span></div>
+            <div class="meta">📅 Tue 16:00</div>
+          </div>
+          <div class="lead">
+            <div class="top"><span class="av">DP</span><span class="name">David Paulsen</span><span class="price">€300</span></div>
+            <div class="meta">📅 Thu 11:30</div>
+          </div>
+          <button class="col-add">+ New prospect</button>
+        </div>
+
+        <div class="col">
+          <div class="col-h">
+            <span class="dot" style="background:#F59E0B;"></span>
+            Proposal <span class="count">1</span>
+            <span class="total">€720</span>
+          </div>
+          <div class="lead">
+            <div class="top"><span class="av">JN</span><span class="name">Jana Novak</span><span class="price">€720</span></div>
+            <div class="meta">📄 6-week plan · sent 3d ago</div>
+          </div>
+          <button class="col-add">+ New prospect</button>
+        </div>
+
+        <div class="col">
+          <div class="col-h">
+            <span class="dot" style="background:#10B981;"></span>
+            Closing <span class="count">1</span>
+            <span class="total">€1,440</span>
+          </div>
+          <div class="lead">
+            <div class="top"><span class="av">AN</span><span class="name">Aya Nakamura</span><span class="price">€1,440</span></div>
+            <div class="meta">💳 Awaiting payment · 12-week</div>
+          </div>
+          <button class="col-add">+ New prospect</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="fab">💬</div>
+
+<script src="_shell.js"></script>
+<script>__mountShell('prospects', 'Prospects');</script>
+</body>
+</html>

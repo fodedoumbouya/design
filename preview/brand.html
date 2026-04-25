@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Ekklo — Brand</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<link rel="stylesheet" href="_shell.css" />
+<style>
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+  .demo {
+    background: var(--surface-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--r-card);
+    padding: 32px;
+  }
+  .demo h3 { font: var(--t-h3); margin: 0 0 4px; }
+  .demo .demo-meta { font: var(--t-caption); color: var(--text-secondary); margin: 0 0 24px; }
+  .stage {
+    background: var(--surface-canvas);
+    border-radius: var(--r-input);
+    padding: 32px;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 160px;
+  }
+  .stage.dark { background: var(--ekklo-ink-soft); color: white; }
+
+  /* Logo */
+  .logo {
+    display: inline-flex; align-items: center; gap: 8px;
+    font: 700 22px/1 var(--font-ui); color: var(--text-primary);
+  }
+  .logo-mark {
+    width: 32px; height: 32px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .logo.light { color: white; }
+
+  /* Iconography table */
+  .icon-grid {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px;
+  }
+  .icon-tile {
+    background: var(--surface-canvas); border: 1px solid var(--border-subtle);
+    border-radius: var(--r-card);
+    padding: 18px 12px; text-align: center;
+  }
+  .icon-tile .ic-box {
+    height: 36px; display: flex; align-items: center; justify-content: center;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+  .icon-tile .name { font: var(--t-caption); color: var(--text-secondary); }
+</style>
+</head>
+<body>
+
+<header class="spec-header">
+  <div class="eyebrow">Foundations · Brand</div>
+  <h1>Brand</h1>
+  <p>Two marks (wordmark + lime kettlebell glyph), a recurring mascot named Bell, and a stroke-based icon set. The brand is small and consistent on purpose — the product earns warmth from microcopy and the mascot, not from decoration.</p>
+</header>
+
+<section class="spec-section">
+  <h2>Logo</h2>
+  <p class="desc">The kettlebell glyph + "Ekklo" wordmark always sit together in the top-left of the sidebar with a small caret to indicate the workspace switcher. The mark is a stylized lime kettlebell with two leaf-like cuts.</p>
+  <div class="grid-2">
+    <div class="demo">
+      <h3>Primary lockup</h3>
+      <p class="demo-meta">Used on light surfaces. Wordmark in ink, mark in lime.</p>
+      <div class="stage">
+        <div class="logo">
+          <span class="logo-mark">
+            <svg viewBox="0 0 32 32" width="32" height="32" fill="none">
+              <path d="M16 4 C9 4 4 9 4 16 C4 23 9 28 16 28 C23 28 28 23 28 16 C28 12 26 9 23 7 L20 12 C22 13 23 14 23 16 C23 19 20 22 16 22 C12 22 9 19 9 16 C9 13 12 10 16 10 C17 10 18 10 19 11 L22 6 C20 5 18 4 16 4 Z" fill="#D8F11A" stroke="#1A1A1A" stroke-width="1.5" stroke-linejoin="round"/>
+              <circle cx="22" cy="9" r="2.5" fill="#1A1A1A"/>
+            </svg>
+          </span>
+          Ekklo
+        </div>
+      </div>
+    </div>
+
+    <div class="demo">
+      <h3>Inverse</h3>
+      <p class="demo-meta">For dark surfaces — empty-state cards, the trial banner, the future mobile splash.</p>
+      <div class="stage dark">
+        <div class="logo light">
+          <span class="logo-mark">
+            <svg viewBox="0 0 32 32" width="32" height="32" fill="none">
+              <path d="M16 4 C9 4 4 9 4 16 C4 23 9 28 16 28 C23 28 28 23 28 16 C28 12 26 9 23 7 L20 12 C22 13 23 14 23 16 C23 19 20 22 16 22 C12 22 9 19 9 16 C9 13 12 10 16 10 C17 10 18 10 19 11 L22 6 C20 5 18 4 16 4 Z" fill="#D8F11A" stroke="#D8F11A" stroke-width="1.5" stroke-linejoin="round"/>
+              <circle cx="22" cy="9" r="2.5" fill="#1A1A1A"/>
+            </svg>
+          </span>
+          Ekklo
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="spec-section">
+  <h2>Mascot — meet Bell</h2>
+  <p class="desc">Bell is a smiling green kettlebell. He shows up <strong>only</strong> in onboarding and empty states — never inside dense data. He's the warmth budget; everything else stays calm.</p>
+  <div class="grid-3">
+    <div class="demo">
+      <h3>Greeting</h3>
+      <p class="demo-meta">Dashboard "Hello Fode 👋". Big, waving, off-duty.</p>
+      <div class="stage">
+        <svg viewBox="0 0 120 120" width="100" height="100">
+          <circle cx="60" cy="68" r="38" fill="#1ED77A"/>
+          <path d="M40 38 Q60 24 80 38 L78 50 L42 50 Z" fill="#0C5C32"/>
+          <rect x="50" y="32" width="20" height="10" rx="2" fill="#1A1A1A"/>
+          <circle cx="50" cy="64" r="4" fill="#1A1A1A"/>
+          <circle cx="70" cy="64" r="4" fill="#1A1A1A"/>
+          <path d="M50 78 Q60 86 70 78" stroke="#1A1A1A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <ellipse cx="48" cy="106" rx="10" ry="5" fill="#0C5C32"/>
+          <ellipse cx="72" cy="106" rx="10" ry="5" fill="#0C5C32"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="demo">
+      <h3>Empty state</h3>
+      <p class="demo-meta">In long empty modules — Notifications, Automations.</p>
+      <div class="stage">
+        <svg viewBox="0 0 120 120" width="80" height="80">
+          <circle cx="60" cy="68" r="36" fill="#1ED77A"/>
+          <path d="M42 38 Q60 26 78 38 L76 48 L44 48 Z" fill="#0C5C32"/>
+          <circle cx="50" cy="64" r="3.5" fill="#1A1A1A"/>
+          <circle cx="70" cy="64" r="3.5" fill="#1A1A1A"/>
+          <path d="M52 78 Q60 84 68 78" stroke="#1A1A1A" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="demo">
+      <h3>Don't</h3>
+      <p class="demo-meta">No mascot in tables, no mascot inside graphs, no mascot at less than 56px.</p>
+      <div class="stage">
+        <div style="font: var(--t-h3); color: var(--text-tertiary); text-align: center;">
+          🚫 not in dense data<br>
+          <span style="font: var(--t-caption);">use a stroke icon instead</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="spec-section">
+  <h2>Iconography</h2>
+  <p class="desc">Lucide-style stroke icons at 1.5–1.7px weight, 18px in the sidebar and 16px inline. Icons inherit currentColor so they pick up nav state automatically.</p>
+  <div class="demo">
+    <div class="icon-grid">
+      <div class="icon-tile"><div class="ic-box"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div><div class="name">Dashboard</div></div>
+      <div class="icon-tile"><div class="ic-box"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg></div><div class="name">Clients</div></div>
+      <div class="icon-tile"><div class="ic-box"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="name">Calendar</div></div>
+      <div class="icon-tile"><div class="ic-box"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v16M18 4v16M6 12h12M2 9v6M22 9v6"/></svg></div><div class="name">Fitness</div></div>
+      <div class="icon-tile"><div class="ic-box"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 1 4 4v6a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z"/><path d="M5 12a7 7 0 0 0 14 0"/><path d="M12 19v3"/></svg></div><div class="name">Nutrition</div></div>
+      <div class="icon-tile"><div class="ic-box"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><polyline points="7 14 11 10 14 13 20 7"/></svg></div><div class="name">Tracking</div></div>
+      <div class="icon-tile"><div class="ic-box"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg></div><div class="name">Videos</div></div>
+      <div class="icon-tile"><div class="ic-box"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div class="name">Accounting</div></div>
+      <div class="icon-tile"><div class="ic-box"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="name">Teams</div></div>
+      <div class="icon-tile"><div class="ic-box"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 3h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg></div><div class="name">Drive</div></div>
+      <div class="icon-tile"><div class="ic-box"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 17h7M17 14v7"/></svg></div><div class="name">Automations</div></div>
+      <div class="icon-tile"><div class="ic-box"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg></div><div class="name">Notifications</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="spec-section">
+  <h2>The "Getting Started" pattern</h2>
+  <p class="desc">A small sunken-gray card pinned bottom-left of the sidebar with the lime CTA. Sticks until the coach completes onboarding. The 🚀 emoji is the only sanctioned emoji in chrome.</p>
+  <div class="demo" style="max-width: 320px;">
+    <div style="background: var(--surface-sunken); border-radius: var(--r-card); padding: 16px; text-align: center;">
+      <p style="font: var(--t-h3); margin: 0 0 4px;">Getting Started 🚀</p>
+      <p style="font: var(--t-caption); color: var(--text-secondary); margin: 0 0 12px;">Set up your business and welcome your first clients.</p>
+      <button style="background: var(--ekklo-lime); color: var(--ekklo-lime-ink); border: none; padding: 6px 18px; border-radius: 999px; font: 600 12px var(--font-ui); cursor: pointer;">Let's go</button>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

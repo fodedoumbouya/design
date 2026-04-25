@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Ekklo · Drive</title>
+<link rel="stylesheet" href="../../colors_and_type.css" />
+<link rel="stylesheet" href="_shell.css" />
+<style>
+  .folder-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
+  .folder {
+    background: white; border: 1px solid var(--border-subtle); border-radius: 10px;
+    padding: 14px 16px; display: flex; align-items: center; gap: 10px; cursor: pointer;
+    font: var(--t-body-strong);
+  }
+  .folder:hover { border-color: var(--ekklo-lime); }
+  .folder .ic { color: var(--ekklo-ink); }
+  .folder .meta { font: var(--t-caption); color: var(--text-tertiary); margin-left: auto; font-weight: 400; }
+
+  .file-list { background: white; border: 1px solid var(--border-subtle); border-radius: 12px; overflow: hidden; }
+  .file {
+    display: grid; grid-template-columns: 32px 1fr 140px 100px 90px 40px;
+    gap: 12px; align-items: center; padding: 12px 16px;
+    border-bottom: 1px solid var(--border-subtle); font: var(--t-body);
+  }
+  .file:last-child { border-bottom: none; }
+  .file:hover { background: var(--surface-sunken); }
+  .file .file-ic { width: 28px; height: 28px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font: 600 11px var(--font-ui); color: white; }
+  .file .file-ic.pdf { background: #DC2626; }
+  .file .file-ic.img { background: #2563EB; }
+  .file .file-ic.vid { background: #1A1A1A; }
+  .file .file-ic.doc { background: #15803D; }
+  .file .name { color: var(--text-primary); }
+  .file .meta { color: var(--text-tertiary); font: var(--t-caption); }
+</style>
+</head>
+<body>
+
+<div class="app" data-screen-label="11 Drive">
+  <div id="shell-side"></div>
+  <main class="main">
+    <div id="shell-top"></div>
+
+    <div class="page">
+      <div class="page-head">
+        <div>
+          <h1>Drive</h1>
+          <p class="subtitle">Manage and share your files with your clients.</p>
+        </div>
+      </div>
+
+      <div class="tabs"><button class="active">Drive</button></div>
+
+      <div class="toolbar">
+        <div class="search"><span>🔍</span><input placeholder="Search" /></div>
+        <span class="divider"></span>
+        <button class="filter active">All</button>
+        <button class="filter">▽ Filter</button>
+        <button class="filter">⊞ Gallery view</button>
+        <span class="grow"></span>
+        <button class="btn btn-outline">New folder</button>
+        <button class="btn btn-primary">Add +</button>
+      </div>
+
+      <h3 style="font: var(--t-h2); margin: 8px 0 14px;">Folders</h3>
+      <div class="folder-grid">
+        <div class="folder"><span class="ic">📁</span> Programs <span class="meta">12</span></div>
+        <div class="folder"><span class="ic">📁</span> Onboarding <span class="meta">5</span></div>
+        <div class="folder"><span class="ic">📁</span> Contracts <span class="meta">8</span></div>
+        <div class="folder"><span class="ic">📁</span> Branding <span class="meta">22</span></div>
+        <div class="folder"><span class="ic">📁</span> Client photos <span class="meta">47</span></div>
+      </div>
+
+      <h3 style="font: var(--t-h2); margin: 8px 0 14px;">Files</h3>
+      <div class="file-list">
+        <div class="file"><span class="file-ic pdf">PDF</span><span class="name">Coaching agreement template.pdf</span><span class="meta">14/04/2026</span><span class="meta">240 KB</span><span class="meta">Shared</span><span>⋯</span></div>
+        <div class="file"><span class="file-ic doc">DOC</span><span class="name">Welcome packet.docx</span><span class="meta">12/04/2026</span><span class="meta">89 KB</span><span class="meta">Private</span><span>⋯</span></div>
+        <div class="file"><span class="file-ic img">IMG</span><span class="name">aya-nakamura-progress-w6.jpg</span><span class="meta">10/04/2026</span><span class="meta">1.2 MB</span><span class="meta">Aya N.</span><span>⋯</span></div>
+        <div class="file"><span class="file-ic vid">MP4</span><span class="name">squat-form-correction-marc.mp4</span><span class="meta">08/04/2026</span><span class="meta">14 MB</span><span class="meta">Marc R.</span><span>⋯</span></div>
+        <div class="file"><span class="file-ic pdf">PDF</span><span class="name">Programme prise de masse v3.pdf</span><span class="meta">02/04/2026</span><span class="meta">680 KB</span><span class="meta">Shared</span><span>⋯</span></div>
+        <div class="file"><span class="file-ic img">IMG</span><span class="name">studio-bastille-logo.png</span><span class="meta">28/03/2026</span><span class="meta">320 KB</span><span class="meta">Private</span><span>⋯</span></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="fab">💬</div>
+
+<script src="_shell.js"></script>
+<script>__mountShell('drive', 'Drive', { tutorial: true });</script>
+</body>
+</html>
