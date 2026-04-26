@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────
-   Ekklo App Shell
+   Coach App Shell
    shared sidebar + topbar styling for every screen
    ───────────────────────────────────────────── */
 
@@ -26,7 +26,7 @@ body { margin: 0; background: var(--surface-canvas); font-family: var(--font-ui)
 .nav a .ic { width: 18px; height: 18px; flex-shrink: 0; }
 .nav a .grow { flex: 1; }
 .nav a .tag {
-  background: var(--ekklo-lime-soft); color: var(--ekklo-lime-ink);
+  background: var(--coach-lime-soft); color: var(--coach-lime-ink);
   font: 600 10px/1 var(--font-ui); padding: 3px 6px; border-radius: 4px;
 }
 
@@ -38,7 +38,7 @@ body { margin: 0; background: var(--surface-canvas); font-family: var(--font-ui)
 .gs h4 { font: var(--t-h3); margin: 0 0 4px; }
 .gs p { font: var(--t-caption); color: var(--text-secondary); margin: 0 0 10px; }
 .gs button {
-  background: var(--ekklo-lime); color: var(--ekklo-lime-ink); border: none;
+  background: var(--coach-lime); color: var(--coach-lime-ink); border: none;
   padding: 6px 18px; border-radius: 999px; font: 600 12px var(--font-ui); cursor: pointer;
   white-space: nowrap;
 }
@@ -64,13 +64,13 @@ body { margin: 0; background: var(--surface-canvas); font-family: var(--font-ui)
   font: var(--t-body-strong); color: var(--text-primary);
 }
 .topbar .center button {
-  background: var(--ekklo-ink); color: white; border: none; padding: 5px 14px;
+  background: var(--coach-ink); color: white; border: none; padding: 5px 14px;
   border-radius: 999px; font: 600 12px var(--font-ui); cursor: pointer;
   white-space: nowrap;
 }
 .topbar .right { display: flex; gap: 14px; align-items: center; color: var(--text-secondary); }
 .topbar .right a { text-decoration: none; color: inherit; display: inline-flex; align-items: center; gap: 6px; }
-.topbar .right .badge { background: var(--ekklo-lime); color: var(--ekklo-lime-ink); border-radius: 999px; padding: 1px 6px; font: 600 10px var(--font-ui); }
+.topbar .right .badge { background: var(--coach-lime); color: var(--coach-lime-ink); border-radius: 999px; padding: 1px 6px; font: 600 10px var(--font-ui); }
 
 /* ───── Page header ───── */
 .page { padding: 28px 32px; }
@@ -88,7 +88,7 @@ body { margin: 0; background: var(--surface-canvas); font-family: var(--font-ui)
   padding: 8px 16px; border-radius: 999px; font: var(--t-button); color: var(--text-secondary);
   white-space: nowrap;
 }
-.tabs button.active { background: var(--ekklo-ink); color: white; }
+.tabs button.active { background: var(--coach-ink); color: white; }
 .tabs button:not(.active):hover { background: var(--surface-sunken); color: var(--text-primary); }
 
 /* ───── Toolbar (search + filter + actions) ───── */
@@ -106,7 +106,7 @@ body { margin: 0; background: var(--surface-canvas); font-family: var(--font-ui)
   font: var(--t-body); color: var(--text-secondary);
   padding: 6px 12px; border-radius: 6px;
 }
-.toolbar .filter.active { background: var(--ekklo-ink); color: white; }
+.toolbar .filter.active { background: var(--coach-ink); color: white; }
 .toolbar .divider { width: 1px; height: 20px; background: var(--border-subtle); }
 .toolbar .grow { flex: 1; }
 
@@ -114,11 +114,11 @@ body { margin: 0; background: var(--surface-canvas); font-family: var(--font-ui)
 .btn {
   display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
   height: 36px; padding: 0 18px; border-radius: 999px;
-  font: var(--t-button); cursor: pointer; border: none; color: var(--ekklo-lime-ink);
+  font: var(--t-button); cursor: pointer; border: none; color: var(--coach-lime-ink);
 }
-.btn-primary { background: var(--ekklo-lime); color: var(--ekklo-lime-ink); }
-.btn-ink { background: var(--ekklo-ink); color: white; }
-.btn-outline { background: white; color: var(--text-primary); border: 1.5px solid var(--ekklo-lime); }
+.btn-primary { background: var(--coach-lime); color: var(--coach-lime-ink); }
+.btn-ink { background: var(--coach-ink); color: white; }
+.btn-outline { background: white; color: var(--text-primary); border: 1.5px solid var(--coach-lime); }
 .btn-ghost { background: white; color: var(--text-primary); border: 1.5px solid var(--border-input); }
 .btn-text { background: transparent; color: var(--text-secondary); padding: 0 8px; }
 .btn-sm { height: 30px; padding: 0 14px; font-size: 12px; }
@@ -141,7 +141,7 @@ body { margin: 0; background: var(--surface-canvas); font-family: var(--font-ui)
 .fab {
   position: fixed; bottom: 22px; right: 24px;
   width: 48px; height: 48px; border-radius: 999px;
-  background: var(--ekklo-mint); color: white;
+  background: var(--coach-mint); color: white;
   box-shadow: var(--shadow-fab);
   display: flex; align-items: center; justify-content: center;
   cursor: pointer; z-index: 50;

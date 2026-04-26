@@ -1,38 +1,60 @@
-/* Ekklo Design Tokens
+/* Ekklo Design Tokens — Trail palette
  * Source of truth — every preview and UI kit page imports this file.
+ *
+ * Trail: moss + bark + clay on warm paper. Quiet, grounded, wellness-leaning.
+ * Replaces the previous Court (lime) palette without changing token names —
+ * the lime/mint aliases are kept so existing UI keeps working.
  */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
   /* ── Brand ─────────────────────────────────────────── */
-  --ekklo-lime: #D8F11A;          /* Primary accent — CTAs, selected sidebar item, badges */
-  --ekklo-lime-soft: #EEFBA5;     /* Soft lime — sidebar selected bg, "New" tags */
-  --ekklo-lime-ink: #1A1A1A;      /* Text color used on top of lime */
+  --ekklo-moss: #5B8E3A;          /* Primary accent — CTAs, selected sidebar item, badges */
+  --ekklo-moss-soft: #DCEDCB;     /* Soft sage — sidebar selected bg, "New" tags */
+  --ekklo-moss-ink: #FFFFFF;      /* Text color used on top of moss */
 
-  --ekklo-ink: #1A1A1A;           /* Near-black — selected pills, secondary CTA, primary text */
-  --ekklo-ink-soft: #2C2C2A;      /* Dark surface (about-box, empty-state hero) */
+  --ekklo-ink: #2A2620;           /* Bark — selected pills, secondary CTA, primary text */
+  --ekklo-ink-soft: #3A3530;      /* Dark surface (about-box, empty-state hero) */
 
-  --ekklo-mint: #1ED77A;          /* Help FAB and mascot accents */
-  --ekklo-mint-soft: #B6F0CC;     /* Mint chip background */
+  --ekklo-clay: #C57544;          /* Help FAB and mascot accents */
+  --ekklo-clay-soft: #F2DCC9;     /* Clay chip background */
+
+  /* Backward-compat aliases — old token names kept working */
+  --ekklo-lime: var(--ekklo-moss);
+  --ekklo-lime-soft: var(--ekklo-moss-soft);
+  --ekklo-lime-ink: var(--ekklo-moss-ink);
+  --ekklo-mint: var(--ekklo-clay);
+  --ekklo-mint-soft: var(--ekklo-clay-soft);
+
+  /* Legacy --coach-* aliases — kept for files authored before the rename. */
+  --coach-lime: var(--ekklo-moss);
+  --coach-lime-soft: var(--ekklo-moss-soft);
+  --coach-lime-ink: var(--ekklo-moss-ink);
+  --coach-ink: var(--ekklo-ink);
+  --coach-ink-soft: var(--ekklo-ink-soft);
+  --coach-mint: var(--ekklo-clay);
+  --coach-mint-soft: var(--ekklo-clay-soft);
+  --coach-clay: var(--ekklo-clay);
+  --coach-clay-soft: var(--ekklo-clay-soft);
 
   /* ── Surfaces ──────────────────────────────────────── */
-  --surface-canvas: #FAFAFA;      /* App background behind sidebar + main */
+  --surface-canvas: #F8F6F1;      /* App background — paper */
   --surface-card: #FFFFFF;        /* Cards, modals, the main content panel */
-  --surface-sunken: #F4F4F2;      /* Inputs, getting-started box, table header */
-  --surface-overlay: rgba(26, 26, 26, 0.4); /* Modal scrim */
+  --surface-sunken: #EFEBE2;      /* Inputs, getting-started box, table header — oat */
+  --surface-overlay: rgba(42, 38, 32, 0.4); /* Modal scrim */
 
   /* ── Text ──────────────────────────────────────────── */
-  --text-primary: #1A1A1A;
-  --text-secondary: #6B6B68;      /* Subtitles, helper copy, sidebar idle */
-  --text-tertiary: #9C9C98;       /* Placeholder, disabled, table headers */
+  --text-primary: #2A2620;
+  --text-secondary: #6B655B;      /* Subtitles, helper copy, sidebar idle */
+  --text-tertiary: #9C9689;       /* Placeholder, disabled, table headers */
   --text-on-dark: #FFFFFF;
-  --text-link: #1A1A1A;
+  --text-link: #2A2620;
 
   /* ── Borders ───────────────────────────────────────── */
-  --border-subtle: #ECECEA;       /* Card edges, table rows, input idle */
-  --border-strong: #1A1A1A;       /* Outline buttons, focus, selected card edge */
-  --border-input: #DCDCD8;
+  --border-subtle: #E8E3D8;       /* Card edges, table rows, input idle */
+  --border-strong: #2A2620;       /* Outline buttons, focus, selected card edge */
+  --border-input: #D6D0C2;
 
   /* ── Status ────────────────────────────────────────── */
   --status-success: #1ED77A;
@@ -40,11 +62,11 @@
   --status-warning-bg: #FEF3C7;
   --status-danger: #E5484D;
   --status-danger-bg: #FEEBEB;
-  --status-info: #6E8AFF;          /* Stripe button blue */
+  --status-info: #6E8AFF;         /* Stripe button blue */
   --status-info-bg: #EEF2FF;
 
   /* Notification trial banner */
-  --banner-trial-bg: #1A1A1A;
+  --banner-trial-bg: #2A2620;
   --banner-trial-text: #FFFFFF;
 
   /* Tutorial banner (red/maroon) */
@@ -68,9 +90,9 @@
   --s-9: 56px;
 
   /* ── Shadow ────────────────────────────────────────── */
-  --shadow-card: 0 1px 2px rgba(20, 20, 20, 0.04), 0 1px 3px rgba(20, 20, 20, 0.04);
-  --shadow-modal: 0 24px 60px rgba(20, 20, 20, 0.18), 0 4px 12px rgba(20, 20, 20, 0.08);
-  --shadow-fab: 0 8px 24px rgba(30, 215, 122, 0.35);
+  --shadow-card: 0 1px 2px rgba(42, 38, 32, 0.04), 0 1px 3px rgba(42, 38, 32, 0.04);
+  --shadow-modal: 0 24px 60px rgba(42, 38, 32, 0.18), 0 4px 12px rgba(42, 38, 32, 0.08);
+  --shadow-fab: 0 8px 24px rgba(197, 117, 68, 0.35);
 
   /* ── Type ──────────────────────────────────────────── */
   --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;

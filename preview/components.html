@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Ekklo — Components</title>
+<title>Coach — Components</title>
 <link rel="stylesheet" href="../colors_and_type.css" />
 <link rel="stylesheet" href="_shell.css" />
 <style>
@@ -42,19 +42,19 @@
     border: none; cursor: pointer;
     transition: filter 0.15s ease, background 0.15s ease;
     text-decoration: none;
-    color: var(--ekklo-lime-ink);
+    color: var(--coach-lime-ink);
   }
   .btn-primary {
-    background: var(--ekklo-lime); color: var(--ekklo-lime-ink);
+    background: var(--coach-lime); color: var(--coach-lime-ink);
   }
   .btn-primary:hover { filter: brightness(0.95); }
   .btn-ink {
-    background: var(--ekklo-ink); color: white;
+    background: var(--coach-ink); color: white;
   }
   .btn-ink:hover { background: #2a2a2a; }
   .btn-outline {
     background: white; color: var(--text-primary);
-    border: 1.5px solid var(--ekklo-lime);
+    border: 1.5px solid var(--coach-lime);
   }
   .btn-outline:hover { background: #fbffe0; }
   .btn-ghost {
@@ -102,7 +102,7 @@
     display: inline-flex; align-items: center;
   }
   .tab:hover { background: var(--surface-sunken); }
-  .tab[aria-selected="true"] { background: var(--ekklo-ink); color: white; }
+  .tab[aria-selected="true"] { background: var(--coach-ink); color: white; }
   .tab .dim { color: var(--text-tertiary); margin-left: 6px; font-size: 11px; }
   .tab[aria-selected="true"] .dim { color: rgba(255,255,255,0.6); }
 
@@ -112,12 +112,12 @@
     border-radius: var(--r-chip);
     font: 600 11px/1 var(--font-ui);
   }
-  .badge-new { background: var(--ekklo-lime-soft); color: var(--ekklo-lime-ink); }
-  .badge-v2 { background: var(--ekklo-lime-soft); color: var(--ekklo-lime-ink); }
-  .badge-active { background: var(--ekklo-mint); color: white; }
+  .badge-new { background: var(--coach-lime-soft); color: var(--coach-lime-ink); }
+  .badge-v2 { background: var(--coach-lime-soft); color: var(--coach-lime-ink); }
+  .badge-active { background: var(--coach-mint); color: white; }
   .badge-pending { background: #FEF3C7; color: #92400E; }
-  .badge-once { background: var(--ekklo-mint-soft); color: #0C5C32; }
-  .badge-not-verified { background: var(--ekklo-lime-soft); color: var(--ekklo-lime-ink); }
+  .badge-once { background: var(--coach-mint-soft); color: #5B3D1F; }
+  .badge-not-verified { background: var(--coach-lime-soft); color: var(--coach-lime-ink); }
 
   /* ──────────────── Inputs ──────────────── */
   .field { display: flex; flex-direction: column; gap: 6px; width: 100%; }
@@ -136,7 +136,7 @@
     transition: border-color 0.15s, box-shadow 0.15s;
   }
   .input:focus, .select:focus, .textarea:focus {
-    outline: none; border-color: var(--ekklo-ink);
+    outline: none; border-color: var(--coach-ink);
     box-shadow: 0 0 0 3px rgba(216, 241, 26, 0.35);
   }
   .input::placeholder { color: var(--text-tertiary); }
@@ -152,7 +152,7 @@
   .toggle {
     --w: 36px; --h: 20px;
     width: var(--w); height: var(--h);
-    background: #DCDCD8; border-radius: 999px;
+    background: #D6D0C2; border-radius: 999px;
     position: relative; display: inline-block; cursor: pointer;
     transition: background 0.18s;
   }
@@ -162,7 +162,7 @@
     transition: transform 0.18s;
     box-shadow: 0 1px 2px rgba(0,0,0,0.2);
   }
-  .toggle.on { background: var(--ekklo-ink); }
+  .toggle.on { background: var(--coach-ink); }
   .toggle.on::after { transform: translateX(16px); }
 
   /* ──────────────── Cards / List ──────────────── */
@@ -261,9 +261,9 @@
   .modal-head { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
   .modal-icon {
     width: 36px; height: 36px; border-radius: var(--r-input);
-    background: var(--ekklo-lime-soft);
+    background: var(--coach-lime-soft);
     display: flex; align-items: center; justify-content: center;
-    color: var(--ekklo-lime-ink); font-size: 18px;
+    color: var(--coach-lime-ink); font-size: 18px;
   }
   .modal-title { font: var(--t-h2); margin: 0; }
   .modal-sub { font: var(--t-caption); color: var(--text-secondary); margin: 2px 0 0; }
@@ -271,7 +271,7 @@
 
   /* ──────────────── Empty state ──────────────── */
   .empty {
-    background: var(--ekklo-ink-soft);
+    background: var(--coach-ink-soft);
     border-radius: var(--r-card);
     padding: 32px;
     text-align: center;
@@ -301,7 +301,7 @@
 <header class="spec-header">
   <div class="eyebrow">Foundations · Components</div>
   <h1>Components</h1>
-  <p>Every interactive element in Ekklo speaks the same vocabulary: pills for action and tabs, 12px cards for grouping, 8px inputs, near-black for "this is selected," lime for "this is the next step."</p>
+  <p>Every interactive element in Coach speaks the same vocabulary: pills for action and tabs, 12px cards for grouping, 8px inputs, near-black for "this is selected," lime for "this is the next step."</p>
 </header>
 
 <!-- ── Buttons ─────────────────────────────────────────── -->
@@ -377,10 +377,10 @@
       <h3>Pipeline / kanban tab</h3>
       <p class="demo-meta">Same pill but with a colored dot prefix and a count. From the Prospects board.</p>
       <div class="stage">
-        <button class="tab" aria-selected="true"><span style="display:inline-block;width:8px;height:8px;border-radius:999px;background:#9C9C98;margin-right:8px;"></span>First contact <span class="dim">0</span></button>
+        <button class="tab" aria-selected="true"><span style="display:inline-block;width:8px;height:8px;border-radius:999px;background:#9C9689;margin-right:8px;"></span>First contact <span class="dim">0</span></button>
         <button class="tab"><span style="display:inline-block;width:8px;height:8px;border-radius:999px;background:#6E8AFF;margin-right:8px;"></span>Discovery call <span class="dim">0</span></button>
         <button class="tab"><span style="display:inline-block;width:8px;height:8px;border-radius:999px;background:#F59E0B;margin-right:8px;"></span>Proposal <span class="dim">0</span></button>
-        <button class="tab"><span style="display:inline-block;width:8px;height:8px;border-radius:999px;background:#1ED77A;margin-right:8px;"></span>Closing <span class="dim">0</span></button>
+        <button class="tab"><span style="display:inline-block;width:8px;height:8px;border-radius:999px;background:#C57544;margin-right:8px;"></span>Closing <span class="dim">0</span></button>
       </div>
     </div>
 
@@ -542,7 +542,7 @@
       <div class="stage" style="background: white; border-radius: 0 0 var(--r-card) var(--r-card); padding: 28px;">
         <div class="card" style="width: 100%; padding: 16px;">
           <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-            <span style="display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius: 999px; background: var(--ekklo-mint-soft); font-size: 14px;">🥬</span>
+            <span style="display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius: 999px; background: var(--coach-mint-soft); font-size: 14px;">🥬</span>
             <strong style="font: var(--t-h3);">Nutrition Plan</strong>
           </div>
           <p style="font: var(--t-caption); color: var(--text-secondary); margin: 0 0 12px;">Default image displayed on nutrition cards</p>

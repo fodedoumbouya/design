@@ -1,18 +1,18 @@
-# Ekklo Design System — Skill
+# Coach Design System — Skill
 
-When designing for Ekklo, follow these rules.
+When designing for Coach, follow these rules.
 
 ## 1. Read the system first
 Always read `colors_and_type.css` (tokens) and skim `preview/components.html` before designing. Use `ui_kits/dashboard/index.html` as the canonical example of how it all fits together.
 
 ## 2. Use tokens, never raw values
-- Colors → `var(--ekklo-lime)`, `var(--text-primary)`, `var(--surface-card)`, etc.
+- Colors → `var(--coach-lime)`, `var(--text-primary)`, `var(--surface-card)`, etc.
 - Type → `font: var(--t-h2)` shorthand whenever possible
 - Radii → `var(--r-pill)` for buttons, `var(--r-card)` for cards, `var(--r-input)` for inputs
 - Never invent a new color. If a tone is missing, ask first.
 
 ## 3. The lime rule
-`#D8F11A` is the primary CTA on every screen, and there should be **only one** lime button visible at a time. Secondary actions are ink (`#1A1A1A`) pills or ghost buttons. Tertiary is text-only.
+`#5B8E3A` is the primary CTA on every screen, and there should be **only one** lime button visible at a time. Secondary actions are ink (`#2A2620`) pills or ghost buttons. Tertiary is text-only.
 
 ## 4. The mascot rule
 **Bell** (the green kettlebell) appears only in:
@@ -20,7 +20,7 @@ Always read `colors_and_type.css` (tokens) and skim `preview/components.html` be
 - Greeting cards (Dashboard "Hello {name}")
 - Long empty states (Notifications, Activity, etc.)
 
-Never in tables, charts, or dense data. Never below 36px. The mint green (`#1ED77A`) belongs to Bell and the help FAB — nothing else.
+Never in tables, charts, or dense data. Never below 36px. The mint green (`#C57544`) belongs to Bell and the help FAB — nothing else.
 
 ## 5. Voice
 Friendly + operator-grade. Microcopy is short, action-oriented, and addresses the coach directly. Keep emoji to 🚀 (Getting Started) and 👋 (greeting) — nothing else in chrome.

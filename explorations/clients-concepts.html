@@ -1,0 +1,733 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Coach · Clients view concepts</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  /* ─── shell ─── */
+  body { margin: 0; font-family: var(--font-ui); color: var(--text-primary); }
+  .frame {
+    width: 1280px; height: 900px;
+    display: grid; grid-template-columns: 64px 1fr;
+    background: var(--surface-canvas);
+    overflow: hidden;
+    color: var(--text-primary);
+  }
+  .mside {
+    background: var(--surface-canvas);
+    padding: 16px 0;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    border-right: 1px solid var(--border-subtle);
+  }
+  .mside .logo { width: 32px; height: 32px; border-radius: 8px; background: var(--coach-lime); display: grid; place-items: center; font: 700 14px var(--font-ui); color: var(--coach-lime-ink); margin-bottom: 12px; }
+  .mside .ic { width: 36px; height: 36px; border-radius: 8px; display: grid; place-items: center; color: var(--text-tertiary); cursor: pointer; }
+  .mside .ic.active { background: var(--surface-sunken); color: var(--text-primary); }
+  .mside .ic svg { width: 18px; height: 18px; }
+  .mside .grow { flex: 1; }
+  .mside .me { width: 32px; height: 32px; border-radius: 999px; background: var(--coach-ink); color: white; display: grid; place-items: center; font: 600 12px var(--font-ui); }
+
+  .main { background: white; overflow: hidden; display: flex; flex-direction: column; }
+  .topbar {
+    height: 48px; display: flex; align-items: center; gap: 12px;
+    padding: 0 24px; border-bottom: 1px solid var(--border-subtle);
+    font: var(--t-secondary); color: var(--text-secondary); flex-shrink: 0;
+  }
+  .topbar .crumb { font: var(--t-body-strong); color: var(--text-primary); }
+  .topbar .grow { flex: 1; }
+  .topbar .pill { background: var(--surface-sunken); border-radius: 999px; padding: 5px 12px; font: var(--t-caption); }
+  .topbar .upgrade { background: var(--coach-ink); color: white; border: none; padding: 6px 14px; border-radius: 999px; font: 600 12px var(--font-ui); cursor: pointer; }
+
+  /* shared */
+  .av {
+    width: 32px; height: 32px; border-radius: 999px;
+    display: inline-grid; place-items: center;
+    font: 600 11px var(--font-ui); color: white; flex-shrink: 0;
+  }
+  .av.sm { width: 22px; height: 22px; font-size: 9px; }
+  .av.md { width: 28px; height: 28px; font-size: 10px; }
+  .av.lg { width: 40px; height: 40px; font-size: 13px; }
+  .av-1 { background: #C57544; }
+  .av-2 { background: #5B8E3A; }
+  .av-3 { background: #2A2620; }
+  .av-4 { background: #856B47; }
+  .av-5 { background: #B07654; }
+  .av-6 { background: #4A6B2A; }
+  .av-7 { background: #6B655B; }
+  .av-8 { background: #8E1F1F; }
+  .av-9 { background: #9C9689; }
+
+  .pill-tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    border-radius: 999px; padding: 3px 9px;
+    font: 600 11px var(--font-ui); white-space: nowrap;
+  }
+  .tag-soft  { background: var(--coach-lime-soft); color: var(--coach-lime-ink); }
+  .tag-warn  { background: #FBE6CC; color: #6B3A12; }
+  .tag-alert { background: #F9D9D2; color: #8E1F1F; }
+  .tag-ghost { background: var(--surface-sunken); color: var(--text-secondary); }
+  .tag-ink   { background: var(--coach-ink); color: white; }
+  .tag-dot { width: 7px; height: 7px; border-radius: 999px; background: var(--coach-lime); flex-shrink: 0; }
+  .tag-dot.warn  { background: #C57544; }
+  .tag-dot.alert { background: #8E1F1F; }
+  .tag-dot.muted { background: var(--text-tertiary); }
+
+  .page-head {
+    padding: 22px 32px 0; display: flex; align-items: end; gap: 14px;
+  }
+  .page-head h1 { font: 700 26px/1 var(--font-ui); margin: 0 0 6px; }
+  .page-head .sub { font: var(--t-secondary); color: var(--text-secondary); margin: 0; }
+  .page-head .grow { flex: 1; }
+  .page-head .actions { display: flex; gap: 8px; align-items: center; }
+  .page-head .actions button {
+    background: white; border: 1px solid var(--border-input);
+    padding: 8px 14px; border-radius: 999px; font: var(--t-button); cursor: pointer; color: var(--text-primary);
+  }
+  .page-head .actions button.primary { background: var(--coach-lime); border-color: var(--coach-lime); color: var(--coach-lime-ink); }
+
+  /* segments inline */
+  .segs { display: flex; gap: 8px; padding: 16px 32px 8px; flex-wrap: wrap; }
+  .segs .seg {
+    background: var(--surface-sunken); padding: 6px 14px; border-radius: 999px;
+    font: 600 12px var(--font-ui); color: var(--text-secondary); display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border: none;
+  }
+  .segs .seg.active { background: var(--coach-ink); color: white; }
+  .segs .seg .n { background: rgba(255,255,255,0.18); padding: 1px 7px; border-radius: 999px; font-size: 10px; font-weight: 600; }
+  .segs .seg:not(.active) .n { background: white; color: var(--text-primary); }
+
+  /* ──────────────────────────────────────────
+     CONCEPT 1 — ROSTER GRID
+     Pulse cards filling the whole width. No list rail.
+  ────────────────────────────────────────── */
+  .c1-toolbar {
+    padding: 12px 32px; display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .c1-search {
+    background: var(--surface-sunken); border-radius: 999px; padding: 7px 14px; min-width: 280px;
+    font: var(--t-body); color: var(--text-tertiary); display: inline-flex; align-items: center; gap: 8px;
+  }
+  .c1-toolbar .grow { flex: 1; }
+  .c1-toolbar .ghost {
+    background: transparent; border: none; padding: 6px 10px; border-radius: 8px;
+    font: var(--t-body); color: var(--text-secondary); cursor: pointer;
+  }
+  .c1-grid {
+    flex: 1; padding: 16px 32px 28px; overflow: auto;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; align-content: start;
+  }
+  .c1-card {
+    background: white; border: 1px solid var(--border-subtle); border-radius: 12px;
+    border-top: 3px solid var(--coach-lime);
+    padding: 16px; display: flex; flex-direction: column; gap: 12px; min-height: 200px;
+  }
+  .c1-card.warn { border-top-color: #C57544; }
+  .c1-card.alert { border-top-color: #8E1F1F; }
+  .c1-card.muted { border-top-color: var(--text-tertiary); }
+  .c1-card-hd { display: flex; align-items: center; gap: 10px; }
+  .c1-card-hd .who { flex: 1; min-width: 0; }
+  .c1-card-hd .name { font: 700 13px var(--font-ui); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c1-card-hd .program { font: 11px var(--font-ui); color: var(--text-secondary); margin: 1px 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c1-meta {
+    background: var(--surface-canvas); border-radius: 8px; padding: 9px 11px;
+    display: grid; grid-template-columns: auto 1fr; gap: 3px 10px;
+    font: 11px var(--font-ui); color: var(--text-secondary);
+  }
+  .c1-meta .k { color: var(--text-tertiary); font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .c1-meta .v { font: 600 11px var(--font-ui); color: var(--text-primary); }
+  .c1-meta .v.good { color: #456D2A; } .c1-meta .v.bad { color: #8E1F1F; }
+  .c1-foot { display: flex; align-items: center; justify-content: space-between; font: 11px var(--font-ui); margin-top: auto; }
+  .c1-foot button {
+    background: transparent; border: none; padding: 0;
+    font: 600 11px var(--font-ui); color: var(--coach-ink); cursor: pointer;
+  }
+
+  /* ──────────────────────────────────────────
+     CONCEPT 2 — KANBAN BY JOURNEY STAGE
+  ────────────────────────────────────────── */
+  .c2-board {
+    flex: 1; padding: 12px 24px 24px; overflow-x: auto; overflow-y: hidden;
+    display: grid; grid-template-columns: repeat(5, 240px); gap: 14px;
+  }
+  .c2-col {
+    background: var(--surface-canvas); border: 1px solid var(--border-subtle);
+    border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px;
+    min-height: 0;
+  }
+  .c2-col-hd { display: flex; align-items: center; gap: 8px; padding: 4px 4px 8px; }
+  .c2-col-hd .stage { width: 8px; height: 8px; border-radius: 999px; background: var(--coach-lime); }
+  .c2-col-hd .stage.onboard { background: #C57544; }
+  .c2-col-hd .stage.wrap { background: var(--coach-ink); }
+  .c2-col-hd .stage.paused { background: #856B47; }
+  .c2-col-hd .stage.churned { background: #8E1F1F; }
+  .c2-col-hd .name { font: 700 13px var(--font-ui); }
+  .c2-col-hd .n { font: 600 11px var(--font-ui); color: var(--text-tertiary); margin-left: auto; }
+  .c2-col-hd .add { background: transparent; border: none; padding: 2px 6px; border-radius: 4px; cursor: pointer; color: var(--text-tertiary); font-size: 14px; }
+  .c2-col-body { display: flex; flex-direction: column; gap: 8px; overflow-y: auto; flex: 1; min-height: 0; }
+  .c2-tile {
+    background: white; border-radius: 8px; padding: 10px 12px;
+    display: flex; flex-direction: column; gap: 8px;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.04);
+    cursor: grab;
+  }
+  .c2-tile-hd { display: flex; align-items: center; gap: 8px; }
+  .c2-tile-hd .name { font: 700 12px var(--font-ui); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c2-tile .program { font: 11px var(--font-ui); color: var(--text-secondary); margin: 0; }
+  .c2-tile .progress { display: grid; grid-template-columns: 1fr auto; gap: 6px; align-items: center; font: 10px var(--font-ui); color: var(--text-tertiary); }
+  .c2-tile .bar { height: 4px; background: var(--surface-sunken); border-radius: 999px; overflow: hidden; }
+  .c2-tile .bar > span { display: block; height: 100%; background: var(--coach-lime); }
+  .c2-tile .meta-row { display: flex; align-items: center; justify-content: space-between; font: 10px var(--font-ui); color: var(--text-tertiary); }
+
+  /* ──────────────────────────────────────────
+     CONCEPT 3 — POWER TABLE
+  ────────────────────────────────────────── */
+  .c3-toolbar {
+    padding: 12px 32px; display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .c3-table-wrap { flex: 1; overflow: auto; padding: 0 32px 24px; }
+  .c3-tbl { width: 100%; border-collapse: collapse; font: var(--t-body); }
+  .c3-tbl thead th {
+    text-align: left; font: 600 10px var(--font-ui); text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--text-tertiary); padding: 12px 14px; border-bottom: 1px solid var(--border-subtle);
+    background: white; position: sticky; top: 0; z-index: 1;
+  }
+  .c3-tbl tbody td { padding: 14px 14px; border-bottom: 1px solid var(--border-subtle); }
+  .c3-tbl tbody tr:hover { background: var(--surface-canvas); }
+  .c3-tbl .check { width: 14px; height: 14px; border: 1.5px solid var(--border-input); border-radius: 3px; display: inline-block; }
+  .c3-tbl .name-cell { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .c3-tbl .name-cell .nm { font: var(--t-body-strong); }
+  .c3-tbl .spark { display: inline-flex; align-items: end; gap: 2px; height: 18px; }
+  .c3-tbl .spark span { width: 4px; background: var(--coach-lime); border-radius: 1px; opacity: 0.85; }
+  .c3-tbl .spark span.dim { background: var(--surface-sunken); opacity: 1; }
+  .c3-tbl .progress-cell { display: flex; align-items: center; gap: 8px; }
+  .c3-tbl .progress-cell .bar { flex: 1; height: 4px; background: var(--surface-sunken); border-radius: 999px; overflow: hidden; min-width: 60px; max-width: 120px; }
+  .c3-tbl .progress-cell .bar > span { display: block; height: 100%; background: var(--coach-ink); }
+  .c3-tbl .progress-cell .lbl { font: var(--t-caption); color: var(--text-secondary); white-space: nowrap; }
+  .c3-tbl .last { font: var(--t-caption); color: var(--text-secondary); }
+  .c3-tbl .last.bad { color: #8E1F1F; font-weight: 600; }
+  .c3-tbl .right { text-align: right; }
+
+  /* ──────────────────────────────────────────
+     CONCEPT 4 — TIMELINE / COHORT VIEW
+  ────────────────────────────────────────── */
+  .c4-tl {
+    flex: 1; padding: 12px 24px 24px; overflow: hidden;
+    display: flex; flex-direction: column; min-height: 0;
+  }
+  .c4-tl-head {
+    display: grid; grid-template-columns: 200px repeat(12, 1fr) 100px; gap: 0;
+    border-bottom: 1px solid var(--border-subtle);
+    font: 600 10px var(--font-ui); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em;
+    padding: 8px 0;
+  }
+  .c4-tl-head .lab { padding: 0 12px; }
+  .c4-tl-head .wk { text-align: center; padding: 0 4px; }
+  .c4-tl-head .wk.now { color: var(--coach-ink); position: relative; }
+  .c4-tl-head .wk.now::after {
+    content: ''; position: absolute; left: 50%; bottom: -8px;
+    width: 1px; height: 8px; background: var(--coach-ink);
+  }
+  .c4-tl-body { flex: 1; overflow: auto; padding: 4px 0; }
+  .c4-row {
+    display: grid; grid-template-columns: 200px repeat(12, 1fr) 100px; gap: 0;
+    align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-subtle);
+    position: relative;
+  }
+  .c4-row .lab { display: flex; align-items: center; gap: 10px; padding: 0 12px; }
+  .c4-row .lab .who { min-width: 0; }
+  .c4-row .lab .nm { font: var(--t-body-strong); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c4-row .lab .pg { font: var(--t-caption); color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .c4-track {
+    grid-column: 2 / span 12;
+    height: 28px; position: relative;
+  }
+  .c4-track::before {
+    content: ''; position: absolute; left: 0; right: 0; top: 50%;
+    height: 1px; background: var(--border-subtle); transform: translateY(-50%);
+  }
+  /* now-line */
+  .c4-row.has-now::after {
+    content: ''; position: absolute; top: 0; bottom: 0;
+    width: 1px; background: var(--coach-ink); opacity: 0.18;
+  }
+  .c4-prog {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    height: 8px; border-radius: 999px;
+    background: var(--coach-lime); border: 1px solid var(--coach-lime-ink);
+  }
+  .c4-prog.warn { background: #C57544; border-color: #6B3A12; }
+  .c4-prog.alert { background: #8E1F1F; border-color: #5C1414; }
+  .c4-prog.muted { background: var(--surface-sunken); border-color: var(--border-input); }
+  .c4-mark {
+    position: absolute; top: 50%; transform: translate(-50%, -50%);
+    width: 14px; height: 14px; border-radius: 999px; background: white; border: 2px solid var(--coach-ink);
+  }
+  .c4-mark.warn { border-color: #6B3A12; }
+  .c4-mark.alert { border-color: #8E1F1F; }
+  .c4-row .right-meta { padding: 0 12px; text-align: right; font: var(--t-caption); color: var(--text-secondary); }
+
+  /* ─── Notes ─── */
+  .note { padding: 22px; font-family: var(--font-ui); height: 100%; box-sizing: border-box; background: #EFEBE2; overflow: auto; }
+  .note h2 { font: 700 16px var(--font-ui); margin: 0 0 8px; color: #2a251f; }
+  .note p { font: 13px/1.5 var(--font-ui); margin: 0 0 8px; color: rgba(40,30,20,0.85); }
+  .note ul { margin: 4px 0 0; padding-left: 16px; font: 13px/1.5 var(--font-ui); color: rgba(40,30,20,0.85); }
+  .note li { margin-bottom: 4px; }
+  .note .when { font: 600 10px var(--font-ui); text-transform: uppercase; letter-spacing: 0.06em; color: rgba(40,30,20,0.55); margin-top: 12px; display: block; }
+</style>
+</head>
+<body>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+
+<div id="root"></div>
+
+<script type="text/babel">
+const NavIcon = ({ children, active }) => <div className={`ic ${active ? 'active' : ''}`}>{children}</div>;
+const MiniSide = () => (
+  <aside className="mside">
+    <div className="logo">C</div>
+    <NavIcon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></NavIcon>
+    <NavIcon active><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg></NavIcon>
+    <NavIcon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="7" r="4"/><path d="M2 21c0-3.9 3.1-7 7-7s7 3.1 7 7"/><path d="M19 8v6M16 11h6"/></svg></NavIcon>
+    <NavIcon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></NavIcon>
+    <NavIcon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M6 4v16M18 4v16M6 12h12M2 9v6M22 9v6"/></svg></NavIcon>
+    <NavIcon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg></NavIcon>
+    <NavIcon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/></svg></NavIcon>
+    <div className="grow" />
+    <div className="me">F</div>
+  </aside>
+);
+const Topbar = () => (
+  <div className="topbar">
+    <span className="crumb">Clients</span>
+    <span className="grow" />
+    <span className="pill">9 trial days left</span>
+    <button className="upgrade">Upgrade plan</button>
+  </div>
+);
+
+/* dataset reused across concepts */
+const CLIENTS = [
+  { i:1, name:'Diego Torres',    av:'av-4', program:'Hypertrophy · 12wk', tone:'alert', tag:'Drifting',     dot:'alert', week:6, total:12, adh:42, last:'3 days ago',  next:'Not scheduled', sig:'Skipped 3 check-ins',     mrr:160, stage:'paused' },
+  { i:2, name:'Aya Nakamura',    av:'av-1', program:'Strength · 8wk',     tone:'warn',  tag:'Awaiting you', dot:'warn',  week:4, total:8,  adh:88, last:'2 hours ago', next:'Tomorrow 10:00', sig:'Assessment to validate', mrr:150, stage:'active' },
+  { i:3, name:'Marcus Kane',     av:'av-3', program:'Conditioning',       tone:'warn',  tag:'Conflict',     dot:'warn',  week:3, total:6,  adh:71, last:'Yesterday',   next:'Today 14:00',   sig:'Schedule conflict',       mrr:160, stage:'active' },
+  { i:4, name:'Camille Roux',    av:'av-2', program:'Mobility & Recovery', tone:null,    tag:'On track',     dot:'',      week:9, total:10, adh:94, last:'Today',       next:'Today 17:30',   sig:'On track',                mrr:180, stage:'wrap' },
+  { i:5, name:'Jade Lambert',    av:'av-5', program:'Onboarding',          tone:null,    tag:'New',          dot:'',      week:1, total:8,  adh:0,  last:'Mon',         next:'Awaiting program', sig:'Just started',         mrr:0,   stage:'onboard' },
+  { i:6, name:'Theo Brunet',     av:'av-6', program:'Strength · 8wk',     tone:null,    tag:'On track',     dot:'',      week:7, total:8,  adh:96, last:'Today',       next:'Thu 09:00',     sig:'Crushing it',              mrr:150, stage:'active' },
+  { i:7, name:'Sofia Marin',     av:'av-7', program:'Strength · 8wk',     tone:'muted', tag:'Silent 5d',    dot:'muted', week:5, total:8,  adh:58, last:'5 days ago',  next:'Not scheduled', sig:'Quiet',                   mrr:150, stage:'paused' },
+  { i:8, name:'Lou Martin',      av:'av-1', program:'Hypertrophy · 12wk', tone:null,    tag:'On track',     dot:'',      week:2, total:12, adh:85, last:'Today',       next:'Wed 18:00',     sig:'On track',                mrr:180, stage:'active' },
+  { i:9, name:'Karim Idriss',    av:'av-4', program:'Conditioning',       tone:null,    tag:'Final week',   dot:'',      week:6, total:6,  adh:92, last:'Today',       next:'Final assessment', sig:'Wrapping up',          mrr:160, stage:'wrap' },
+  { i:10, name:'Elena Costa',    av:'av-8', program:'Onboarding',          tone:null,    tag:'New',          dot:'',      week:0, total:8,  adh:0,  last:'Today',       next:'Intake call Wed', sig:'Welcomed',              mrr:0,   stage:'onboard' },
+  { i:11, name:'Yusuf Ahmadi',   av:'av-3', program:'Hypertrophy · 12wk', tone:null,    tag:'On track',     dot:'',      week:8, total:12, adh:90, last:'Today',       next:'Fri 07:00',     sig:'On track',                mrr:180, stage:'active' },
+  { i:12, name:'Margot Hervé',   av:'av-2', program:'Mobility · 6wk',     tone:'muted', tag:'Paused',       dot:'muted', week:3, total:6,  adh:0,  last:'12 days ago', next:'Paused',        sig:'Knee injury',              mrr:0,   stage:'paused' },
+];
+
+/* ============================================================
+   CONCEPT 1 — ROSTER GRID
+   ============================================================ */
+const C1Card = ({ c }) => (
+  <article className={`c1-card ${c.tone || ''}`}>
+    <div className="c1-card-hd">
+      <span className={`av md ${c.av}`}>{c.name.split(' ').map(s=>s[0]).join('')}</span>
+      <div className="who">
+        <p className="name">{c.name}</p>
+        <p className="program">{c.program}</p>
+      </div>
+      <span className={`pill-tag ${c.tone === 'alert' ? 'tag-alert' : c.tone === 'warn' ? 'tag-warn' : c.tone === 'muted' ? 'tag-ghost' : 'tag-soft'}`}>
+        <span className={`tag-dot ${c.dot}`} />{c.tag}
+      </span>
+    </div>
+    <div className="c1-meta">
+      <span className="k">Week</span><span className="v">{c.week} of {c.total}</span>
+      <span className="k">Adherence</span><span className={`v ${c.adh >= 85 ? 'good' : c.adh < 60 ? 'bad' : ''}`}>{c.adh ? c.adh + '%' : '—'}</span>
+      <span className="k">Last log</span><span className="v">{c.last}</span>
+      <span className="k">Next</span><span className="v">{c.next}</span>
+    </div>
+    <div className="c1-foot">
+      <span style={{ color: c.tone === 'alert' ? '#8E1F1F' : c.tone === 'warn' ? '#6B3A12' : c.tone === 'muted' ? 'var(--text-tertiary)' : '#456D2A' }}>● {c.sig}</span>
+      <button>Open →</button>
+    </div>
+  </article>
+);
+const Concept1 = () => (
+  <div className="frame">
+    <MiniSide />
+    <div className="main">
+      <Topbar />
+      <div className="page-head">
+        <div>
+          <h1>Clients</h1>
+          <p className="sub">12 active · sorted by who needs you most.</p>
+        </div>
+        <span className="grow" />
+        <div className="actions">
+          <button>Filter</button>
+          <button>Sort: needs attention ▾</button>
+          <button className="primary">+ Invite client</button>
+        </div>
+      </div>
+      <div className="segs">
+        <span className="seg active">All <span className="n">12</span></span>
+        <span className="seg">Needs attention <span className="n">4</span></span>
+        <span className="seg">On track <span className="n">7</span></span>
+        <span className="seg">Silent / paused <span className="n">2</span></span>
+        <span className="seg">New <span className="n">2</span></span>
+      </div>
+      <div className="c1-toolbar" style={{ borderBottom: 'none', paddingTop: 0 }}>
+        <span className="c1-search">🔍 Search clients</span>
+        <span className="grow" />
+        <button className="ghost">⊞ Grid</button>
+        <button className="ghost">≡ Table</button>
+        <button className="ghost">▥ Kanban</button>
+      </div>
+      <div className="c1-grid">
+        {CLIENTS.map(c => <C1Card key={c.i} c={c} />)}
+      </div>
+    </div>
+  </div>
+);
+
+/* ============================================================
+   CONCEPT 2 — KANBAN BY STAGE
+   ============================================================ */
+const C2Tile = ({ c }) => (
+  <div className="c2-tile">
+    <div className="c2-tile-hd">
+      <span className={`av sm ${c.av}`}>{c.name.split(' ').map(s=>s[0]).join('')}</span>
+      <span className="name">{c.name}</span>
+      {c.tone && <span className={`tag-dot ${c.dot}`} title={c.tag} />}
+    </div>
+    <p className="program">{c.program}</p>
+    {c.total > 0 && (
+      <div>
+        <div className="bar"><span style={{ width: `${(c.week/c.total)*100}%` }} /></div>
+        <div className="meta-row">
+          <span>Wk {c.week}/{c.total}</span>
+          <span>{c.adh ? c.adh + '% adh' : c.last}</span>
+        </div>
+      </div>
+    )}
+  </div>
+);
+const C2Col = ({ stage, name, dotClass, items }) => (
+  <div className="c2-col">
+    <div className="c2-col-hd">
+      <span className={`stage ${dotClass}`} />
+      <span className="name">{name}</span>
+      <span className="n">{items.length}</span>
+      <button className="add">+</button>
+    </div>
+    <div className="c2-col-body">
+      {items.map(c => <C2Tile key={c.i} c={c} />)}
+    </div>
+  </div>
+);
+const Concept2 = () => {
+  const by = (s) => CLIENTS.filter(c => c.stage === s);
+  return (
+    <div className="frame">
+      <MiniSide />
+      <div className="main">
+        <Topbar />
+        <div className="page-head">
+          <div>
+            <h1>Clients</h1>
+            <p className="sub">Pipeline by lifecycle stage. Drag to move.</p>
+          </div>
+          <span className="grow" />
+          <div className="actions">
+            <button>Filter</button>
+            <button className="primary">+ Invite client</button>
+          </div>
+        </div>
+        <div className="c1-toolbar">
+          <span className="c1-search">🔍 Search clients</span>
+          <span className="grow" />
+          <button className="ghost">⊞ Grid</button>
+          <button className="ghost">≡ Table</button>
+          <button className="ghost" style={{ background: 'var(--surface-sunken)', color: 'var(--text-primary)' }}>▥ Kanban</button>
+        </div>
+        <div className="c2-board">
+          <C2Col stage="onboard" name="Onboarding" dotClass="onboard" items={by('onboard')} />
+          <C2Col stage="active" name="Active" dotClass="" items={by('active')} />
+          <C2Col stage="wrap" name="Wrapping up" dotClass="wrap" items={by('wrap')} />
+          <C2Col stage="paused" name="Paused / silent" dotClass="paused" items={by('paused')} />
+          <C2Col stage="churned" name="Churned" dotClass="churned" items={[]} />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* ============================================================
+   CONCEPT 3 — POWER TABLE
+   ============================================================ */
+const Spark = ({ values }) => (
+  <span className="spark">
+    {values.map((v, i) => <span key={i} style={{ height: `${4 + v * 0.14}px` }} className={v < 50 ? 'dim' : ''} />)}
+  </span>
+);
+const sparkSeed = (n) => Array.from({length: 8}, (_, i) => Math.max(10, (n + Math.sin(i * 1.3) * 22) | 0));
+
+const C3Row = ({ c }) => (
+  <tr>
+    <td><span className="check" /></td>
+    <td>
+      <div className="name-cell">
+        <span className={`av md ${c.av}`}>{c.name.split(' ').map(s=>s[0]).join('')}</span>
+        <div>
+          <div className="nm">{c.name}</div>
+          <div className="last">{c.program}</div>
+        </div>
+      </div>
+    </td>
+    <td>
+      <span className={`pill-tag ${c.tone === 'alert' ? 'tag-alert' : c.tone === 'warn' ? 'tag-warn' : c.tone === 'muted' ? 'tag-ghost' : 'tag-soft'}`}>
+        <span className={`tag-dot ${c.dot}`} />{c.tag}
+      </span>
+    </td>
+    <td>
+      <div className="progress-cell">
+        <div className="bar"><span style={{ width: `${c.total ? (c.week/c.total)*100 : 0}%` }} /></div>
+        <span className="lbl">Wk {c.week}/{c.total}</span>
+      </div>
+    </td>
+    <td><Spark values={sparkSeed(c.adh || 30)} /></td>
+    <td><span style={{ font: '600 13px var(--font-ui)', color: c.adh >= 85 ? '#456D2A' : c.adh && c.adh < 60 ? '#8E1F1F' : 'var(--text-primary)' }}>{c.adh ? c.adh + '%' : '—'}</span></td>
+    <td className={`last ${c.last.includes('day') && parseInt(c.last) >= 3 ? 'bad' : ''}`}>{c.last}</td>
+    <td className="last">{c.next}</td>
+    <td className="right" style={{ font: '600 13px var(--font-ui)' }}>{c.mrr ? c.mrr + ' €' : '—'}</td>
+  </tr>
+);
+const Concept3 = () => (
+  <div className="frame">
+    <MiniSide />
+    <div className="main">
+      <Topbar />
+      <div className="page-head">
+        <div>
+          <h1>Clients</h1>
+          <p className="sub">All 12 in one table. Sort, filter, multi-select.</p>
+        </div>
+        <span className="grow" />
+        <div className="actions">
+          <button>Columns</button>
+          <button>Filter</button>
+          <button className="primary">+ Invite client</button>
+        </div>
+      </div>
+      <div className="c3-toolbar">
+        <span className="c1-search">🔍 Search clients</span>
+        <span className="pill-tag tag-ghost">12 rows</span>
+        <span className="grow" />
+        <button className="ghost" style={{ background: 'transparent', border: 'none', padding: '6px 10px', borderRadius: 8, font: 'var(--t-body)', color: 'var(--text-secondary)', cursor: 'pointer' }}>⊞ Grid</button>
+        <button className="ghost" style={{ background: 'var(--surface-sunken)', color: 'var(--text-primary)', border: 'none', padding: '6px 10px', borderRadius: 8, font: 'var(--t-body)', cursor: 'pointer' }}>≡ Table</button>
+        <button className="ghost" style={{ background: 'transparent', border: 'none', padding: '6px 10px', borderRadius: 8, font: 'var(--t-body)', color: 'var(--text-secondary)', cursor: 'pointer' }}>▥ Kanban</button>
+      </div>
+      <div className="c3-table-wrap">
+        <table className="c3-tbl">
+          <thead>
+            <tr>
+              <th style={{ width: 32 }}><span className="check" /></th>
+              <th>Client</th>
+              <th>Status</th>
+              <th>Program</th>
+              <th>Adherence trend</th>
+              <th>Now</th>
+              <th>Last log</th>
+              <th>Next session</th>
+              <th className="right">MRR</th>
+            </tr>
+          </thead>
+          <tbody>
+            {CLIENTS.map(c => <C3Row key={c.i} c={c} />)}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+);
+
+/* ============================================================
+   CONCEPT 4 — TIMELINE / COHORT
+   ============================================================ */
+const C4Row = ({ c }) => {
+  // map week 0..12 onto 12-track grid
+  const startWk = 1;
+  const totalWks = 12;
+  const left = ((c.week - 0) / totalWks) * 100;
+  const startLeft = 0;
+  const width = (c.week / totalWks) * 100;
+  const tone = c.tone === 'alert' ? 'alert' : c.tone === 'warn' ? 'warn' : c.tone === 'muted' ? 'muted' : '';
+  const nowCol = 7; // pretend "now" = week 7
+  return (
+    <div className={`c4-row has-now`} style={{ position: 'relative' }}>
+      <div className="lab">
+        <span className={`av md ${c.av}`}>{c.name.split(' ').map(s=>s[0]).join('')}</span>
+        <div className="who">
+          <div className="nm">{c.name}</div>
+          <div className="pg">{c.program}</div>
+        </div>
+      </div>
+      <div className="c4-track">
+        <div className={`c4-prog ${tone}`} style={{ left: `${(startLeft / totalWks) * 100}%`, width: `${Math.max(2, (c.week / totalWks) * 100)}%` }} />
+        <div className={`c4-mark ${tone}`} style={{ left: `${(c.week / totalWks) * 100}%` }} />
+      </div>
+      <div className="right-meta">{c.tag}</div>
+      <div style={{ position: 'absolute', top: 0, bottom: 0, left: `calc(200px + (100% - 300px) * ${nowCol/12})`, width: 1, background: 'rgba(40, 38, 32, 0.18)' }} />
+    </div>
+  );
+};
+const Concept4 = () => (
+  <div className="frame">
+    <MiniSide />
+    <div className="main">
+      <Topbar />
+      <div className="page-head">
+        <div>
+          <h1>Clients</h1>
+          <p className="sub">Cohort timeline. Where everyone is in their program.</p>
+        </div>
+        <span className="grow" />
+        <div className="actions">
+          <button>Group: program ▾</button>
+          <button>Filter</button>
+          <button className="primary">+ Invite client</button>
+        </div>
+      </div>
+      <div className="c1-toolbar">
+        <span className="c1-search">🔍 Search clients</span>
+        <span className="grow" />
+        <button className="ghost">⊞ Grid</button>
+        <button className="ghost">≡ Table</button>
+        <button className="ghost">▥ Kanban</button>
+        <button className="ghost" style={{ background: 'var(--surface-sunken)', color: 'var(--text-primary)' }}>▭ Timeline</button>
+      </div>
+      <div className="c4-tl">
+        <div className="c4-tl-head">
+          <span className="lab">Client</span>
+          {Array.from({length: 12}, (_, i) => (
+            <span key={i} className={`wk ${i === 6 ? 'now' : ''}`}>W{i+1}</span>
+          ))}
+          <span className="lab" style={{ textAlign: 'right' }}>Status</span>
+        </div>
+        <div className="c4-tl-body">
+          {CLIENTS.map(c => <C4Row key={c.i} c={c} />)}
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+/* ============================================================
+   CANVAS
+   ============================================================ */
+const Note = ({ title, children, when }) => (
+  <div className="note">
+    <h2>{title}</h2>
+    {children}
+    <span className="when">Best when</span>
+    <p style={{ marginTop: 4 }}>{when}</p>
+  </div>
+);
+
+const App = () => (
+  <DesignCanvas>
+    <DCSection id="intro" title="Coach · Clients view concepts" subtitle="Four ways to surface your roster — from quick scan to power tools.">
+      <DCArtboard id="intro-note" label="Read me" width={320} height={900}>
+        <div className="note">
+          <h1 style={{ font: '700 22px/1.2 var(--font-ui)', margin: '0 0 12px' }}>Pick your shape</h1>
+          <p>The current Clients page is master-detail: 280px list rail on the left, big profile card on the right. It's good for one-client deep work but hides the rest of the roster behind that profile.</p>
+          <p>Each concept here pivots on a different scanning behavior:</p>
+          <div style={{ display: 'grid', gap: 12, marginTop: 14 }}>
+            <div style={{ background: 'white', borderRadius: 10, padding: 12, borderLeft: '3px solid #5B8E3A' }}>
+              <p style={{ font: '700 13px var(--font-ui)', margin: '0 0 4px' }}>1 · Roster grid</p>
+              <p style={{ font: '12px/1.4 var(--font-ui)', color: '#6B655B', margin: 0 }}>Pulse cards filling the canvas. Like the dashboard, but bigger and filterable.</p>
+            </div>
+            <div style={{ background: 'white', borderRadius: 10, padding: 12, borderLeft: '3px solid #C57544' }}>
+              <p style={{ font: '700 13px var(--font-ui)', margin: '0 0 4px' }}>2 · Pipeline (Kanban)</p>
+              <p style={{ font: '12px/1.4 var(--font-ui)', color: '#6B655B', margin: 0 }}>Columns by lifecycle: Onboarding → Active → Wrap-up → Paused → Churned.</p>
+            </div>
+            <div style={{ background: 'white', borderRadius: 10, padding: 12, borderLeft: '3px solid #2A2620' }}>
+              <p style={{ font: '700 13px var(--font-ui)', margin: '0 0 4px' }}>3 · Power table</p>
+              <p style={{ font: '12px/1.4 var(--font-ui)', color: '#6B655B', margin: 0 }}>One dense row per client. Sort by adherence, MRR, last seen. Bulk-action friendly.</p>
+            </div>
+            <div style={{ background: 'white', borderRadius: 10, padding: 12, borderLeft: '3px solid #856B47' }}>
+              <p style={{ font: '700 13px var(--font-ui)', margin: '0 0 4px' }}>4 · Cohort timeline</p>
+              <p style={{ font: '12px/1.4 var(--font-ui)', color: '#6B655B', margin: 0 }}>Horizontal Gantt. See who's at week 1 vs week 8 at a glance — useful for capacity.</p>
+            </div>
+          </div>
+          <p style={{ marginTop: 16, fontStyle: 'italic' }}>These can coexist as view-switcher tabs in the toolbar (Grid / Table / Kanban / Timeline). The current master-detail can stay as the "Profile" page when you click into one client.</p>
+        </div>
+      </DCArtboard>
+    </DCSection>
+
+    <DCSection id="c1" title="01 — Roster grid" subtitle="Pulse cards full-width, filterable.">
+      <DCArtboard id="c1-board" label="Roster grid" width={1280} height={900}><Concept1 /></DCArtboard>
+      <DCArtboard id="c1-note" label="Notes" width={320} height={900}>
+        <Note title="Same DNA as the dashboard pulse" when="Coaches with 8–25 clients who want one screen showing the entire roster's health. The dashboard already teaches the card vocabulary; this just gives it room to breathe.">
+          <ul>
+            <li><strong>Top:</strong> page header + segments by signal (All / Needs attention / On track / Silent / New).</li>
+            <li><strong>Toolbar:</strong> search + view switcher (Grid · Table · Kanban). View choice is per-coach preference.</li>
+            <li><strong>4-col grid:</strong> 12 active clients fit comfortably; scrolls past that. Each card is identical to the dashboard's pulse card.</li>
+            <li><strong>Click a card:</strong> opens the existing profile page (master-detail) — that view becomes the *deep* view, this is the *broad* view.</li>
+          </ul>
+        </Note>
+      </DCArtboard>
+    </DCSection>
+
+    <DCSection id="c2" title="02 — Pipeline (Kanban)" subtitle="Lifecycle columns. See where every client is in their journey.">
+      <DCArtboard id="c2-board" label="Pipeline" width={1280} height={900}><Concept2 /></DCArtboard>
+      <DCArtboard id="c2-note" label="Notes" width={320} height={900}>
+        <Note title="Coach as funnel manager" when="Coaches running a small business with steady churn — they need to see the funnel. Onboarding queue, active engagements, wrap-ups, pauses, churn. Drag a tile right when they start, drag left when they pause.">
+          <ul>
+            <li><strong>5 columns:</strong> Onboarding · Active · Wrapping up · Paused/silent · Churned. Stage dot color matches the column.</li>
+            <li><strong>Tiles are compact:</strong> name, program, week-progress bar, adherence or last-log. Health dot in the corner if there's an issue.</li>
+            <li><strong>Drag-to-update:</strong> moving a tile changes the client's stage. Wrap-up → Active brings them back; → Churned ends the engagement.</li>
+            <li><strong>Stage rules:</strong> "Wrapping up" auto-populates from clients in the final 2 weeks of their program. "Paused" auto-populates from clients silent 7+ days.</li>
+          </ul>
+        </Note>
+      </DCArtboard>
+    </DCSection>
+
+    <DCSection id="c3" title="03 — Power table" subtitle="Dense, sortable, multi-select. For coaches who think in spreadsheets.">
+      <DCArtboard id="c3-board" label="Power table" width={1280} height={900}><Concept3 /></DCArtboard>
+      <DCArtboard id="c3-note" label="Notes" width={320} height={900}>
+        <Note title="Operator's view" when="Coaches who think in numbers. They want to sort by 'who's silent longest' or 'who's paying the most' or 'whose adherence is dropping.' Bulk-message the bottom 3 in one click.">
+          <ul>
+            <li><strong>Columns:</strong> select · client · status pill · program (with progress bar) · adherence trend (8-week sparkline) · current adherence · last log · next session · MRR.</li>
+            <li><strong>Adherence trend:</strong> the sparkline shows the *direction*, not just the current number — a coach can spot drift before it becomes "silent 5d."</li>
+            <li><strong>"Last log" turns red</strong> at 3+ days. The cell is the alert.</li>
+            <li><strong>Multi-select:</strong> checkboxes in the first column unlock bulk actions in a sticky bar (message, assign program, archive, etc).</li>
+            <li><strong>Customizable columns:</strong> "Columns" button in the header lets each coach pick what matters.</li>
+          </ul>
+        </Note>
+      </DCArtboard>
+    </DCSection>
+
+    <DCSection id="c4" title="04 — Cohort timeline" subtitle="Where everyone is in their program — capacity at a glance.">
+      <DCArtboard id="c4-board" label="Cohort timeline" width={1280} height={900}><Concept4 /></DCArtboard>
+      <DCArtboard id="c4-note" label="Notes" width={320} height={900}>
+        <Note title="Capacity-first" when="Coaches who plan their availability around program cycles. They want to see 'who's wrapping up in 2 weeks (revenue gap incoming)' and 'who's just starting (still ramping).' The horizontal axis is time-in-program, not calendar time.">
+          <ul>
+            <li><strong>X-axis:</strong> week 1–12 of program. The dashed vertical line is "today" — a sense of who's behind, who's ahead.</li>
+            <li><strong>Each row:</strong> a horizontal progress bar from W1 to current week, with a circle marker at "where they are now." Tone of bar = signal.</li>
+            <li><strong>Right column:</strong> status tag (Drifting / Awaiting / On track / Wrapping / etc).</li>
+            <li><strong>Group by:</strong> program, coach (for teams), or start month — pick from the toolbar dropdown.</li>
+            <li><strong>Use case:</strong> 3 of the bars hitting "W12" simultaneously means 3 wrap-up conversations and possibly 3 churn risks in the same week — plan accordingly.</li>
+          </ul>
+        </Note>
+      </DCArtboard>
+    </DCSection>
+  </DesignCanvas>
+);
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

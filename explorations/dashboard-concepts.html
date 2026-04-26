@@ -1,0 +1,1202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Coach · Dashboard concepts</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  /* ─── Shared dashboard mini-shell ─────────────────────────── */
+  body { margin: 0; font-family: var(--font-ui); color: var(--text-primary); }
+
+  .dash {
+    width: 1280px; height: 900px;
+    display: grid; grid-template-columns: 64px 1fr;
+    background: var(--surface-canvas);
+    overflow: hidden;
+    font-family: var(--font-ui);
+    color: var(--text-primary);
+  }
+  .mini-side {
+    background: var(--surface-canvas);
+    padding: 16px 0;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    border-right: 1px solid var(--border-subtle);
+  }
+  .mini-side .logo {
+    width: 32px; height: 32px; border-radius: 8px; background: var(--coach-lime);
+    display: grid; place-items: center; font: 700 14px var(--font-ui);
+    color: var(--coach-lime-ink);
+    margin-bottom: 12px;
+  }
+  .mini-side .ic {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: grid; place-items: center;
+    color: var(--text-tertiary);
+    cursor: pointer;
+  }
+  .mini-side .ic.active {
+    background: var(--surface-sunken); color: var(--text-primary);
+  }
+  .mini-side .ic svg { width: 18px; height: 18px; }
+  .mini-side .grow { flex: 1; }
+  .mini-side .me {
+    width: 32px; height: 32px; border-radius: 999px; background: var(--coach-ink);
+    color: white; display: grid; place-items: center; font: 600 12px var(--font-ui);
+  }
+
+  .dash-main { background: white; overflow: hidden; }
+  .topbar {
+    height: 48px; display: flex; align-items: center; gap: 12px;
+    padding: 0 24px; border-bottom: 1px solid var(--border-subtle);
+    font: var(--t-secondary); color: var(--text-secondary);
+  }
+  .topbar .crumb { font: var(--t-body-strong); color: var(--text-primary); }
+  .topbar .grow { flex: 1; }
+  .topbar .pill { background: var(--surface-sunken); border-radius: 999px; padding: 5px 12px; font: var(--t-caption); color: var(--text-secondary); }
+  .topbar .upgrade {
+    background: var(--coach-ink); color: white; border: none;
+    padding: 6px 14px; border-radius: 999px; font: 600 12px var(--font-ui); cursor: pointer;
+  }
+
+  /* mascot */
+  .bell { width: var(--s, 56px); height: var(--s, 56px); flex-shrink: 0; }
+
+  /* shared bits */
+  .av {
+    width: 32px; height: 32px; border-radius: 999px;
+    display: inline-grid; place-items: center;
+    font: 600 11px var(--font-ui); color: white; flex-shrink: 0;
+  }
+  .av.sm { width: 22px; height: 22px; font-size: 9px; }
+  .av.lg { width: 40px; height: 40px; font-size: 13px; }
+  .av-1 { background: #C57544; }
+  .av-2 { background: #5B8E3A; }
+  .av-3 { background: #2A2620; }
+  .av-4 { background: #856B47; }
+  .av-5 { background: #B07654; }
+  .av-6 { background: #4A6B2A; }
+
+  .pill-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    border-radius: 999px; padding: 3px 9px;
+    font: 600 11px var(--font-ui); white-space: nowrap;
+  }
+  .tag-soft { background: var(--coach-lime-soft); color: var(--coach-lime-ink); }
+  .tag-warn { background: #FBE6CC; color: #6B3A12; }
+  .tag-alert { background: #F9D9D2; color: #8E1F1F; }
+  .tag-ink { background: var(--coach-ink); color: white; }
+  .tag-ghost { background: var(--surface-sunken); color: var(--text-secondary); }
+  .tag-dot {
+    width: 8px; height: 8px; border-radius: 999px; background: var(--coach-lime); flex-shrink: 0;
+  }
+  .tag-dot.warn { background: #C57544; }
+  .tag-dot.alert { background: #8E1F1F; }
+  .tag-dot.muted { background: var(--text-tertiary); }
+
+  /* ============================================================
+     CONCEPT 1 — TODAY'S QUEUE
+     One ranked list. "4 things need you today." Triage-first.
+     ============================================================ */
+  .c1-body { padding: 24px 32px; height: calc(100% - 48px); overflow: hidden; display: grid; grid-template-rows: auto 1fr; gap: 18px; }
+  .c1-hero {
+    background: var(--coach-ink); color: white;
+    border-radius: 14px; padding: 22px 26px;
+    display: grid; grid-template-columns: 1fr auto auto auto; gap: 28px; align-items: center;
+  }
+  .c1-hero .greet { font: 700 22px/1.2 var(--font-ui); margin: 0 0 4px; }
+  .c1-hero .greet-sub { font: var(--t-caption); opacity: 0.7; margin: 0; }
+  .c1-hero .stat { text-align: right; }
+  .c1-hero .stat .n { font: 700 28px/1 var(--font-ui); display: block; color: var(--coach-lime); }
+  .c1-hero .stat.muted .n { color: white; opacity: 0.95; }
+  .c1-hero .stat .lbl { font: 600 10px/1.3 var(--font-ui); text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.6; display: block; margin-top: 4px; }
+
+  .c1-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 18px; min-height: 0; }
+  .c1-card { background: white; border: 1px solid var(--border-subtle); border-radius: 14px; display: flex; flex-direction: column; min-height: 0; }
+  .c1-card-hd {
+    padding: 18px 22px; display: flex; align-items: baseline; justify-content: space-between;
+  }
+  .c1-card-hd h3 { font: 700 16px var(--font-ui); margin: 0; }
+  .c1-card-hd .meta { font: var(--t-caption); color: var(--text-tertiary); }
+
+  .c1-queue { flex: 1; padding: 0 22px 18px; overflow: auto; }
+  .c1-q-row {
+    display: grid; grid-template-columns: 12px 32px 1fr auto auto; gap: 14px;
+    align-items: center; padding: 14px 0; border-top: 1px solid var(--border-subtle);
+  }
+  .c1-q-row:first-child { border-top: none; }
+  .c1-q-row .prio {
+    width: 6px; height: 32px; border-radius: 3px;
+  }
+  .c1-q-row.p1 .prio { background: #8E1F1F; }
+  .c1-q-row.p2 .prio { background: #C57544; }
+  .c1-q-row.p3 .prio { background: var(--coach-lime); }
+  .c1-q-row .what { font: var(--t-body-strong); color: var(--text-primary); }
+  .c1-q-row .what .who { color: var(--text-secondary); font-weight: 400; }
+  .c1-q-row .when { font: var(--t-caption); color: var(--text-tertiary); white-space: nowrap; }
+  .c1-q-row .go {
+    background: white; border: 1.5px solid var(--coach-ink); color: var(--coach-ink);
+    padding: 6px 14px; border-radius: 999px; font: 600 12px var(--font-ui); cursor: pointer;
+  }
+  .c1-q-row.p1 .go { background: var(--coach-ink); color: white; }
+
+  .c1-side { display: grid; grid-template-rows: auto auto 1fr; gap: 14px; min-height: 0; }
+  .c1-mini {
+    background: white; border: 1px solid var(--border-subtle); border-radius: 14px;
+    padding: 16px 18px;
+  }
+  .c1-mini h4 { font: 600 12px/1 var(--font-ui); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 12px; }
+  .c1-mini .row { display: flex; align-items: center; gap: 10px; padding: 8px 0; font: var(--t-body); }
+  .c1-mini .row + .row { border-top: 1px solid var(--border-subtle); }
+  .c1-mini .row .grow { flex: 1; }
+  .c1-mini .row .time { font: var(--t-caption); color: var(--text-tertiary); }
+
+  /* ============================================================
+     CONCEPT 2 — CLIENT PULSE BOARD
+     Every active client = card with a health signal.
+     ============================================================ */
+  .c2-body { padding: 24px 32px; height: calc(100% - 48px); overflow: hidden; display: grid; grid-template-rows: auto auto 1fr; gap: 18px; }
+
+  .c2-head { display: flex; align-items: end; justify-content: space-between; gap: 18px; }
+  .c2-head h1 { font: 700 26px/1.1 var(--font-ui); margin: 0 0 4px; }
+  .c2-head .sub { font: var(--t-secondary); color: var(--text-secondary); margin: 0; }
+  .c2-head .actions { display: flex; gap: 8px; }
+  .c2-head .actions button {
+    background: white; border: 1px solid var(--border-input);
+    padding: 8px 14px; border-radius: 999px; font: var(--t-button); cursor: pointer; color: var(--text-primary);
+  }
+  .c2-head .actions button.primary { background: var(--coach-lime); border-color: var(--coach-lime); color: var(--coach-lime-ink); }
+
+  .c2-segments { display: flex; gap: 8px; }
+  .c2-seg {
+    background: var(--surface-sunken); padding: 6px 14px; border-radius: 999px;
+    font: 600 12px var(--font-ui); color: var(--text-secondary); display: inline-flex; align-items: center; gap: 8px;
+    cursor: pointer;
+  }
+  .c2-seg.active { background: var(--coach-ink); color: white; }
+  .c2-seg .n { font: 600 11px var(--font-ui); background: rgba(255,255,255,0.18); padding: 1px 7px; border-radius: 999px; }
+  .c2-seg:not(.active) .n { background: white; color: var(--text-primary); }
+
+  .c2-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+    overflow: auto; padding-bottom: 6px; align-content: start;
+  }
+  .c2-card {
+    background: white; border: 1px solid var(--border-subtle); border-radius: 12px;
+    padding: 16px;
+    display: flex; flex-direction: column; gap: 12px;
+    border-top: 3px solid var(--coach-lime);
+  }
+  .c2-card.warn { border-top-color: #C57544; }
+  .c2-card.alert { border-top-color: #8E1F1F; }
+  .c2-card.muted { border-top-color: var(--text-tertiary); }
+
+  .c2-card-hd { display: flex; gap: 12px; align-items: center; }
+  .c2-card-hd .who { flex: 1; min-width: 0; }
+  .c2-card-hd .name { font: 700 14px var(--font-ui); margin: 0; }
+  .c2-card-hd .program { font: var(--t-caption); color: var(--text-secondary); margin: 2px 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .c2-pulse {
+    background: var(--surface-canvas); border-radius: 8px; padding: 10px 12px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px;
+    font: var(--t-caption); color: var(--text-secondary);
+  }
+  .c2-pulse .k { color: var(--text-tertiary); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .c2-pulse .v { font: var(--t-body-strong); color: var(--text-primary); }
+  .c2-pulse .v.good { color: #456D2A; }
+  .c2-pulse .v.bad { color: #8E1F1F; }
+
+  .c2-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    font: var(--t-caption); color: var(--text-secondary);
+  }
+  .c2-foot .signal {
+    display: inline-flex; align-items: center; gap: 6px;
+    font: 600 11px var(--font-ui);
+  }
+  .c2-foot button {
+    background: transparent; border: none; padding: 0;
+    font: 600 12px var(--font-ui); color: var(--coach-ink); cursor: pointer; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px;
+  }
+
+  /* ============================================================
+     CONCEPT 3 — TODAY + NOW (timeline + validation)
+     Time-on-the-left layout. What's happening in the next 8 hours.
+     ============================================================ */
+  .c3-body { padding: 24px 32px; height: calc(100% - 48px); overflow: hidden; display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; }
+
+  .c3-left { display: flex; flex-direction: column; min-height: 0; }
+  .c3-left h1 { font: 700 24px/1.1 var(--font-ui); margin: 0 0 2px; }
+  .c3-left .day { font: var(--t-secondary); color: var(--text-secondary); margin: 0 0 18px; }
+
+  .c3-now-bar {
+    background: var(--coach-ink); color: white; border-radius: 12px;
+    padding: 12px 18px; display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
+    font: var(--t-body);
+  }
+  .c3-now-bar .dot { width: 8px; height: 8px; border-radius: 999px; background: var(--coach-lime); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .c3-now-bar .grow { flex: 1; }
+  .c3-now-bar strong { color: var(--coach-lime); }
+
+  .c3-timeline {
+    flex: 1; overflow: auto;
+    background: white; border: 1px solid var(--border-subtle); border-radius: 14px;
+    padding: 16px 0;
+  }
+  .c3-slot { display: grid; grid-template-columns: 60px 1fr; gap: 14px; padding: 0 18px 0 22px; }
+  .c3-slot .hr { font: 600 11px var(--font-ui); color: var(--text-tertiary); padding-top: 8px; border-top: 1px solid var(--border-subtle); }
+  .c3-slot:first-child .hr { border-top: none; }
+  .c3-slot .lane { padding: 8px 0; min-height: 50px; border-top: 1px solid var(--border-subtle); }
+  .c3-slot:first-child .lane { border-top: none; }
+  .c3-event {
+    background: var(--surface-canvas); border-left: 3px solid var(--coach-lime);
+    border-radius: 6px; padding: 10px 12px; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .c3-event.now { background: var(--coach-lime-soft); border-left-color: var(--coach-ink); }
+  .c3-event.assessment { background: #FBE6CC; border-left-color: #C57544; }
+  .c3-event .grow { flex: 1; min-width: 0; }
+  .c3-event .title { font: var(--t-body-strong); color: var(--text-primary); }
+  .c3-event .meta { font: var(--t-caption); color: var(--text-secondary); }
+  .c3-event .dur { font: 600 11px var(--font-ui); color: var(--text-tertiary); }
+
+  .c3-right { display: flex; flex-direction: column; gap: 14px; min-height: 0; }
+  .c3-right .panel {
+    background: white; border: 1px solid var(--border-subtle); border-radius: 12px;
+    padding: 16px;
+  }
+  .c3-right .panel.flex { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  .c3-right h3 {
+    font: 700 13px var(--font-ui); margin: 0 0 10px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .c3-right h3 .count {
+    background: #8E1F1F; color: white; font: 600 10px var(--font-ui);
+    padding: 1px 7px; border-radius: 999px;
+  }
+  .c3-validate {
+    flex: 1; overflow: auto;
+    margin: 0 -16px -16px; padding: 0 16px 16px;
+  }
+  .c3-v-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 0; border-top: 1px solid var(--border-subtle);
+  }
+  .c3-v-row:first-child { border-top: none; }
+  .c3-v-row .grow { flex: 1; min-width: 0; }
+  .c3-v-row .name { font: var(--t-body-strong); }
+  .c3-v-row .what { font: var(--t-caption); color: var(--text-secondary); }
+  .c3-v-row button {
+    background: var(--coach-lime); border: none;
+    padding: 6px 12px; border-radius: 999px; font: 600 11px var(--font-ui);
+    cursor: pointer; color: var(--coach-lime-ink);
+  }
+  .c3-quick {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  }
+  .c3-quick .q {
+    border: 1px solid var(--border-subtle); border-radius: 8px;
+    padding: 10px 12px; font: var(--t-caption); color: var(--text-secondary);
+    display: flex; flex-direction: column; gap: 2px; cursor: pointer;
+  }
+  .c3-quick .q .n { font: 700 18px var(--font-ui); color: var(--text-primary); }
+
+  /* ============================================================
+     CONCEPT 4 — BUSINESS COCKPIT
+     Numbers-first. MRR, retention, sessions, payments.
+     ============================================================ */
+  .c4-body { padding: 24px 32px; height: calc(100% - 48px); overflow: hidden; display: grid; grid-template-rows: auto auto 1fr; gap: 16px; }
+  .c4-head { display: flex; align-items: baseline; gap: 14px; }
+  .c4-head h1 { font: 700 24px/1 var(--font-ui); margin: 0; }
+  .c4-head .range { display: inline-flex; gap: 4px; background: var(--surface-sunken); border-radius: 999px; padding: 3px; }
+  .c4-head .range button {
+    background: transparent; border: none; padding: 5px 12px; border-radius: 999px;
+    font: 600 11px var(--font-ui); color: var(--text-secondary); cursor: pointer;
+  }
+  .c4-head .range button.active { background: white; color: var(--text-primary); box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .c4-head .grow { flex: 1; }
+  .c4-head .last { font: var(--t-caption); color: var(--text-tertiary); }
+
+  .c4-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .c4-kpi {
+    background: white; border: 1px solid var(--border-subtle); border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .c4-kpi .lbl { font: 600 10px var(--font-ui); text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); margin: 0 0 6px; }
+  .c4-kpi .n { font: 700 24px/1.1 var(--font-ui); margin: 0; }
+  .c4-kpi .delta { font: 600 11px var(--font-ui); margin-top: 6px; display: inline-flex; align-items: center; gap: 4px; }
+  .c4-kpi .delta.up { color: #456D2A; }
+  .c4-kpi .delta.down { color: #8E1F1F; }
+  .c4-kpi.featured { background: var(--coach-ink); color: white; }
+  .c4-kpi.featured .lbl { color: rgba(255,255,255,0.6); }
+  .c4-kpi.featured .delta.up { color: var(--coach-lime); }
+
+  .c4-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 14px; min-height: 0; }
+  .c4-panel { background: white; border: 1px solid var(--border-subtle); border-radius: 12px; padding: 18px; display: flex; flex-direction: column; min-height: 0; }
+  .c4-panel h3 { font: 700 14px var(--font-ui); margin: 0 0 4px; display: flex; justify-content: space-between; align-items: baseline; }
+  .c4-panel h3 .sub { font: var(--t-caption); color: var(--text-tertiary); font-weight: 400; }
+
+  .c4-chart {
+    flex: 1;
+    margin: 14px 0 0;
+    position: relative; min-height: 0;
+  }
+  .c4-chart svg { width: 100%; height: 100%; display: block; }
+
+  .c4-list { flex: 1; overflow: auto; margin: 4px -18px -18px; padding: 0 18px 18px; }
+  .c4-list-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 0; border-top: 1px solid var(--border-subtle);
+  }
+  .c4-list-row:first-child { border-top: none; }
+  .c4-list-row .grow { flex: 1; min-width: 0; }
+  .c4-list-row .name { font: var(--t-body-strong); }
+  .c4-list-row .meta { font: var(--t-caption); color: var(--text-tertiary); }
+  .c4-list-row .amt { font: 600 13px var(--font-ui); }
+
+  /* ============================================================
+     CONCEPT 5 — HYBRID (current shell + pulse cards in client area)
+     Keep the original left column. Keep the tutorial banner.
+     Replace the 'Client tracking' empty section with pulse cards.
+     ============================================================ */
+  .c5-body { padding: 24px 28px; height: calc(100% - 48px); display: grid; grid-template-columns: 320px 1fr; gap: 20px; overflow: hidden; }
+
+  /* left column — same DNA as the live dashboard */
+  .c5-col-left { display: flex; flex-direction: column; gap: 14px; min-height: 0; overflow: auto; }
+  .c5-card {
+    background: white; border: 1px solid var(--border-subtle); border-radius: 12px; padding: 18px 20px;
+  }
+  .c5-card h3 { font: 700 14px var(--font-ui); margin: 0 0 12px; }
+  .c5-greet { display: flex; align-items: center; gap: 14px; margin-top: 4px; }
+  .c5-greet h2 { font: 700 22px/1.15 var(--font-ui); margin: 0; }
+  .c5-schedule-row {
+    display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--border-subtle); font: var(--t-body);
+  }
+  .c5-schedule-row:first-of-type { border-top: none; }
+  .c5-schedule-row .time { font: 600 12px var(--font-ui); color: var(--text-secondary); width: 48px; flex-shrink: 0; }
+  .c5-schedule-row .grow { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .c5-pmt { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--border-subtle); }
+  .c5-pmt:first-of-type { border-top: none; }
+  .c5-pmt .grow { flex: 1; font: var(--t-body); }
+  .c5-pmt .amt { font: 600 13px var(--font-ui); }
+  .c5-rev-chart { height: 90px; border-radius: 8px; margin-top: 6px; display: flex; align-items: flex-end; padding: 0 4px; gap: 6px; }
+  .c5-rev-chart .bar { flex: 1; background: var(--coach-ink); border-radius: 3px 3px 0 0; opacity: 0.85; }
+  .c5-rev-x { display: flex; justify-content: space-between; font: var(--t-caption); color: var(--text-tertiary); margin-top: 6px; padding: 0 4px; }
+
+  /* right column */
+  .c5-col-right { display: flex; flex-direction: column; gap: 16px; min-height: 0; overflow: hidden; }
+  .c5-tut {
+    background: #8E1F1F; color: white; border-radius: 12px;
+    padding: 14px 18px; display: flex; align-items: center; gap: 14px;
+    flex-shrink: 0;
+  }
+  .c5-tut .iconbox { width: 36px; height: 36px; background: rgba(255,255,255,0.12); border-radius: 8px; display: grid; place-items: center; }
+  .c5-tut .grow { flex: 1; }
+  .c5-tut h4 { font: 700 14px var(--font-ui); margin: 0 0 2px; }
+  .c5-tut p { font: var(--t-caption); margin: 0; opacity: 0.85; }
+  .c5-tut button {
+    background: white; color: #8E1F1F; border: none; padding: 7px 14px;
+    border-radius: 999px; font: 600 12px var(--font-ui); cursor: pointer; white-space: nowrap;
+  }
+
+  /* tracking section header — replaces 'Client tracking' */
+  .c5-track-head { display: flex; align-items: end; gap: 14px; flex-shrink: 0; }
+  .c5-track-head h3 { font: 700 18px/1 var(--font-ui); margin: 0 0 4px; }
+  .c5-track-head .sub { font: var(--t-caption); color: var(--text-secondary); margin: 0; }
+  .c5-track-head .grow { flex: 1; }
+  .c5-track-head .invite {
+    background: var(--coach-lime); border: none; color: var(--coach-lime-ink);
+    padding: 8px 16px; border-radius: 999px; font: 600 12px var(--font-ui); cursor: pointer;
+  }
+
+  /* segments inline */
+  .c5-segs { display: flex; gap: 6px; flex-wrap: wrap; flex-shrink: 0; }
+  .c5-segs .seg {
+    background: var(--surface-sunken); padding: 5px 12px; border-radius: 999px;
+    font: 600 11px var(--font-ui); color: var(--text-secondary); display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
+  }
+  .c5-segs .seg.active { background: var(--coach-ink); color: white; }
+  .c5-segs .seg .n { background: rgba(255,255,255,0.18); padding: 0px 6px; border-radius: 999px; font-size: 10px; }
+  .c5-segs .seg:not(.active) .n { background: white; color: var(--text-primary); }
+
+  /* compact pulse grid — 2 cols because it lives in a smaller right column */
+  .c5-pulse-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    overflow: auto; align-content: start; padding-bottom: 4px;
+  }
+  .c5-pcard {
+    background: white; border: 1px solid var(--border-subtle); border-radius: 12px;
+    border-top: 3px solid var(--coach-lime);
+    padding: 14px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .c5-pcard.warn { border-top-color: #C57544; }
+  .c5-pcard.alert { border-top-color: #8E1F1F; }
+  .c5-pcard.muted { border-top-color: var(--text-tertiary); }
+  .c5-pcard-hd { display: flex; align-items: center; gap: 10px; }
+  .c5-pcard-hd .who { flex: 1; min-width: 0; }
+  .c5-pcard-hd .name { font: 700 13px var(--font-ui); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c5-pcard-hd .program { font: 11px var(--font-ui); color: var(--text-secondary); margin: 1px 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c5-pcard-meta {
+    background: var(--surface-canvas); border-radius: 8px; padding: 8px 10px;
+    display: grid; grid-template-columns: auto 1fr; gap: 3px 10px;
+    font: 11px/1.4 var(--font-ui); color: var(--text-secondary);
+  }
+  .c5-pcard-meta .k { color: var(--text-tertiary); font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .c5-pcard-meta .v { font: 600 11px var(--font-ui); color: var(--text-primary); }
+  .c5-pcard-meta .v.good { color: #456D2A; }
+  .c5-pcard-meta .v.bad { color: #8E1F1F; }
+  .c5-pcard-foot {
+    display: flex; align-items: center; justify-content: space-between; font: 11px var(--font-ui);
+  }
+  .c5-pcard-foot button {
+    background: transparent; border: none; padding: 0;
+    font: 600 11px var(--font-ui); color: var(--coach-ink); cursor: pointer;
+  }
+
+  /* ─── Notes pane (sticky context) ─── */
+  .note h2 { font: 700 14px var(--font-ui); margin: 0 0 6px; color: #2a251f; }
+  .note p { font: 13px/1.45 var(--font-ui); margin: 0 0 6px; color: rgba(40,30,20,0.85); }
+  .note ul { margin: 0; padding-left: 16px; font: 13px/1.45 var(--font-ui); color: rgba(40,30,20,0.85); }
+  .note li { margin-bottom: 3px; }
+  .note .when-to-use { font: 600 11px var(--font-ui); text-transform: uppercase; letter-spacing: 0.05em; color: rgba(40,30,20,0.6); margin-top: 10px; display: block; }
+</style>
+</head>
+<body>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+
+<div id="root"></div>
+
+<script type="text/babel">
+const Bell = ({ s = 56 }) => (
+  <svg viewBox="0 0 120 120" style={{ width: s, height: s, flexShrink: 0 }}>
+    <circle cx="60" cy="68" r="36" fill="#C57544"/>
+    <path d="M42 38 Q60 26 78 38 L76 48 L44 48 Z" fill="#5B3D1F"/>
+    <rect x="52" y="34" width="16" height="8" rx="2" fill="#2A2620"/>
+    <circle cx="50" cy="64" r="3.5" fill="#2A2620"/>
+    <circle cx="70" cy="64" r="3.5" fill="#2A2620"/>
+    <path d="M52 78 Q60 84 68 78" stroke="#2A2620" strokeWidth="2" fill="none" strokeLinecap="round"/>
+    <ellipse cx="48" cy="104" rx="9" ry="4" fill="#5B3D1F"/>
+    <ellipse cx="72" cy="104" rx="9" ry="4" fill="#5B3D1F"/>
+  </svg>
+);
+
+const NavIcon = ({ children, active }) => (
+  <div className={`ic ${active ? 'active' : ''}`}>{children}</div>
+);
+
+const MiniSide = ({ active }) => (
+  <aside className="mini-side">
+    <div className="logo">C</div>
+    <NavIcon active={active === 'dashboard'}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+    </NavIcon>
+    <NavIcon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg></NavIcon>
+    <NavIcon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="7" r="4"/><path d="M2 21c0-3.9 3.1-7 7-7s7 3.1 7 7"/><path d="M19 8v6M16 11h6"/></svg></NavIcon>
+    <NavIcon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></NavIcon>
+    <NavIcon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M6 4v16M18 4v16M6 12h12M2 9v6M22 9v6"/></svg></NavIcon>
+    <NavIcon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg></NavIcon>
+    <NavIcon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/></svg></NavIcon>
+    <div className="grow" />
+    <div className="me">F</div>
+  </aside>
+);
+
+const Topbar = ({ crumb }) => (
+  <div className="topbar">
+    <span className="crumb">{crumb}</span>
+    <span className="grow" />
+    <span className="pill">9 trial days left</span>
+    <button className="upgrade">Upgrade plan</button>
+  </div>
+);
+
+/* ============================================================
+   CONCEPT 1 — TODAY'S QUEUE
+   ============================================================ */
+const Concept1 = () => (
+  <div className="dash">
+    <MiniSide active="dashboard" />
+    <div className="dash-main">
+      <Topbar crumb="Dashboard" />
+      <div className="c1-body">
+        <header className="c1-hero">
+          <div>
+            <h2 className="greet">Good morning, Fode</h2>
+            <p className="greet-sub">Wednesday, March 12 · here's what needs you today.</p>
+          </div>
+          <div className="stat">
+            <span className="n">4</span>
+            <span className="lbl">Need attention</span>
+          </div>
+          <div className="stat muted">
+            <span className="n">3</span>
+            <span className="lbl">Sessions today</span>
+          </div>
+          <div className="stat muted">
+            <span className="n">12</span>
+            <span className="lbl">Active clients</span>
+          </div>
+        </header>
+
+        <div className="c1-grid">
+          <section className="c1-card">
+            <header className="c1-card-hd">
+              <h3>Your queue · today</h3>
+              <span className="meta">Auto-prioritized · 4 items</span>
+            </header>
+            <div className="c1-queue">
+              <div className="c1-q-row p1">
+                <span className="prio" />
+                <span className="av av-1">AN</span>
+                <span className="what">
+                  Validate <strong>week 4 assessment</strong> · <span className="who">Aya Nakamura</span>
+                </span>
+                <span className="when">Submitted 2h ago</span>
+                <button className="go">Review</button>
+              </div>
+              <div className="c1-q-row p1">
+                <span className="prio" />
+                <span className="av av-3">MK</span>
+                <span className="what">
+                  <strong>Reschedule</strong> 14:00 session · <span className="who">Marcus Kane</span>
+                </span>
+                <span className="when">Conflict · 11:42</span>
+                <button className="go">Resolve</button>
+              </div>
+              <div className="c1-q-row p2">
+                <span className="prio" />
+                <span className="av av-2">CR</span>
+                <span className="what">
+                  Reply to message · <span className="who">Camille Roux</span>
+                </span>
+                <span className="when">Yesterday</span>
+                <button className="go">Open</button>
+              </div>
+              <div className="c1-q-row p2">
+                <span className="prio" />
+                <span className="av av-4">DT</span>
+                <span className="what">
+                  <strong>Check-in skipped</strong> 3 days · <span className="who">Diego Torres</span>
+                </span>
+                <span className="when">Last seen Sun</span>
+                <button className="go">Nudge</button>
+              </div>
+              <div className="c1-q-row p3">
+                <span className="prio" />
+                <span className="av av-5">JL</span>
+                <span className="what">
+                  Send week 1 program · <span className="who">Jade Lambert</span>
+                </span>
+                <span className="when">Started Mon</span>
+                <button className="go">Send</button>
+              </div>
+            </div>
+          </section>
+
+          <aside className="c1-side">
+            <div className="c1-mini">
+              <h4>Today's sessions</h4>
+              <div className="row"><span className="av sm av-1">AN</span><span className="grow">Aya · Strength A</span><span className="time">10:00</span></div>
+              <div className="row"><span className="av sm av-3">MK</span><span className="grow">Marcus · Conditioning</span><span className="time">14:00</span></div>
+              <div className="row"><span className="av sm av-2">CR</span><span className="grow">Camille · Mobility</span><span className="time">17:30</span></div>
+            </div>
+            <div className="c1-mini">
+              <h4>This week at a glance</h4>
+              <div className="row"><span className="grow">Sessions completed</span><span className="time" style={{ font: '700 14px var(--font-ui)', color: 'var(--text-primary)' }}>11 / 14</span></div>
+              <div className="row"><span className="grow">Programs delivered</span><span className="time" style={{ font: '700 14px var(--font-ui)', color: 'var(--text-primary)' }}>6</span></div>
+              <div className="row"><span className="grow">Revenue this week</span><span className="time" style={{ font: '700 14px var(--font-ui)', color: 'var(--text-primary)' }}>1,840 €</span></div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+/* ============================================================
+   CONCEPT 2 — CLIENT PULSE BOARD
+   ============================================================ */
+const PulseCard = ({ tone, name, program, av, week, adherence, lastSeen, note, signal, signalText }) => (
+  <article className={`c2-card ${tone || ''}`}>
+    <div className="c2-card-hd">
+      <span className={`av lg ${av}`}>{name.split(' ').map(s=>s[0]).join('')}</span>
+      <div className="who">
+        <p className="name">{name}</p>
+        <p className="program">{program}</p>
+      </div>
+      <span className={`pill-tag ${tone === 'alert' ? 'tag-alert' : tone === 'warn' ? 'tag-warn' : tone === 'muted' ? 'tag-ghost' : 'tag-soft'}`}>
+        <span className={`tag-dot ${tone || ''}`} />
+        {signalText}
+      </span>
+    </div>
+    <div className="c2-pulse">
+      <span className="k">Week</span><span className="v">{week}</span>
+      <span className="k">Adherence</span><span className={`v ${adherence.tone}`}>{adherence.label}</span>
+      <span className="k">Last log</span><span className="v">{lastSeen}</span>
+      <span className="k">Next session</span><span className="v">{note}</span>
+    </div>
+    <div className="c2-foot">
+      <span className="signal" style={{ color: tone === 'alert' ? '#8E1F1F' : tone === 'warn' ? '#6B3A12' : tone === 'muted' ? 'var(--text-tertiary)' : '#456D2A' }}>{signal}</span>
+      <button>Open profile →</button>
+    </div>
+  </article>
+);
+
+const Concept2 = () => (
+  <div className="dash">
+    <MiniSide active="dashboard" />
+    <div className="dash-main">
+      <Topbar crumb="Dashboard" />
+      <div className="c2-body">
+        <header className="c2-head">
+          <div>
+            <h1>Client pulse</h1>
+            <p className="sub">12 active · sorted by who needs you most. The ones at the top haven't logged in 5+ days or just submitted something.</p>
+          </div>
+          <div className="actions">
+            <button>Filter</button>
+            <button>Sort: needs attention ▾</button>
+            <button className="primary">+ Invite client</button>
+          </div>
+        </header>
+        <div className="c2-segments">
+          <span className="c2-seg active">All <span className="n">12</span></span>
+          <span className="c2-seg">Needs attention <span className="n">4</span></span>
+          <span className="c2-seg">On track <span className="n">7</span></span>
+          <span className="c2-seg">Silent 5d+ <span className="n">1</span></span>
+          <span className="c2-seg">New this month <span className="n">2</span></span>
+        </div>
+
+        <div className="c2-grid">
+          <PulseCard
+            tone="alert" av="av-4" name="Diego Torres" program="Hypertrophy · 12wk"
+            week="6 of 12" adherence={{label:'42% (3/7)', tone:'bad'}} lastSeen="3 days ago" note="None scheduled"
+            signal="● Skipped 3 check-ins"
+            signalText="Drifting" />
+          <PulseCard
+            tone="warn" av="av-1" name="Aya Nakamura" program="Strength · 8wk"
+            week="4 of 8" adherence={{label:'88%', tone:'good'}} lastSeen="2 hours ago" note="Tomorrow 10:00"
+            signal="◆ Assessment to validate"
+            signalText="Awaiting you" />
+          <PulseCard
+            tone="warn" av="av-3" name="Marcus Kane" program="Conditioning"
+            week="3 of 6" adherence={{label:'71%', tone:''}} lastSeen="Yesterday" note="Today 14:00 · conflict"
+            signal="◆ Schedule conflict"
+            signalText="Conflict" />
+          <PulseCard
+            av="av-2" name="Camille Roux" program="Mobility & Recovery"
+            week="9 of 10" adherence={{label:'94%', tone:'good'}} lastSeen="Today" note="Today 17:30"
+            signal="● On track"
+            signalText="On track" />
+          <PulseCard
+            av="av-5" name="Jade Lambert" program="Onboarding"
+            week="1 of 8" adherence={{label:'New', tone:''}} lastSeen="Mon" note="Awaiting program"
+            signal="● Just started"
+            signalText="New" />
+          <PulseCard
+            av="av-6" name="Theo Brunet" program="Strength · 8wk"
+            week="7 of 8" adherence={{label:'96%', tone:'good'}} lastSeen="Today" note="Thu 09:00"
+            signal="● Crushing it"
+            signalText="On track" />
+          <PulseCard
+            tone="muted" av="av-3" name="Sofia Marin" program="Strength · 8wk"
+            week="5 of 8" adherence={{label:'58%', tone:''}} lastSeen="5 days ago" note="None scheduled"
+            signal="○ Quiet"
+            signalText="Silent 5d" />
+          <PulseCard
+            av="av-1" name="Lou Martin" program="Hypertrophy · 12wk"
+            week="2 of 12" adherence={{label:'85%', tone:'good'}} lastSeen="Today" note="Wed 18:00"
+            signal="● On track"
+            signalText="On track" />
+          <PulseCard
+            av="av-4" name="Karim Idriss" program="Conditioning"
+            week="6 of 6" adherence={{label:'92%', tone:'good'}} lastSeen="Today" note="Final assessment"
+            signal="◆ Wrapping up"
+            signalText="Final week" />
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+/* ============================================================
+   CONCEPT 3 — TODAY + NOW
+   ============================================================ */
+const Concept3 = () => (
+  <div className="dash">
+    <MiniSide active="dashboard" />
+    <div className="dash-main">
+      <Topbar crumb="Dashboard" />
+      <div className="c3-body">
+        <div className="c3-left">
+          <h1>Today</h1>
+          <p className="day">Wednesday, March 12 · 09:14</p>
+
+          <div className="c3-now-bar">
+            <span className="dot" />
+            <span className="grow">Next up · <strong>Aya Nakamura</strong> · Strength A · in <strong>46 min</strong></span>
+            <button style={{ background: 'transparent', color: 'white', border: '1px solid rgba(255,255,255,0.25)', padding: '5px 12px', borderRadius: '999px', font: '600 11px var(--font-ui)', cursor: 'pointer' }}>Open notes</button>
+          </div>
+
+          <div className="c3-timeline">
+            <div className="c3-slot"><span className="hr">9 AM</span><div className="lane" /></div>
+            <div className="c3-slot">
+              <span className="hr">10 AM</span>
+              <div className="lane">
+                <div className="c3-event now">
+                  <span className="av av-1">AN</span>
+                  <div className="grow"><div className="title">Aya Nakamura · Strength A</div><div className="meta">Studio · week 4 progress check</div></div>
+                  <span className="dur">10:00 – 11:00</span>
+                </div>
+              </div>
+            </div>
+            <div className="c3-slot"><span className="hr">11 AM</span><div className="lane" /></div>
+            <div className="c3-slot">
+              <span className="hr">12 PM</span>
+              <div className="lane">
+                <div className="c3-event assessment">
+                  <span className="av av-4">DT</span>
+                  <div className="grow"><div className="title">Diego · check-in call</div><div className="meta">3 missed days — find out what's going on</div></div>
+                  <span className="dur">12:30 – 12:45</span>
+                </div>
+              </div>
+            </div>
+            <div className="c3-slot"><span className="hr">1 PM</span><div className="lane" /></div>
+            <div className="c3-slot">
+              <span className="hr">2 PM</span>
+              <div className="lane">
+                <div className="c3-event">
+                  <span className="av av-3">MK</span>
+                  <div className="grow"><div className="title">Marcus Kane · Conditioning</div><div className="meta">⚠ Reschedule requested</div></div>
+                  <span className="dur">14:00 – 15:00</span>
+                </div>
+              </div>
+            </div>
+            <div className="c3-slot"><span className="hr">3 PM</span><div className="lane" /></div>
+            <div className="c3-slot"><span className="hr">4 PM</span><div className="lane" /></div>
+            <div className="c3-slot">
+              <span className="hr">5 PM</span>
+              <div className="lane">
+                <div className="c3-event">
+                  <span className="av av-2">CR</span>
+                  <div className="grow"><div className="title">Camille Roux · Mobility</div><div className="meta">Final session of program</div></div>
+                  <span className="dur">17:30 – 18:30</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside className="c3-right">
+          <div className="panel flex">
+            <h3>Needs validation <span className="count">4</span></h3>
+            <div className="c3-validate">
+              <div className="c3-v-row">
+                <span className="av av-1">AN</span>
+                <div className="grow"><div className="name">Aya Nakamura</div><div className="what">Week 4 assessment · 2h</div></div>
+                <button>Review</button>
+              </div>
+              <div className="c3-v-row">
+                <span className="av av-2">CR</span>
+                <div className="grow"><div className="name">Camille Roux</div><div className="what">Logged weight + photo · 4h</div></div>
+                <button>Review</button>
+              </div>
+              <div className="c3-v-row">
+                <span className="av av-5">JL</span>
+                <div className="grow"><div className="name">Jade Lambert</div><div className="what">Intake form · yesterday</div></div>
+                <button>Review</button>
+              </div>
+              <div className="c3-v-row">
+                <span className="av av-6">TB</span>
+                <div className="grow"><div className="name">Theo Brunet</div><div className="what">Week 7 video form-check · yesterday</div></div>
+                <button>Review</button>
+              </div>
+            </div>
+          </div>
+
+          <div className="panel">
+            <h3>Quick stats</h3>
+            <div className="c3-quick">
+              <div className="q"><span className="n">12</span>active clients</div>
+              <div className="q"><span className="n">3</span>sessions today</div>
+              <div className="q"><span className="n">1,840€</span>this week</div>
+              <div className="q"><span className="n">87%</span>avg adherence</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+);
+
+/* ============================================================
+   CONCEPT 4 — BUSINESS COCKPIT
+   ============================================================ */
+const Concept4 = () => (
+  <div className="dash">
+    <MiniSide active="dashboard" />
+    <div className="dash-main">
+      <Topbar crumb="Dashboard" />
+      <div className="c4-body">
+        <header className="c4-head">
+          <h1>Overview</h1>
+          <div className="range">
+            <button>7d</button>
+            <button className="active">30d</button>
+            <button>90d</button>
+            <button>YTD</button>
+          </div>
+          <span className="grow" />
+          <span className="last">Last sync · 2 min ago</span>
+        </header>
+
+        <div className="c4-kpis">
+          <div className="c4-kpi featured">
+            <p className="lbl">Monthly revenue</p>
+            <p className="n">8,420 €</p>
+            <span className="delta up">▲ 12.4% vs Feb</span>
+          </div>
+          <div className="c4-kpi">
+            <p className="lbl">Active clients</p>
+            <p className="n">12</p>
+            <span className="delta up">▲ 2 this month</span>
+          </div>
+          <div className="c4-kpi">
+            <p className="lbl">Avg adherence</p>
+            <p className="n">87%</p>
+            <span className="delta up">▲ 4 pts</span>
+          </div>
+          <div className="c4-kpi">
+            <p className="lbl">Sessions delivered</p>
+            <p className="n">42</p>
+            <span className="delta down">▼ 3 vs Feb</span>
+          </div>
+        </div>
+
+        <div className="c4-grid">
+          <section className="c4-panel">
+            <h3>Revenue · last 6 months <span className="sub">all programs</span></h3>
+            <div className="c4-chart">
+              <svg viewBox="0 0 600 200" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="g" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stopColor="#5B8E3A" stopOpacity="0.25"/>
+                    <stop offset="100%" stopColor="#5B8E3A" stopOpacity="0"/>
+                  </linearGradient>
+                </defs>
+                <line x1="0" y1="40" x2="600" y2="40" stroke="#E8E3D8" strokeDasharray="3 3"/>
+                <line x1="0" y1="100" x2="600" y2="100" stroke="#E8E3D8" strokeDasharray="3 3"/>
+                <line x1="0" y1="160" x2="600" y2="160" stroke="#E8E3D8" strokeDasharray="3 3"/>
+                <path d="M0 150 L100 130 L200 145 L300 95 L400 60 L500 80 L600 30 L600 200 L0 200 Z" fill="url(#g)"/>
+                <path d="M0 150 L100 130 L200 145 L300 95 L400 60 L500 80 L600 30" stroke="#5B8E3A" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+                <circle cx="600" cy="30" r="4" fill="#5B8E3A"/>
+                <circle cx="600" cy="30" r="8" fill="#5B8E3A" opacity="0.2"/>
+              </svg>
+              <div style={{ display: 'flex', justifyContent: 'space-between', font: 'var(--t-caption)', color: 'var(--text-tertiary)', marginTop: 4 }}>
+                <span>Oct</span><span>Nov</span><span>Dec</span><span>Jan</span><span>Feb</span><span>Mar</span>
+              </div>
+            </div>
+          </section>
+
+          <section className="c4-panel">
+            <h3>Recent payments <span className="sub">this week</span></h3>
+            <div className="c4-list">
+              <div className="c4-list-row"><span className="av av-1">AN</span><div className="grow"><div className="name">Aya Nakamura</div><div className="meta">Strength · monthly</div></div><span className="amt">150 €</span></div>
+              <div className="c4-list-row"><span className="av av-2">CR</span><div className="grow"><div className="name">Camille Roux</div><div className="meta">Mobility · final</div></div><span className="amt">180 €</span></div>
+              <div className="c4-list-row"><span className="av av-3">MK</span><div className="grow"><div className="name">Marcus Kane</div><div className="meta">Conditioning · monthly</div></div><span className="amt">160 €</span></div>
+              <div className="c4-list-row"><span className="av av-6">TB</span><div className="grow"><div className="name">Theo Brunet</div><div className="meta">Strength · monthly</div></div><span className="amt">150 €</span></div>
+              <div className="c4-list-row"><span className="av av-4">KI</span><div className="grow"><div className="name">Karim Idriss</div><div className="meta">Conditioning · final</div></div><span className="amt">160 €</span></div>
+              <div className="c4-list-row"><span className="av av-5">LM</span><div className="grow"><div className="name">Lou Martin</div><div className="meta">Hypertrophy · monthly</div></div><span className="amt">180 €</span></div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+/* ============================================================
+   CONCEPT 5 — HYBRID
+   ============================================================ */
+const PCard = ({ tone, name, av, program, week, adherence, last, next, signal, signalText }) => (
+  <article className={`c5-pcard ${tone || ''}`}>
+    <div className="c5-pcard-hd">
+      <span className={`av ${av}`}>{name.split(' ').map(s=>s[0]).join('')}</span>
+      <div className="who">
+        <p className="name">{name}</p>
+        <p className="program">{program}</p>
+      </div>
+      <span className={`pill-tag ${tone === 'alert' ? 'tag-alert' : tone === 'warn' ? 'tag-warn' : tone === 'muted' ? 'tag-ghost' : 'tag-soft'}`}>
+        <span className={`tag-dot ${tone || ''}`} />{signalText}
+      </span>
+    </div>
+    <div className="c5-pcard-meta">
+      <span className="k">Week</span><span className="v">{week}</span>
+      <span className="k">Adherence</span><span className={`v ${adherence.tone}`}>{adherence.label}</span>
+      <span className="k">Last log</span><span className="v">{last}</span>
+      <span className="k">Next</span><span className="v">{next}</span>
+    </div>
+    <div className="c5-pcard-foot">
+      <span style={{ color: tone === 'alert' ? '#8E1F1F' : tone === 'warn' ? '#6B3A12' : tone === 'muted' ? 'var(--text-tertiary)' : '#456D2A' }}>{signal}</span>
+      <button>Open →</button>
+    </div>
+  </article>
+);
+
+const Concept5 = () => (
+  <div className="dash">
+    <MiniSide active="dashboard" />
+    <div className="dash-main">
+      <Topbar crumb="Dashboard" />
+      <div className="c5-body">
+        {/* LEFT — preserved from current dashboard */}
+        <div className="c5-col-left">
+          <div className="c5-card">
+            <h3>Your activity</h3>
+            <div className="c5-greet">
+              <Bell s={64} />
+              <h2>Hello<br/>Fode 👋</h2>
+            </div>
+          </div>
+
+          <div className="c5-card">
+            <h3>Today's schedule</h3>
+            <div className="c5-schedule-row">
+              <span className="time">10:00</span>
+              <span className="av sm av-1">AN</span>
+              <span className="grow">Aya · Strength A</span>
+            </div>
+            <div className="c5-schedule-row">
+              <span className="time">14:00</span>
+              <span className="av sm av-3">MK</span>
+              <span className="grow">Marcus · Conditioning</span>
+            </div>
+            <div className="c5-schedule-row">
+              <span className="time">17:30</span>
+              <span className="av sm av-2">CR</span>
+              <span className="grow">Camille · Mobility</span>
+            </div>
+          </div>
+
+          <div className="c5-card">
+            <h3>Payments received</h3>
+            <div className="c5-pmt"><span className="av sm av-1">AN</span><span className="grow">Aya Nakamura</span><span className="amt">150,00 €</span></div>
+            <div className="c5-pmt"><span className="av sm av-2">CR</span><span className="grow">Camille Roux</span><span className="amt">180,00 €</span></div>
+            <div className="c5-pmt"><span className="av sm av-3">MK</span><span className="grow">Marcus Kane</span><span className="amt">160,00 €</span></div>
+          </div>
+
+          <div className="c5-card">
+            <h3>Revenue · last 6 months</h3>
+            <p style={{ font: 'var(--t-caption)', color: 'var(--text-secondary)', margin: 0 }}>6 months ▾</p>
+            <div className="c5-rev-chart">
+              <div className="bar" style={{ height: '30%' }} />
+              <div className="bar" style={{ height: '45%' }} />
+              <div className="bar" style={{ height: '25%' }} />
+              <div className="bar" style={{ height: '60%' }} />
+              <div className="bar" style={{ height: '70%' }} />
+              <div className="bar" style={{ height: '50%' }} />
+            </div>
+            <div className="c5-rev-x"><span>Oct</span><span>Nov</span><span>Dec</span><span>Jan</span><span>Feb</span><span>Mar</span></div>
+          </div>
+        </div>
+
+        {/* RIGHT — tutorial banner stays, then pulse replaces 'Client tracking' */}
+        <div className="c5-col-right">
+          <div className="c5-tut">
+            <div className="iconbox">▶</div>
+            <div className="grow">
+              <h4>Master Coach in minutes</h4>
+              <p>Explore our video tutorials and unlock the full potential of the platform.</p>
+            </div>
+            <button>Watch tutorials →</button>
+          </div>
+
+          <div className="c5-track-head">
+            <div>
+              <h3>Client tracking</h3>
+              <p className="sub">12 active · sorted by who needs you most.</p>
+            </div>
+            <span className="grow" />
+            <button className="invite">+ Invite client</button>
+          </div>
+
+          <div className="c5-segs">
+            <span className="seg active">All <span className="n">12</span></span>
+            <span className="seg">Needs attention <span className="n">4</span></span>
+            <span className="seg">On track <span className="n">7</span></span>
+            <span className="seg">Silent 5d+ <span className="n">1</span></span>
+          </div>
+
+          <div className="c5-pulse-grid">
+            <PCard tone="alert" av="av-4" name="Diego Torres" program="Hypertrophy · 12wk"
+              week="6 of 12" adherence={{label:'42%', tone:'bad'}} last="3 days ago" next="Not scheduled"
+              signal="● Skipped 3 check-ins" signalText="Drifting" />
+            <PCard tone="warn" av="av-1" name="Aya Nakamura" program="Strength · 8wk"
+              week="4 of 8" adherence={{label:'88%', tone:'good'}} last="2 hours ago" next="Tomorrow 10:00"
+              signal="◆ Assessment to validate" signalText="Awaiting you" />
+            <PCard tone="warn" av="av-3" name="Marcus Kane" program="Conditioning"
+              week="3 of 6" adherence={{label:'71%', tone:''}} last="Yesterday" next="Today 14:00"
+              signal="◆ Schedule conflict" signalText="Conflict" />
+            <PCard av="av-2" name="Camille Roux" program="Mobility & Recovery"
+              week="9 of 10" adherence={{label:'94%', tone:'good'}} last="Today" next="Today 17:30"
+              signal="● On track" signalText="On track" />
+            <PCard av="av-5" name="Jade Lambert" program="Onboarding"
+              week="1 of 8" adherence={{label:'New', tone:''}} last="Mon" next="Awaiting program"
+              signal="● Just started" signalText="New" />
+            <PCard av="av-6" name="Theo Brunet" program="Strength · 8wk"
+              week="7 of 8" adherence={{label:'96%', tone:'good'}} last="Today" next="Thu 09:00"
+              signal="● Crushing it" signalText="On track" />
+            <PCard tone="muted" av="av-3" name="Sofia Marin" program="Strength · 8wk"
+              week="5 of 8" adherence={{label:'58%', tone:''}} last="5 days ago" next="Not scheduled"
+              signal="○ Quiet" signalText="Silent 5d" />
+            <PCard av="av-1" name="Lou Martin" program="Hypertrophy · 12wk"
+              week="2 of 12" adherence={{label:'85%', tone:'good'}} last="Today" next="Wed 18:00"
+              signal="● On track" signalText="On track" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+/* ============================================================
+   CANVAS
+   ============================================================ */
+const Note = ({ title, children, when }) => (
+  <div className="note" style={{ padding: 18 }}>
+    <h2>{title}</h2>
+    {children}
+    <span className="when-to-use">Best when</span>
+    <p style={{ marginTop: 4 }}>{when}</p>
+  </div>
+);
+
+const App = () => (
+  <DesignCanvas>
+    <DCSection id="intro" title="Coach · Dashboard concepts" subtitle="What the coach sees on first connect — four philosophies of 'what matters now'.">
+      <DCArtboard id="intro-note" label="Read me" width={320} height={900}>
+        <div style={{ padding: 22, fontFamily: 'var(--font-ui)', height: '100%', boxSizing: 'border-box', background: '#EFEBE2', overflow: 'auto' }}>
+          <h1 style={{ font: '700 22px/1.2 var(--font-ui)', margin: '0 0 12px', color: '#2A2620' }}>Pick your philosophy</h1>
+          <p style={{ font: '14px/1.5 var(--font-ui)', color: '#4A4338', margin: '0 0 18px' }}>
+            The current dashboard mixes a greeting, a revenue chart, a CTA, and an empty state. It's pleasant but doesn't tell the coach what to do next. Each concept here picks a different "first question" the dashboard answers.
+          </p>
+
+          <div style={{ display: 'grid', gap: 14 }}>
+            <div style={{ background: 'white', borderRadius: 10, padding: 14, borderLeft: '3px solid #2A2620' }}>
+              <p style={{ font: '700 13px var(--font-ui)', margin: '0 0 4px' }}>1 · Today's queue</p>
+              <p style={{ font: '12px/1.4 var(--font-ui)', color: '#6B655B', margin: 0 }}>"Here are 4 things that need you, in order."</p>
+            </div>
+            <div style={{ background: 'white', borderRadius: 10, padding: 14, borderLeft: '3px solid #C57544' }}>
+              <p style={{ font: '700 13px var(--font-ui)', margin: '0 0 4px' }}>2 · Client pulse</p>
+              <p style={{ font: '12px/1.4 var(--font-ui)', color: '#6B655B', margin: 0 }}>"How is every client doing right now?"</p>
+            </div>
+            <div style={{ background: 'white', borderRadius: 10, padding: 14, borderLeft: '3px solid #5B8E3A' }}>
+              <p style={{ font: '700 13px var(--font-ui)', margin: '0 0 4px' }}>3 · Today + now</p>
+              <p style={{ font: '12px/1.4 var(--font-ui)', color: '#6B655B', margin: 0 }}>"What's happening in the next 8 hours, and what's waiting?"</p>
+            </div>
+            <div style={{ background: 'white', borderRadius: 10, padding: 14, borderLeft: '3px solid #856B47' }}>
+              <p style={{ font: '700 13px var(--font-ui)', margin: '0 0 4px' }}>4 · Business cockpit</p>
+              <p style={{ font: '12px/1.4 var(--font-ui)', color: '#6B655B', margin: 0 }}>"How is the business performing this month?"</p>
+            </div>
+            <div style={{ background: 'white', borderRadius: 10, padding: 14, borderLeft: '3px solid #C57544', boxShadow: '0 0 0 2px rgba(197,117,68,0.18)' }}>
+              <p style={{ font: '700 13px var(--font-ui)', margin: '0 0 4px' }}>5 · Hybrid <span style={{ font: '600 10px var(--font-ui)', background: '#FBE6CC', color: '#6B3A12', padding: '2px 6px', borderRadius: 4, marginLeft: 4 }}>NEW</span></p>
+              <p style={{ font: '12px/1.4 var(--font-ui)', color: '#6B655B', margin: 0 }}>Current dashboard shell with the pulse cards dropped into 'Client tracking'. Smallest possible change.</p>
+            </div>
+          </div>
+
+          <p style={{ font: '12px/1.5 var(--font-ui)', color: '#6B655B', margin: '20px 0 0', fontStyle: 'italic' }}>
+            These aren't mutually exclusive — concept 1 or 3 could be the default, with the cockpit (4) as a tab. Tell me which feels right and I'll build the full screen.
+          </p>
+        </div>
+      </DCArtboard>
+    </DCSection>
+
+    <DCSection id="c1" title="01 — Today's queue" subtitle="One ranked list of things that need the coach, with priority bars. Triage-first.">
+      <DCArtboard id="c1-board" label="Today's queue" width={1280} height={900}><Concept1 /></DCArtboard>
+      <DCArtboard id="c1-note" label="Notes" width={320} height={900}>
+        <Note
+          title="Triage-first"
+          when="The coach has many clients and the #1 question is 'what do I touch first?' This dashboard collapses everything into a single ranked queue with priority bars (red/orange/lime). The hero shows three numbers: items needing you, sessions today, active clients. Side rail shows today's calendar + week glance, but those are secondary.">
+          <ul>
+            <li><strong>Hero:</strong> dark ink card with greeting + 3 numbers. Lime is reserved for the "needs attention" count.</li>
+            <li><strong>Queue:</strong> auto-prioritized — assessments to validate &gt; schedule conflicts &gt; messages &gt; nudges &gt; sends.</li>
+            <li><strong>Action per row:</strong> "Review", "Resolve", "Nudge" — the verb is in the button.</li>
+          </ul>
+        </Note>
+      </DCArtboard>
+    </DCSection>
+
+    <DCSection id="c2" title="02 — Client pulse" subtitle="Every active client as a card. Health signal at a glance — drifting, awaiting you, on track, silent.">
+      <DCArtboard id="c2-board" label="Pulse board" width={1280} height={900}><Concept2 /></DCArtboard>
+      <DCArtboard id="c2-note" label="Notes" width={320} height={900}>
+        <Note
+          title="Roster-health view"
+          when="The coach thinks in clients, not tasks. They want to scan the roster, spot the one who's drifting, and click in. Cards are sorted by who needs attention (alert → warn → on track → silent). A 3px top border encodes the signal so it's readable at speed.">
+          <ul>
+            <li><strong>Segments:</strong> filter the grid by signal — All, Needs attention, On track, Silent, New.</li>
+            <li><strong>Each card:</strong> avatar + name + program, then a 4-cell pulse panel (week / adherence / last log / next session), then a one-line signal + open-profile link.</li>
+            <li><strong>Color discipline:</strong> tone lives only in the top border and the pill — body stays neutral so 12 cards don't feel chaotic.</li>
+          </ul>
+        </Note>
+      </DCArtboard>
+    </DCSection>
+
+    <DCSection id="c3" title="03 — Today + now" subtitle="Hourly timeline on the left, validation queue on the right. Time-first.">
+      <DCArtboard id="c3-board" label="Today + now" width={1280} height={900}><Concept3 /></DCArtboard>
+      <DCArtboard id="c3-note" label="Notes" width={320} height={900}>
+        <Note
+          title="Time-first"
+          when="The coach lives by their calendar. They open the app between sessions and want to see 'what's next' and 'what's piled up while I was coaching.' The timeline is the spine, the validation queue is the persistent right rail.">
+          <ul>
+            <li><strong>Now bar:</strong> dark ink strip with a pulsing dot — what's happening right now, what's in &lt;1h.</li>
+            <li><strong>Timeline:</strong> hourly slots, sessions as colored rails. Current hour highlighted in sage; non-session items (check-in calls, conflicts) use clay/orange.</li>
+            <li><strong>Right rail:</strong> validation queue + 4 quick stats. Validation count uses a red badge because it's literally things waiting on the coach's input.</li>
+          </ul>
+        </Note>
+      </DCArtboard>
+    </DCSection>
+
+    <DCSection id="c5" title="05 — Hybrid · current shell + pulse" subtitle="Keep the existing left column (greeting, schedule, payments, revenue) and the tutorial banner. Replace the 'Client tracking' empty area with pulse cards.">
+      <DCArtboard id="c5-board" label="Hybrid · pulse in client tracking" width={1280} height={900}><Concept5 /></DCArtboard>
+      <DCArtboard id="c5-note" label="Notes" width={320} height={900}>
+        <Note
+          title="Smallest possible change"
+          when="You like the current dashboard's left column and want to keep the familiar shape, but you want the right side to actually tell the coach how their roster is doing instead of showing empty cards. This is the lowest-risk path: nothing the user has learned to look for moves.">
+          <ul>
+            <li><strong>Untouched:</strong> left column (greeting, today's schedule, payments, revenue chart) and the red 'Master Coach in minutes' tutorial banner.</li>
+            <li><strong>Replaced:</strong> the 'Client tracking' invite-card + 'Client activities' + 'Assessments to validate' empties — they're now one section: a 2-column compact pulse grid above filter chips.</li>
+            <li><strong>Same data, two surfaces:</strong> a client awaiting validation now shows up on their card with the 'Awaiting you' tag — no more separate stack to scan.</li>
+            <li><strong>Empty state still works:</strong> when the coach has 0 clients, the section collapses to the original 'Invite your first client' CTA. Pulse mode kicks in at ≥1 client.</li>
+          </ul>
+        </Note>
+      </DCArtboard>
+    </DCSection>
+
+    <DCSection id="c4" title="04 — Business cockpit" subtitle="Numbers-first. MRR, retention, sessions delivered, recent payments.">
+      <DCArtboard id="c4-board" label="Business cockpit" width={1280} height={900}><Concept4 /></DCArtboard>
+      <DCArtboard id="c4-note" label="Notes" width={320} height={900}>
+        <Note
+          title="Business-first"
+          when="The coach runs this as a business and wants the financial picture every time they log in. Useful as a *tab* on top of one of the other concepts more than the default landing page — most coaches don't need MRR before coffee, but the ones running 20+ clients do.">
+          <ul>
+            <li><strong>4 KPIs:</strong> revenue (featured in dark ink), active clients, adherence, sessions. Deltas vs last period.</li>
+            <li><strong>Revenue chart:</strong> 6-month area + line. Last point gets a halo to anchor "you are here."</li>
+            <li><strong>Recent payments:</strong> a denser variant of the existing payments card, this time with what was paid for.</li>
+            <li><strong>Range pill:</strong> 7d / 30d / 90d / YTD — single source of truth for the whole screen.</li>
+          </ul>
+        </Note>
+      </DCArtboard>
+    </DCSection>
+  </DesignCanvas>
+);
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+
+</body>
+</html>

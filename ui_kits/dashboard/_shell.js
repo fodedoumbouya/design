@@ -1,26 +1,26 @@
-/* Ekklo screens - shared sidebar+topbar JS to avoid duplication */
+/* Coach screens - shared sidebar+topbar JS to avoid duplication */
 (function () {
   // Bell mascot SVG (inline so screens don't need separate asset)
   window.__BELL_SVG = function (size) {
     size = size || 72;
     return `
       <svg viewBox="0 0 120 120" width="${size}" height="${size}">
-        <circle cx="60" cy="68" r="36" fill="#1ED77A"/>
-        <path d="M42 38 Q60 26 78 38 L76 48 L44 48 Z" fill="#0C5C32"/>
-        <rect x="52" y="34" width="16" height="8" rx="2" fill="#1A1A1A"/>
-        <circle cx="50" cy="64" r="3.5" fill="#1A1A1A"/>
-        <circle cx="70" cy="64" r="3.5" fill="#1A1A1A"/>
-        <path d="M52 78 Q60 84 68 78" stroke="#1A1A1A" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <ellipse cx="48" cy="104" rx="9" ry="4" fill="#0C5C32"/>
-        <ellipse cx="72" cy="104" rx="9" ry="4" fill="#0C5C32"/>
+        <circle cx="60" cy="68" r="36" fill="#C57544"/>
+        <path d="M42 38 Q60 26 78 38 L76 48 L44 48 Z" fill="#5B3D1F"/>
+        <rect x="52" y="34" width="16" height="8" rx="2" fill="#2A2620"/>
+        <circle cx="50" cy="64" r="3.5" fill="#2A2620"/>
+        <circle cx="70" cy="64" r="3.5" fill="#2A2620"/>
+        <path d="M52 78 Q60 84 68 78" stroke="#2A2620" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <ellipse cx="48" cy="104" rx="9" ry="4" fill="#5B3D1F"/>
+        <ellipse cx="72" cy="104" rx="9" ry="4" fill="#5B3D1F"/>
       </svg>`;
   };
 
   // Logo glyph
   window.__LOGO_SVG = `
     <svg viewBox="0 0 32 32" width="28" height="28" fill="none">
-      <path d="M16 4 C9 4 4 9 4 16 C4 23 9 28 16 28 C23 28 28 23 28 16 C28 12 26 9 23 7 L20 12 C22 13 23 14 23 16 C23 19 20 22 16 22 C12 22 9 19 9 16 C9 13 12 10 16 10 C17 10 18 10 19 11 L22 6 C20 5 18 4 16 4 Z" fill="#D8F11A" stroke="#1A1A1A" stroke-width="1.5" stroke-linejoin="round"/>
-      <circle cx="22" cy="9" r="2.5" fill="#1A1A1A"/>
+      <path d="M16 4 C9 4 4 9 4 16 C4 23 9 28 16 28 C23 28 28 23 28 16 C28 12 26 9 23 7 L20 12 C22 13 23 14 23 16 C23 19 20 22 16 22 C12 22 9 19 9 16 C9 13 12 10 16 10 C17 10 18 10 19 11 L22 6 C20 5 18 4 16 4 Z" fill="#5B8E3A" stroke="#2A2620" stroke-width="1.5" stroke-linejoin="round"/>
+      <circle cx="22" cy="9" r="2.5" fill="#2A2620"/>
     </svg>`;
 
   // Stroke icon set
@@ -56,7 +56,7 @@
       <aside class="side">
         <div class="brand">
           <span class="mark">${window.__LOGO_SVG}</span>
-          Ekklo
+          Coach
           <span class="caret">▾</span>
         </div>
         <nav class="nav">

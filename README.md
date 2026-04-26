@@ -2,7 +2,7 @@
 
 Coach is an all-in-one operating system for independent fitness coaches and wellness pros — clients, prospects (CRM), calendar, fitness & nutrition programs, tracking, videos, accounting, teams, drive, automations, notifications, and a mobile app for clients. The product is in active beta ("9 free trial days remaining") and supports French + English UIs.
 
-This repo captures the visual + interaction language pulled directly from the live `pro.Coach` web app (see `/screens/`).
+This repo captures the visual + interaction language pulled directly from the live `pro.coach` web app (see `/screens/`).
 
 ## Brand tone
 
@@ -10,15 +10,15 @@ Friendly, energetic, **operator-grade**. Coach's coaches juggle a lot — paymen
 
 ## The system at a glance
 
-|                              |                                                                                   |
-| ---------------------------- | --------------------------------------------------------------------------------- |
-| **Primary accent**           | `#D8F11A` lime — used as a fill for the single most-important CTA on every screen |
-| **Primary text / dark fill** | `#1A1A1A` near-black — used for selected pills, headings, and the secondary CTA   |
-| **Surface**                  | `#FFFFFF` cards on `#FAFAFA` canvas; sidebar sits on the canvas                   |
-| **Helper accent**            | `#1ED77A` mint — reserved for the chat/help FAB and the mascot                    |
-| **Type**                     | Inter for UI, weights 400 / 500 / 600 / 700                                       |
-| **Radius**                   | Pills (full) for buttons, 12px for cards, 8px for inputs                          |
-| **Density**                  | 14px body, 13px secondary, 11px uppercase eyebrows with +0.08em tracking          |
+| | |
+|---|---|
+| **Primary accent** | `#5B8E3A` lime — used as a fill for the single most-important CTA on every screen |
+| **Primary text / dark fill** | `#2A2620` near-black — used for selected pills, headings, and the secondary CTA |
+| **Surface** | `#FFFFFF` cards on `#F8F6F1` canvas; sidebar sits on the canvas |
+| **Helper accent** | `#C57544` mint — reserved for the chat/help FAB and the mascot |
+| **Type** | Inter for UI, weights 400 / 500 / 600 / 700 |
+| **Radius** | Pills (full) for buttons, 12px for cards, 8px for inputs |
+| **Density** | 14px body, 13px secondary, 11px uppercase eyebrows with +0.08em tracking |
 
 ## File index
 

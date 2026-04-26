@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Ekklo · Calendar</title>
+<title>Coach · Calendar</title>
 <link rel="stylesheet" href="../../colors_and_type.css" />
 <link rel="stylesheet" href="_shell.css" />
 <style>
@@ -14,14 +14,14 @@
   .cal-toolbar .grow { flex: 1; }
   .cal-toolbar .view-seg { display: inline-flex; border: 1px solid var(--border-subtle); border-radius: 8px; overflow: hidden; }
   .cal-toolbar .view-seg button { padding: 6px 14px; border: none; background: white; cursor: pointer; font: var(--t-button); color: var(--text-secondary); }
-  .cal-toolbar .view-seg button.active { background: var(--ekklo-ink); color: white; }
+  .cal-toolbar .view-seg button.active { background: var(--coach-ink); color: white; }
 
   .week { display: grid; grid-template-columns: 48px repeat(7, 1fr); border-bottom: 1px solid var(--border-subtle); }
   .week .corner {}
   .week .day-h { padding: 10px 8px; text-align: center; border-left: 1px solid var(--border-subtle); }
   .week .day-h .dow { font: var(--t-eyebrow); color: var(--text-tertiary); }
   .week .day-h .num { font: var(--t-h2); margin-top: 2px; }
-  .week .day-h.today .num { color: var(--ekklo-ink); display: inline-flex; width: 30px; height: 30px; align-items: center; justify-content: center; background: var(--ekklo-lime); border-radius: 999px; }
+  .week .day-h.today .num { color: var(--coach-ink); display: inline-flex; width: 30px; height: 30px; align-items: center; justify-content: center; background: var(--coach-lime); border-radius: 999px; }
 
   .grid {
     display: grid; grid-template-columns: 48px repeat(7, 1fr);
@@ -35,14 +35,14 @@
 
   .ev {
     position: absolute; left: 4px; right: 4px;
-    background: var(--ekklo-lime-soft); border-left: 3px solid var(--ekklo-lime);
-    color: var(--ekklo-lime-ink); border-radius: 6px; padding: 6px 8px;
+    background: var(--coach-lime-soft); border-left: 3px solid var(--coach-lime);
+    color: var(--coach-lime-ink); border-radius: 6px; padding: 6px 8px;
     font: 600 11px/1.3 var(--font-ui); overflow: hidden;
   }
   .ev .t { color: var(--text-tertiary); font-weight: 500; display: block; }
-  .ev.ink { background: #1A1A1A; color: white; border-left-color: var(--ekklo-lime); }
+  .ev.ink { background: #2A2620; color: white; border-left-color: var(--coach-lime); }
   .ev.ink .t { color: rgba(255,255,255,0.65); }
-  .ev.mint { background: #DCFCE7; border-left-color: var(--ekklo-mint); color: #065F46; }
+  .ev.mint { background: #DCFCE7; border-left-color: var(--coach-mint); color: #065F46; }
   .ev.mint .t { color: #065F46; opacity: 0.7; }
 
   .legend { display: inline-flex; gap: 12px; align-items: center; font: var(--t-caption); color: var(--text-secondary); }
@@ -64,9 +64,9 @@
       </div>
       <h2>April 2026</h2>
       <span class="legend">
-        <span class="lg"><span class="sw" style="background: var(--ekklo-lime);"></span>Session</span>
-        <span class="lg"><span class="sw" style="background: var(--ekklo-ink);"></span>Discovery call</span>
-        <span class="lg"><span class="sw" style="background: var(--ekklo-mint);"></span>Personal</span>
+        <span class="lg"><span class="sw" style="background: var(--coach-lime);"></span>Session</span>
+        <span class="lg"><span class="sw" style="background: var(--coach-ink);"></span>Discovery call</span>
+        <span class="lg"><span class="sw" style="background: var(--coach-mint);"></span>Personal</span>
       </span>
       <span class="grow"></span>
       <div class="view-seg">

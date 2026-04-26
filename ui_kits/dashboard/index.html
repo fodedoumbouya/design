@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Ekklo · Dashboard</title>
+<title>Coach · Dashboard</title>
 <link rel="stylesheet" href="../../colors_and_type.css" />
 <link rel="stylesheet" href="_shell.css" />
 <style>
+  /* ───── Layout ───── */
   .body { padding: 28px 32px; display: grid; grid-template-columns: 320px 1fr; gap: 24px; }
+  .col-right { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+
+  /* ───── Left column cards (preserved) ───── */
   .card {
     background: white; border: 1px solid var(--border-subtle); border-radius: 12px; padding: 20px;
   }
@@ -16,20 +20,43 @@
   .activity-hero { display: flex; align-items: center; gap: 14px; margin-bottom: 6px; }
   .activity-hero h2 { font: 700 22px/1.1 var(--font-ui); margin: 0; }
 
+  .schedule-row {
+    display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--border-subtle); font: var(--t-body);
+  }
+  .schedule-row:first-of-type { border-top: none; }
+  .schedule-row .time { font: 600 12px var(--font-ui); color: var(--text-secondary); width: 52px; flex-shrink: 0; }
+  .schedule-row .av {
+    width: 22px; height: 22px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center;
+    color: white; font: 600 10px var(--font-ui); flex-shrink: 0;
+  }
+  .schedule-row .grow { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .schedule-empty { text-align: center; padding: 8px 0 0; }
 
   .pmt-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--border-subtle); }
-  .pmt-row .av { width: 28px; height: 28px; border-radius: 999px; background: var(--surface-sunken); display: inline-flex; align-items: center; justify-content: center; font: 600 11px var(--font-ui); color: var(--text-secondary); }
+  .pmt-row:first-of-type { border-top: none; }
+  .pmt-row .av {
+    width: 28px; height: 28px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center;
+    color: white; font: 600 11px var(--font-ui);
+  }
   .pmt-row .grow { flex: 1; font: var(--t-body); }
   .pmt-row .amt { font: var(--t-body-strong); }
 
   .rev-chart { height: 90px; border-radius: 8px; margin-top: 8px; display: flex; align-items: flex-end; padding: 0 6px; gap: 6px; }
-  .rev-chart .bar { flex: 1; background: var(--ekklo-ink); border-radius: 3px 3px 0 0; opacity: 0.85; }
+  .rev-chart .bar { flex: 1; background: var(--coach-ink); border-radius: 3px 3px 0 0; opacity: 0.85; }
   .rev-x { display: flex; justify-content: space-between; font: var(--t-caption); color: var(--text-tertiary); margin-top: 6px; padding: 0 6px; }
 
+  /* avatar palette (shared) */
+  .av-1 { background: #C57544; }
+  .av-2 { background: #5B8E3A; }
+  .av-3 { background: #2A2620; }
+  .av-4 { background: #856B47; }
+  .av-5 { background: #B07654; }
+  .av-6 { background: #4A6B2A; }
+
+  /* ───── Tutorial banner (preserved) ───── */
   .tut-banner {
     background: #8E1F1F; color: white; border-radius: 12px;
-    padding: 16px 20px; display: flex; align-items: center; gap: 16px; margin-bottom: 20px;
+    padding: 16px 20px; display: flex; align-items: center; gap: 16px;
   }
   .tut-banner .iconbox { width: 40px; height: 40px; background: rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
   .tut-banner .grow { flex: 1; }
@@ -40,37 +67,83 @@
     border-radius: 999px; font: var(--t-button); cursor: pointer; white-space: nowrap;
   }
 
-  .section-h { font: var(--t-h2); margin: 24px 0 14px; }
-
-  .invite-card {
-    background: white; border: 1px solid var(--border-subtle); border-radius: 12px;
-    padding: 28px; text-align: center; margin-bottom: 16px;
+  /* ───── Client tracking — pulse section ───── */
+  .track-head { display: flex; align-items: end; gap: 14px; margin-top: 6px; }
+  .track-head h3 { font: var(--t-h2); margin: 0 0 4px; }
+  .track-head .sub { font: var(--t-caption); color: var(--text-secondary); margin: 0; }
+  .track-head .grow { flex: 1; }
+  .track-head .invite {
+    background: var(--coach-lime); border: none; color: var(--coach-lime-ink);
+    padding: 8px 16px; border-radius: 999px; font: var(--t-button); cursor: pointer;
   }
 
-  .activity-card {
+  .segs { display: flex; gap: 8px; flex-wrap: wrap; }
+  .segs .seg {
+    background: var(--surface-sunken); padding: 6px 14px; border-radius: 999px;
+    font: 600 12px var(--font-ui); color: var(--text-secondary); display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+    border: none;
+  }
+  .segs .seg.active { background: var(--coach-ink); color: white; }
+  .segs .seg .n { background: rgba(255,255,255,0.18); padding: 1px 7px; border-radius: 999px; font-size: 10px; font-weight: 600; }
+  .segs .seg:not(.active) .n { background: white; color: var(--text-primary); }
+
+  .pulse-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  }
+
+  .pcard {
     background: white; border: 1px solid var(--border-subtle); border-radius: 12px;
-    padding: 20px; margin-bottom: 16px;
+    border-top: 3px solid var(--coach-lime);
+    padding: 16px;
+    display: flex; flex-direction: column; gap: 12px;
   }
-  .activity-card .hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-  .activity-card .hd h4 { font: var(--t-h2); margin: 0; }
-  .activity-card .filter {
-    border: 1px solid var(--border-input); border-radius: 999px; padding: 4px 12px;
-    font: var(--t-caption); color: var(--text-secondary); background: white; cursor: pointer;
+  .pcard.warn { border-top-color: #C57544; }
+  .pcard.alert { border-top-color: #8E1F1F; }
+  .pcard.muted { border-top-color: var(--text-tertiary); }
+
+  .pcard-hd { display: flex; align-items: center; gap: 12px; }
+  .pcard-hd .av {
+    width: 36px; height: 36px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center;
+    color: white; font: 600 12px var(--font-ui); flex-shrink: 0;
   }
-  .activity-card .empty-inline {
-    background: var(--surface-canvas); border-radius: 8px; padding: 14px; display: flex; gap: 12px; align-items: center;
+  .pcard-hd .who { flex: 1; min-width: 0; }
+  .pcard-hd .name { font: 700 14px var(--font-ui); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pcard-hd .program { font: var(--t-caption); color: var(--text-secondary); margin: 2px 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .pill-tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    border-radius: 999px; padding: 3px 9px;
+    font: 600 11px var(--font-ui); white-space: nowrap;
   }
-  .activity-card .empty-inline p { font: var(--t-caption); color: var(--text-secondary); margin: 0; flex: 1; }
-  .activity-row {
-    display: flex; align-items: center; gap: 10px; padding: 10px 0;
-    border-top: 1px solid var(--border-subtle); font: var(--t-body);
+  .tag-soft  { background: var(--coach-lime-soft); color: var(--coach-lime-ink); }
+  .tag-warn  { background: #FBE6CC; color: #6B3A12; }
+  .tag-alert { background: #F9D9D2; color: #8E1F1F; }
+  .tag-ghost { background: var(--surface-sunken); color: var(--text-secondary); }
+  .tag-dot { width: 7px; height: 7px; border-radius: 999px; background: var(--coach-lime); flex-shrink: 0; }
+  .tag-dot.warn  { background: #C57544; }
+  .tag-dot.alert { background: #8E1F1F; }
+  .tag-dot.muted { background: var(--text-tertiary); }
+
+  .pcard-meta {
+    background: var(--surface-canvas); border-radius: 8px; padding: 10px 12px;
+    display: grid; grid-template-columns: auto 1fr; gap: 4px 12px;
+    font: var(--t-caption);
   }
-  .activity-row .day { color: var(--text-tertiary); width: 50px; }
-  .activity-row .av { width: 22px; height: 22px; border-radius: 999px; background: var(--surface-sunken); display: inline-flex; align-items: center; justify-content: center; font: 600 10px var(--font-ui); color: var(--text-secondary); }
-  .activity-row .grow { flex: 1; }
-  .activity-row .pill { padding: 3px 10px; border-radius: 999px; font: 600 11px var(--font-ui); white-space: nowrap; }
-  .pill-lime { background: var(--ekklo-lime-soft); color: var(--ekklo-lime-ink); }
-  .pill-warn { background: #FEF3C7; color: #92400E; }
+  .pcard-meta .k { color: var(--text-tertiary); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .pcard-meta .v { font: var(--t-body-strong); color: var(--text-primary); }
+  .pcard-meta .v.good { color: #456D2A; }
+  .pcard-meta .v.bad  { color: #8E1F1F; }
+
+  .pcard-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    font: var(--t-caption);
+  }
+  .pcard-foot .signal { font: 600 11px var(--font-ui); }
+  .pcard-foot button {
+    background: transparent; border: none; padding: 0;
+    font: 600 12px var(--font-ui); color: var(--coach-ink); cursor: pointer;
+    text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px;
+  }
 </style>
 </head>
 <body>
@@ -81,7 +154,7 @@
     <div id="shell-top"></div>
 
     <div class="body">
-      <!-- Left column -->
+      <!-- LEFT (preserved) -->
       <div>
         <div class="card">
           <h3>Your activity</h3>
@@ -93,19 +166,29 @@
 
         <div class="card">
           <h3>Today's schedule</h3>
-          <div class="schedule-empty">
-            <button class="btn btn-primary">+ Add an event</button>
+          <div class="schedule-row">
+            <span class="time">10:00</span>
+            <span class="av av-1">AN</span>
+            <span class="grow">Aya · Strength A</span>
+          </div>
+          <div class="schedule-row">
+            <span class="time">14:00</span>
+            <span class="av av-3">MK</span>
+            <span class="grow">Marcus · Conditioning</span>
+          </div>
+          <div class="schedule-row">
+            <span class="time">17:30</span>
+            <span class="av av-2">CR</span>
+            <span class="grow">Camille · Mobility</span>
           </div>
         </div>
 
         <div class="card">
           <h3>Payments received</h3>
           <p style="font: var(--t-caption); color: var(--text-secondary); margin: 0 0 4px;">Your latest payments will appear here.</p>
-          <div class="pmt-row">
-            <span class="av">A</span>
-            <span class="grow">Aya Nakamura</span>
-            <span class="amt">150,00 €</span>
-          </div>
+          <div class="pmt-row"><span class="av av-1">AN</span><span class="grow">Aya Nakamura</span><span class="amt">150,00 €</span></div>
+          <div class="pmt-row"><span class="av av-2">CR</span><span class="grow">Camille Roux</span><span class="amt">180,00 €</span></div>
+          <div class="pmt-row"><span class="av av-3">MK</span><span class="grow">Marcus Kane</span><span class="amt">160,00 €</span></div>
         </div>
 
         <div class="card">
@@ -123,54 +206,178 @@
         </div>
       </div>
 
-      <!-- Right column -->
-      <div>
+      <!-- RIGHT — tutorial banner + pulse board -->
+      <div class="col-right">
         <div class="tut-banner">
           <div class="iconbox">▶</div>
           <div class="grow">
-            <h4>Master Ekklo in minutes</h4>
+            <h4>Master Coach in minutes</h4>
             <p>Explore our video tutorials to unlock the full potential of the platform and save time every day.</p>
           </div>
           <button>Watch tutorials →</button>
         </div>
 
-        <h3 class="section-h">Client tracking</h3>
-
-        <div class="invite-card">
-          <button class="btn btn-primary">+ Invite your first client</button>
+        <div class="track-head">
+          <div>
+            <h3>Client tracking</h3>
+            <p class="sub">12 active · sorted by who needs you most.</p>
+          </div>
+          <span class="grow"></span>
+          <button class="invite">+ Invite client</button>
         </div>
 
-        <div class="activity-card">
-          <div class="hd">
-            <h4>Client activities</h4>
-            <button class="filter">All ▾</button>
-          </div>
-          <div class="empty-inline">
-            <span class="bell" id="bell-act"></span>
-            <p>Track all your clients' activities here: scheduled sessions, logged weight, and more. Monitor their progress at a glance!</p>
-          </div>
-          <div class="activity-row">
-            <span class="day">Today</span>
-            <span class="av">AN</span>
-            <span class="grow">Aya Nakamura</span>
-            <span class="pill pill-lime">Session</span>
-          </div>
+        <div class="segs">
+          <button class="seg active">All <span class="n">12</span></button>
+          <button class="seg">Needs attention <span class="n">4</span></button>
+          <button class="seg">On track <span class="n">7</span></button>
+          <button class="seg">Silent 5d+ <span class="n">1</span></button>
+          <button class="seg">New <span class="n">2</span></button>
         </div>
 
-        <div class="activity-card">
-          <div class="hd">
-            <h4>Assessments to validate <span class="pill pill-lime" style="margin-left:4px;">0</span></h4>
-            <button class="filter">To validate ▾</button>
-          </div>
-          <div class="empty-inline">
-            <span class="bell" id="bell-asm"></span>
-            <p>As soon as a client completes their assessment, you'll see it here. Simply click on it to review and validate it.</p>
-          </div>
-          <div class="activity-row">
-            <span class="av">AN</span>
-            <span class="grow">Aya Nakamura</span>
-            <span class="pill pill-warn">To validate</span>
-          </div>
+        <div class="pulse-grid">
+          <article class="pcard alert">
+            <div class="pcard-hd">
+              <span class="av av-4">DT</span>
+              <div class="who"><p class="name">Diego Torres</p><p class="program">Hypertrophy · 12wk</p></div>
+              <span class="pill-tag tag-alert"><span class="tag-dot alert"></span>Drifting</span>
+            </div>
+            <div class="pcard-meta">
+              <span class="k">Week</span><span class="v">6 of 12</span>
+              <span class="k">Adherence</span><span class="v bad">42%</span>
+              <span class="k">Last log</span><span class="v">3 days ago</span>
+              <span class="k">Next</span><span class="v">Not scheduled</span>
+            </div>
+            <div class="pcard-foot">
+              <span class="signal" style="color: #8E1F1F;">● Skipped 3 check-ins</span>
+              <button>Open →</button>
+            </div>
+          </article>
+
+          <article class="pcard warn">
+            <div class="pcard-hd">
+              <span class="av av-1">AN</span>
+              <div class="who"><p class="name">Aya Nakamura</p><p class="program">Strength · 8wk</p></div>
+              <span class="pill-tag tag-warn"><span class="tag-dot warn"></span>Awaiting you</span>
+            </div>
+            <div class="pcard-meta">
+              <span class="k">Week</span><span class="v">4 of 8</span>
+              <span class="k">Adherence</span><span class="v good">88%</span>
+              <span class="k">Last log</span><span class="v">2 hours ago</span>
+              <span class="k">Next</span><span class="v">Tomorrow 10:00</span>
+            </div>
+            <div class="pcard-foot">
+              <span class="signal" style="color: #6B3A12;">◆ Assessment to validate</span>
+              <button>Open →</button>
+            </div>
+          </article>
+
+          <article class="pcard warn">
+            <div class="pcard-hd">
+              <span class="av av-3">MK</span>
+              <div class="who"><p class="name">Marcus Kane</p><p class="program">Conditioning</p></div>
+              <span class="pill-tag tag-warn"><span class="tag-dot warn"></span>Conflict</span>
+            </div>
+            <div class="pcard-meta">
+              <span class="k">Week</span><span class="v">3 of 6</span>
+              <span class="k">Adherence</span><span class="v">71%</span>
+              <span class="k">Last log</span><span class="v">Yesterday</span>
+              <span class="k">Next</span><span class="v">Today 14:00</span>
+            </div>
+            <div class="pcard-foot">
+              <span class="signal" style="color: #6B3A12;">◆ Schedule conflict</span>
+              <button>Open →</button>
+            </div>
+          </article>
+
+          <article class="pcard">
+            <div class="pcard-hd">
+              <span class="av av-2">CR</span>
+              <div class="who"><p class="name">Camille Roux</p><p class="program">Mobility &amp; Recovery</p></div>
+              <span class="pill-tag tag-soft"><span class="tag-dot"></span>On track</span>
+            </div>
+            <div class="pcard-meta">
+              <span class="k">Week</span><span class="v">9 of 10</span>
+              <span class="k">Adherence</span><span class="v good">94%</span>
+              <span class="k">Last log</span><span class="v">Today</span>
+              <span class="k">Next</span><span class="v">Today 17:30</span>
+            </div>
+            <div class="pcard-foot">
+              <span class="signal" style="color: #456D2A;">● On track</span>
+              <button>Open →</button>
+            </div>
+          </article>
+
+          <article class="pcard">
+            <div class="pcard-hd">
+              <span class="av av-5">JL</span>
+              <div class="who"><p class="name">Jade Lambert</p><p class="program">Onboarding</p></div>
+              <span class="pill-tag tag-soft"><span class="tag-dot"></span>New</span>
+            </div>
+            <div class="pcard-meta">
+              <span class="k">Week</span><span class="v">1 of 8</span>
+              <span class="k">Adherence</span><span class="v">New</span>
+              <span class="k">Last log</span><span class="v">Mon</span>
+              <span class="k">Next</span><span class="v">Awaiting program</span>
+            </div>
+            <div class="pcard-foot">
+              <span class="signal" style="color: #456D2A;">● Just started</span>
+              <button>Open →</button>
+            </div>
+          </article>
+
+          <article class="pcard">
+            <div class="pcard-hd">
+              <span class="av av-6">TB</span>
+              <div class="who"><p class="name">Theo Brunet</p><p class="program">Strength · 8wk</p></div>
+              <span class="pill-tag tag-soft"><span class="tag-dot"></span>On track</span>
+            </div>
+            <div class="pcard-meta">
+              <span class="k">Week</span><span class="v">7 of 8</span>
+              <span class="k">Adherence</span><span class="v good">96%</span>
+              <span class="k">Last log</span><span class="v">Today</span>
+              <span class="k">Next</span><span class="v">Thu 09:00</span>
+            </div>
+            <div class="pcard-foot">
+              <span class="signal" style="color: #456D2A;">● Crushing it</span>
+              <button>Open →</button>
+            </div>
+          </article>
+
+          <article class="pcard muted">
+            <div class="pcard-hd">
+              <span class="av av-3">SM</span>
+              <div class="who"><p class="name">Sofia Marin</p><p class="program">Strength · 8wk</p></div>
+              <span class="pill-tag tag-ghost"><span class="tag-dot muted"></span>Silent 5d</span>
+            </div>
+            <div class="pcard-meta">
+              <span class="k">Week</span><span class="v">5 of 8</span>
+              <span class="k">Adherence</span><span class="v">58%</span>
+              <span class="k">Last log</span><span class="v">5 days ago</span>
+              <span class="k">Next</span><span class="v">Not scheduled</span>
+            </div>
+            <div class="pcard-foot">
+              <span class="signal" style="color: var(--text-tertiary);">○ Quiet</span>
+              <button>Open →</button>
+            </div>
+          </article>
+
+          <article class="pcard">
+            <div class="pcard-hd">
+              <span class="av av-1">LM</span>
+              <div class="who"><p class="name">Lou Martin</p><p class="program">Hypertrophy · 12wk</p></div>
+              <span class="pill-tag tag-soft"><span class="tag-dot"></span>On track</span>
+            </div>
+            <div class="pcard-meta">
+              <span class="k">Week</span><span class="v">2 of 12</span>
+              <span class="k">Adherence</span><span class="v good">85%</span>
+              <span class="k">Last log</span><span class="v">Today</span>
+              <span class="k">Next</span><span class="v">Wed 18:00</span>
+            </div>
+            <div class="pcard-foot">
+              <span class="signal" style="color: #456D2A;">● On track</span>
+              <button>Open →</button>
+            </div>
+          </article>
         </div>
       </div>
     </div>
@@ -183,8 +390,6 @@
 <script>
   __mountShell('dashboard', 'Dashboard');
   document.getElementById('bell-greet').innerHTML = window.__BELL_SVG(72);
-  document.getElementById('bell-act').innerHTML = window.__BELL_SVG(36);
-  document.getElementById('bell-asm').innerHTML = window.__BELL_SVG(36);
 </script>
 </body>
 </html>
